@@ -17,53 +17,53 @@ const BASE_FEE = '10000'; // 0.001 XLM (10x a taxa base para rápida aprovação
  */
 export const OracleService = {
     /**
-     * Traz a cotação médica ponderada / média do XLM para BRL (Real)
-     * usando 3 Corretoras descentralizadas / centralizadas:
-     * 1. Binance (Maior Mundial) -> USD-BRL * XLM-USD
-     * 2. Mercado Bitcoin (Maior Nacional)
-     * 3. NovaDax (Alta Liquidez Nacional)
+     * Traz os preços em tempo real de toda a cesta Web3 contra BRL
+     * Oráculo Principal: CoinGecko (Livre de CORS para frontends).
      */
-    async getXlmToBrlPrice(): Promise<number> {
-        const prices: number[] = [];
+    async getPrices(): Promise<{ xlm: number, usdc: number, btc: number }> {
+        // Fallbacks conservadores caso oráculos falhem
+        const fallbacks = { xlm: 0.80, usdc: 5.25, btc: 350000 };
 
-        // Oráculo 1: Binance (Liquidez Global)
         try {
-            const resXLM = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=XLMUSDT');
-            const dataXLM = await resXLM.json();
-
-            const resBRL = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=USDTBRL');
-            const dataBRL = await resBRL.json();
-
-            if (dataXLM.price && dataBRL.price) {
-                prices.push(parseFloat(dataXLM.price) * parseFloat(dataBRL.price));
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=stellar,usd-coin,bitcoin&vs_currencies=brl');
+            if (res.ok) {
+                const data = await res.json();
+                return {
+                    xlm: data.stellar?.brl || fallbacks.xlm,
+                    usdc: data['usd-coin']?.brl || fallbacks.usdc,
+                    btc: data.bitcoin?.brl || fallbacks.btc
+                };
             }
-        } catch (e) { console.warn('Oráculo Binance falhou', e); }
+        } catch (e) {
+            console.warn('Oráculo CoinGecko falhou. Tentando redundâncias...', e);
+        }
 
-        // Oráculo 2: Mercado Bitcoin (Latam)
+        // Tenta MercadoBitcoin como redundância pro XLM nativo, mas mascara erro de CORS
         try {
             const resMB = await fetch('https://api.mercadobitcoin.net/api/v4/tickers?symbols=XLM-BRL');
             const dataMB = await resMB.json();
             if (dataMB && dataMB[0]?.last) {
-                prices.push(parseFloat(dataMB[0].last));
+                fallbacks.xlm = parseFloat(dataMB[0].last);
             }
-        } catch (e) { console.warn('Oráculo MercadoBitcoin falhou', e); }
+        } catch (e) { /* cors block */ }
 
-        // Oráculo 3: NovaDax (Liquidez Latam 2)
+        // NovaDax pra BTC
         try {
-            const resNova = await fetch('https://api.novadax.com/v1/market/ticker?symbol=XLM_BRL');
+            const resNova = await fetch('https://api.novadax.com/v1/market/ticker?symbol=BTC_BRL');
             const dataNova = await resNova.json();
             if (dataNova?.data?.lastPrice) {
-                prices.push(parseFloat(dataNova.data.lastPrice));
+                fallbacks.btc = parseFloat(dataNova.data.lastPrice);
             }
-        } catch (e) { console.warn('Oráculo NovaDax falhou', e); }
+        } catch (e) { /* cors block */ }
 
-        if (prices.length === 0) {
-            // Cotação de Emergência Padrão
-            return 1.40;
-        }
+        return fallbacks;
+    },
 
-        // Tira a média dos Oráculos Vivos (Previne distorção extrema se 1 falhar)
-        const soma = prices.reduce((a, b) => a + b, 0);
-        return soma / prices.length;
+    /**
+     * Wrapper legacy pro Settings (Pro Mode) e compatibilidade
+     */
+    async getXlmToBrlPrice(): Promise<number> {
+        const prices = await this.getPrices();
+        return prices.xlm;
     }
 };

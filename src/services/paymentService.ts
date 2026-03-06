@@ -170,5 +170,154 @@ export const PaymentService = {
             console.error('❌ Falha Crítica no OffRamp API (Saque):', error?.response?.data || error.message);
             throw error;
         }
+    },
+
+    /**
+     * Swap Service (AMM Emulado Gasless via Market Maker Master)
+     * Troca Ativo A por Ativo B do usuário. Como estamos na Testnet e não temos pools 
+     * gigantes de liquidez, o Serviço emula a liquidez transferindo o Ativo A 
+     * pro cofre Mestre e Mintando instantaneamente o Ativo B.
+     */
+    async swapAssets(userSecretKey: string, fromAssetCode: string, toAssetCode: string, payAmount: string, receiveAmount: string): Promise<string | null> {
+        try {
+            console.log(`💱 PaymentService: Swap Solicitado. ${payAmount} ${fromAssetCode} -> ${receiveAmount} ${toAssetCode}...`);
+
+            const server = new Horizon.Server('https://horizon-testnet.stellar.org');
+            const userKeypair = Keypair.fromSecret(userSecretKey);
+            const userPublicKey = userKeypair.publicKey();
+            const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET!);
+
+            const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+            const userAccount = await server.loadAccount(userPublicKey);
+
+            const operations: any[] = [];
+
+            // Helper para identificar se é XLM ou Token Mintado por nós
+            const getAsset = (code: string) => {
+                if (code === 'XLM') return Asset.native();
+                return new Asset(code, issuerKeypair.publicKey());
+            };
+
+            const fromAsset = getAsset(fromAssetCode);
+            const toAsset = getAsset(toAssetCode);
+
+            // 1. BURN/VENDER: O Usuário paga pro Mestre
+            operations.push(Operation.payment({
+                source: userPublicKey,
+                destination: issuerKeypair.publicKey(),
+                asset: fromAsset,
+                amount: String(parseFloat(payAmount).toFixed(7))
+            }));
+
+            // 2. CHECK TRUSTLINE: Se o cliente vai receber um token não-nativo, ele tem Trustline?
+            if (toAssetCode !== 'XLM') {
+                const hasTrustLine = userAccount.balances.some(
+                    (b: any) => b.asset_type !== 'native' && b.asset_code === toAssetCode && b.asset_issuer === issuerKeypair.publicKey()
+                );
+
+                if (!hasTrustLine) {
+                    console.log(`Abrindo Trustline Gasless para a moeda ${toAssetCode}...`);
+                    operations.push(Operation.beginSponsoringFutureReserves({
+                        source: issuerKeypair.publicKey(),
+                        sponsoredId: userPublicKey
+                    }));
+                    operations.push(Operation.changeTrust({
+                        source: userPublicKey,
+                        asset: toAsset
+                    }));
+                    operations.push(Operation.endSponsoringFutureReserves({
+                        source: userPublicKey
+                    }));
+                }
+            }
+
+            // 3. MINT/COMPRAR: O Mestre manda o Ativo B para o Cliente
+            operations.push(Operation.payment({
+                source: issuerKeypair.publicKey(),
+                destination: userPublicKey,
+                asset: toAsset,
+                amount: String(parseFloat(receiveAmount).toFixed(7))
+            }));
+
+            const transactionBuilder = new TransactionBuilder(issuerAccount, {
+                fee: BASE_FEE,
+                networkPassphrase: Networks.TESTNET
+            }).setTimeout(30);
+
+            operations.forEach(op => transactionBuilder.addOperation(op));
+            const transaction = transactionBuilder.build();
+
+            // Duas assinaturas: Cofre Mestre e Conta do Cliente
+            transaction.sign(issuerKeypair, userKeypair);
+
+            console.log('🚀 Transmitindo Câmbio/Swap para a Blockchain...');
+            const response = await server.submitTransaction(transaction);
+
+            return response.hash;
+        } catch (error: any) {
+            console.error('❌ Falha Crítica no Swap API:', error?.response?.data || error.message);
+            throw new Error(error.message);
+        }
+    },
+
+    /**
+     * Send On-Chain Service (Transferência Peer-to-Peer Gasless)
+     * Transfere moedas reais da carteira do usuário para qualquer outra conta
+     * global na Blockchain. O Cofre Master continua bancando a taxa de 0.001 XLM.
+     * Funciona para BRZ, USDC, XLM, BTC e afins.
+     */
+    async sendAssetOnChain(userSecretKey: string, destPublicKey: string, assetCode: string, amount: string): Promise<string | null> {
+        try {
+            console.log(`🚀 PaymentService: Envio Descentralizado de ${amount} ${assetCode} para ${destPublicKey}`);
+
+            const server = new Horizon.Server('https://horizon-testnet.stellar.org');
+            const userKeypair = Keypair.fromSecret(userSecretKey);
+            const userPublicKey = userKeypair.publicKey();
+            const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET!);
+
+            // O issuerAccount pagará a taxa
+            const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+
+            // Identificação do Asset
+            const getAsset = (code: string) => {
+                if (code === 'XLM') return Asset.native();
+                return new Asset(code, issuerKeypair.publicKey());
+            };
+            const transferAsset = getAsset(assetCode);
+
+            // Monta o Bloquinho de Pagamento
+            const paymentOp = Operation.payment({
+                source: userPublicKey,
+                destination: destPublicKey,
+                asset: transferAsset,
+                amount: String(parseFloat(amount).toFixed(7))
+            });
+
+            const transactionBuilder = new TransactionBuilder(issuerAccount, {
+                fee: BASE_FEE,
+                networkPassphrase: Networks.TESTNET
+            }).setTimeout(30);
+
+            transactionBuilder.addOperation(paymentOp);
+            const transaction = transactionBuilder.build();
+
+            // Assinatura do Cliente (Permissão para movimentar fundos) + Master (Pagador da Taxa Gasless)
+            transaction.sign(issuerKeypair, userKeypair);
+
+            console.log('🔗 Transmitindo Envio On-Chain para a Ledger Mundial...');
+            const response = await server.submitTransaction(transaction);
+
+            return response.hash;
+        } catch (error: any) {
+            console.error('❌ Falha Crítica no Send On-Chain:', error?.response?.data || error.message);
+            // Extrai o erro profundo
+            const resultCodes = error?.response?.data?.extras?.result_codes;
+            if (resultCodes?.operations?.includes('op_no_trust')) {
+                throw new Error("A carteira de destino não possui linha de confiança (Trustline) para este ativo.");
+            } else if (resultCodes?.operations?.includes('op_no_destination')) {
+                throw new Error("A carteira informada não está ativa na Blockchain. Envie XLM primeiro para inicializá-la.");
+            }
+            throw new Error(error.message);
+        }
     }
 };

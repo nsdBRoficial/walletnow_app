@@ -221,7 +221,7 @@ export default function Dashboard() {
           Passamos a função onClose para que o modal saiba como se fechar.
       */}
       <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} onSuccess={fetchOnChainBalance} />
-      <SendModal isOpen={isSendOpen} onClose={() => setIsSendOpen(false)} />
+      <SendModal isOpen={isSendOpen} onClose={() => setIsSendOpen(false)} onSuccess={fetchOnChainBalance} />
 
     </div>
   );

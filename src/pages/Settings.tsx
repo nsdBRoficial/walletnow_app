@@ -8,7 +8,7 @@ import { WalletFactory } from '../services/walletFactory';
 import { OracleService } from '../services/oracleService';
 import ReceiveCryptoModal from '../components/modals/ReceiveCryptoModal';
 import SwapModal from '../components/modals/SwapModal';
-import SendModal from '../components/modals/SendModal';
+import OnChainSendModal from '../components/modals/OnChainSendModal';
 
 /**
  * Tela de Configurações e Identidade (The Trust Layer)
@@ -47,36 +47,42 @@ export default function Settings() {
   // Estados PRO Mode (Carteira Web3)
   const [brzBalance, setBrzBalance] = useState<string>('0.00');
   const [xlmBalance, setXlmBalance] = useState<string>('0.00');
+  const [usdcBalance, setUsdcBalance] = useState<string>('0.00');
+  const [btcBalance, setBtcBalance] = useState<string>('0.00');
   const [xlmBrlPrice, setXlmBrlPrice] = useState<number>(0);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
 
   // Estados para os Modais Web3
   const [isReceiveOpen, setIsReceiveOpen] = useState(false);
-  const [isSendOpen, setIsSendOpen] = useState(false);
+  const [isOnChainSendOpen, setIsOnChainSendOpen] = useState(false);
   const [isSwapOpen, setIsSwapOpen] = useState(false);
+
+  // Função isolada para poder recarregar no sucesso de um modal
+  const fetchProModeBalance = async () => {
+    if (!profile?.stellar_address) return;
+    setIsLoadingBalance(true);
+    try {
+      const [balances, brlPrice] = await Promise.all([
+        WalletFactory.getBalances(profile.stellar_address),
+        OracleService.getXlmToBrlPrice()
+      ]);
+      if (balances) {
+        setBrzBalance(balances.brz);
+        setXlmBalance(balances.xlm);
+        setUsdcBalance(balances.usdc);
+        setBtcBalance(balances.btc);
+      }
+      setXlmBrlPrice(brlPrice);
+    } catch (e) {
+      console.error("Falha ao carregar Web3 Pro Mode", e);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  };
 
   // Efeito para carregar os saldos da Blockchain no Pro Mode
   useEffect(() => {
-    async function loadWeb3Data() {
-      if (!profile?.stellar_address) return;
-      setIsLoadingBalance(true);
-      try {
-        const [balances, brlPrice] = await Promise.all([
-          WalletFactory.getBalances(profile.stellar_address),
-          OracleService.getXlmToBrlPrice()
-        ]);
-        if (balances) {
-          setBrzBalance(balances.brz);
-          setXlmBalance(balances.xlm);
-        }
-        setXlmBrlPrice(brlPrice);
-      } catch (e) {
-        console.error("Falha ao carregar Web3 Pro Mode", e);
-      } finally {
-        setIsLoadingBalance(false);
-      }
-    }
-    loadWeb3Data();
+    fetchProModeBalance();
   }, [profile?.stellar_address]);
 
   // Efeito para carregar os dados se o perfil já foi verificado
@@ -510,6 +516,25 @@ export default function Settings() {
                   </div>
                 </div>
 
+                {/* USDC (Stablecoin Dólar) */}
+                {parseFloat(usdcBalance) > 0 && (
+                  <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full border border-blue-500/20 bg-blue-500/5 flex items-center justify-center">
+                        <span className="text-xs font-bold text-blue-500">USD</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">USDC Coin</p>
+                        <p className="text-[10px] text-gray-500">Dólar Pareado (Stablecoin)</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(usdcBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</p>
+                      <p className="text-[10px] text-gray-500">Transfero (Issuer)</p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Cripto Nativa XLM */}
                 <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl">
                   <div className="flex items-center gap-3">
@@ -528,6 +553,25 @@ export default function Settings() {
                     )}
                   </div>
                 </div>
+
+                {/* BTC (Bitcoin Wrap) */}
+                {parseFloat(btcBalance) > 0 && (
+                  <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full border border-orange-500/20 bg-orange-500/5 flex items-center justify-center">
+                        <span className="text-xs font-bold text-orange-500">₿</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">Bitcoin</p>
+                        <p className="text-[10px] text-gray-500">Reserva de Valor (Wrapped)</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(btcBalance).toFixed(7)}</p>
+                      <p className="text-[10px] text-gray-500">Transfero (Issuer)</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -539,7 +583,7 @@ export default function Settings() {
                   <ArrowDownLeft className="w-5 h-5 mb-2" />
                   <span className="text-[10px] font-medium uppercase">Receber</span>
                 </button>
-                <button onClick={() => setIsSendOpen(true)} className="flex flex-col items-center justify-center py-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 text-gray-400 hover:text-white">
+                <button onClick={() => setIsOnChainSendOpen(true)} className="flex flex-col items-center justify-center py-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 text-gray-400 hover:text-white">
                   <ArrowUpRight className="w-5 h-5 mb-2" />
                   <span className="text-[10px] font-medium uppercase">Enviar</span>
                 </button>
@@ -570,11 +614,11 @@ export default function Settings() {
       </div>
 
       <ReceiveCryptoModal isOpen={isReceiveOpen} onClose={() => setIsReceiveOpen(false)} />
-      <SwapModal isOpen={isSwapOpen} onClose={() => setIsSwapOpen(false)} />
-      <SendModal
-        isOpen={isSendOpen}
-        onClose={() => setIsSendOpen(false)}
-        onSuccess={() => { }}
+      <SwapModal isOpen={isSwapOpen} onClose={() => setIsSwapOpen(false)} onSuccess={fetchProModeBalance} />
+      <OnChainSendModal
+        isOpen={isOnChainSendOpen}
+        onClose={() => setIsOnChainSendOpen(false)}
+        onSuccess={fetchProModeBalance}
       />
     </div>
   );

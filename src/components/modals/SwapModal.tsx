@@ -1,10 +1,14 @@
 import { X, ArrowDownUp, Info, CheckCircle2, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { WalletFactory } from '../../services/walletFactory';
+import { PaymentService } from '../../services/paymentService';
+import { OracleService } from '../../services/oracleService';
 
 interface SwapModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
 const ASSETS = [
@@ -14,14 +18,41 @@ const ASSETS = [
     { code: 'BTC', name: 'Bitcoin (Wrapped Stellar)', icon: '₿' }
 ];
 
-export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
+export default function SwapModal({ isOpen, onClose, onSuccess }: SwapModalProps) {
     const { profile } = useAuth();
     const [payAmount, setPayAmount] = useState('');
     const [payAsset, setPayAsset] = useState(ASSETS[0]);
     const [receiveAsset, setReceiveAsset] = useState(ASSETS[1]);
     const [status, setStatus] = useState<'idle' | 'swapping' | 'success'>('idle');
+    const [prices, setPrices] = useState<{ xlm: number, usdc: number, btc: number } | null>(null);
+
+    // Carrega preços reais assim que o usuário abre o modal
+    useEffect(() => {
+        if (isOpen) {
+            OracleService.getPrices().then(setPrices);
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
+
+    const getAssetPriceInBrl = (code: string) => {
+        if (code === 'BRZ') return 1.0;
+        if (!prices) return 0;
+        if (code === 'XLM') return prices.xlm;
+        if (code === 'USDC') return prices.usdc;
+        if (code === 'BTC') return prices.btc;
+        return 0;
+    };
+
+    const payPriceBrl = getAssetPriceInBrl(payAsset.code);
+    const receivePriceBrl = getAssetPriceInBrl(receiveAsset.code);
+
+    let estimatedReceive = "0.0000";
+    if (payAmount && payPriceBrl > 0 && receivePriceBrl > 0) {
+        // Desconto de spread DEX de 2% simulado
+        const rawAmount = (parseFloat(payAmount) * payPriceBrl) / receivePriceBrl;
+        estimatedReceive = (rawAmount * 0.98).toFixed(7);
+    }
 
     const handleSwapAssets = () => {
         const temp = payAsset;
@@ -29,17 +60,35 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
         setReceiveAsset(temp);
     };
 
-    const handleConfirmSwap = () => {
-        if (!payAmount) return;
+    const handleConfirmSwap = async () => {
+        if (!payAmount || !profile?.id) return;
         setStatus('swapping');
-        setTimeout(() => {
+
+        try {
+            const secretKey = WalletFactory.getSecretKey(profile.id);
+            if (!secretKey) throw new Error("Credencial secreta indisponível. Cadastre Passkey.");
+
+            await PaymentService.swapAssets(
+                secretKey,
+                payAsset.code,
+                receiveAsset.code,
+                payAmount,
+                estimatedReceive // Valor real com Spread calculado
+            );
+
             setStatus('success');
+            if (onSuccess) onSuccess();
+
             setTimeout(() => {
                 setStatus('idle');
                 setPayAmount('');
                 onClose();
             }, 3000);
-        }, 2000);
+        } catch (error: any) {
+            console.error("Erro Swap:", error);
+            alert("Falha no Câmbio Web3: " + error.message);
+            setStatus('idle');
+        }
     };
 
     return (
@@ -97,7 +146,7 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                             <div className="flex justify-between items-center">
                                 <input
                                     type="text"
-                                    value={payAmount ? (parseFloat(payAmount) * 0.98).toFixed(4) : "0.00"}
+                                    value={estimatedReceive}
                                     disabled
                                     className="bg-transparent text-2xl font-bold text-gray-500 w-full outline-none"
                                 />
@@ -111,13 +160,24 @@ export default function SwapModal({ isOpen, onClose }: SwapModalProps) {
                             </div>
                         </div>
 
-                        <div className="flex items-start gap-2 text-xs text-gray-500 mt-2 bg-[#F27D26]/5 p-3 rounded-lg border border-[#F27D26]/20">
-                            <Info className="w-4 h-4 text-[#F27D26] flex-shrink-0" />
-                            <p>As cotações são providas de pools descentralizadas na rede Stellar (AMM). Liquidez sob demanda.</p>
+                        <div className="flex items-start gap-2 text-xs text-gray-500 mt-2 bg-black/30 p-3 rounded-lg border border-white/5">
+                            <Info className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <div className="flex flex-col gap-1 w-full">
+                                <p>Cotação Oficial (Oracle CoinGecko):</p>
+                                {prices ? (
+                                    <div className="grid grid-cols-2 gap-1 mt-1 text-gray-400">
+                                        <span>1 USD = R$ {prices.usdc.toFixed(2)}</span>
+                                        <span>1 XLM = R$ {prices.xlm.toFixed(4)}</span>
+                                        <span className="col-span-2">1 BTC = R$ {prices.btc.toLocaleString()}</span>
+                                    </div>
+                                ) : (
+                                    <p className="text-[#F27D26] animate-pulse mt-1">Sincronizando oráculos descentralizados...</p>
+                                )}
+                            </div>
                         </div>
 
                         <button
-                            disabled={!payAmount || status === 'swapping'}
+                            disabled={!payAmount || status === 'swapping' || !prices || estimatedReceive === "0.0000"}
                             onClick={handleConfirmSwap}
                             className="w-full mt-4 bg-[#F27D26] hover:bg-[#D96B1C] text-white py-4 rounded-2xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >

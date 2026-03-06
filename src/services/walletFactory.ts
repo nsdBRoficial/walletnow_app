@@ -134,23 +134,29 @@ export const WalletFactory = {
      * Helper (Ajudante) para buscar os saldos reais na Blockchain
      * Retorna os balanços em formato de dicionário simplificado.
      */
-    async getBalances(publicKey: string): Promise<{ brz: string, xlm: string } | null> {
+    async getBalances(publicKey: string): Promise<{ brz: string, xlm: string, usdc: string, btc: string } | null> {
         try {
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const account = await server.loadAccount(publicKey);
 
             let brzBalance = '0.00';
             let xlmBalance = '0.00';
+            let usdcBalance = '0.00';
+            let btcBalance = '0.00';
 
             account.balances.forEach((balance: any) => {
                 if (balance.asset_type === 'native') {
                     xlmBalance = balance.balance;
                 } else if (balance.asset_code === 'BRZ') {
                     brzBalance = balance.balance;
+                } else if (balance.asset_code === 'USDC') {
+                    usdcBalance = balance.balance;
+                } else if (balance.asset_code === 'BTC') {
+                    btcBalance = balance.balance;
                 }
             });
 
-            return { brz: brzBalance, xlm: xlmBalance };
+            return { brz: brzBalance, xlm: xlmBalance, usdc: usdcBalance, btc: btcBalance };
         } catch (error: any) {
             // Conta pode ainda não existir (404) ou erro de rede
             if (error.response?.status !== 404) {
