@@ -1,6 +1,8 @@
 import { ArrowLeft, Camera, CheckCircle2, Copy, Loader2, ShieldAlert, ShieldCheck, UploadCloud, Mail, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 /**
  * Tela de Configurações e Identidade (The Trust Layer)
@@ -12,7 +14,8 @@ import { useNavigate } from 'react-router-dom';
  */
 export default function Settings() {
   const navigate = useNavigate();
-  
+  const { profile } = useAuth();
+
   // Máquina de estados para o status do KYC geral:
   // 'pending' = Aguardando preenchimento
   // 'processing' = Gerando a prova ZK-STARK (Spinner)
@@ -45,9 +48,9 @@ export default function Settings() {
 
   // O botão de verificar a identidade (ZK-STARK) só é habilitado se TODOS os campos,
   // verificações (email/whatsapp) e documentos estiverem válidos.
-  const canSubmit = isNameValid && isCpfValid && isBirthDateValid && isAddressValid && 
-                    documentUploaded && selfieCaptured && 
-                    emailStatus === 'verified' && phoneStatus === 'verified';
+  const canSubmit = isNameValid && isCpfValid && isBirthDateValid && isAddressValid &&
+    documentUploaded && selfieCaptured &&
+    emailStatus === 'verified' && phoneStatus === 'verified';
 
   /**
    * Simula o envio de um código de verificação para o E-mail
@@ -76,7 +79,7 @@ export default function Settings() {
    */
   const handleVerify = () => {
     if (!canSubmit) return;
-    
+
     // 1. Muda o status para 'processing' (Mostra o spinner principal)
     setKycStatus('processing');
 
@@ -89,11 +92,11 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] animate-in slide-in-from-right-8 duration-300">
-      
+
       {/* Cabeçalho com botão de Voltar */}
       <header className="px-6 pt-8 pb-6 flex items-center gap-4 border-b border-white/5">
-        <button 
-          onClick={() => navigate('/dashboard')} 
+        <button
+          onClick={() => navigate('/dashboard')}
           className="p-2 bg-[#161616] rounded-full text-gray-400 hover:text-white border border-white/5 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -102,13 +105,13 @@ export default function Settings() {
       </header>
 
       <div className="flex-1 p-6 space-y-8 pb-24">
-        
+
         {/* Seção 1: Identidade (KYC) */}
         <section>
           {/* Título da Seção e Badge de Status Dinâmico */}
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm text-gray-400 font-medium uppercase tracking-wider">Identidade (KYC)</h2>
-            
+
             {kycStatus === 'verified' ? (
               <span className="flex items-center gap-1 text-xs font-medium text-[#00E676] bg-[#00E676]/10 px-2.5 py-1 rounded-full border border-[#00E676]/20">
                 <ShieldCheck className="w-3.5 h-3.5" />
@@ -124,7 +127,7 @@ export default function Settings() {
 
           {/* Container Principal do Formulário KYC */}
           <div className="bg-[#161616] rounded-[24px] p-6 border border-white/5 shadow-lg">
-            
+
             {/* Mensagem de Sucesso (Só aparece quando verificado) */}
             {kycStatus === 'verified' && (
               <div className="mb-6 p-4 bg-[#00E676]/10 border border-[#00E676]/20 rounded-xl flex items-start gap-3 animate-in fade-in zoom-in duration-500">
@@ -138,13 +141,13 @@ export default function Settings() {
 
             {/* Campos de Dados Pessoais */}
             <div className="space-y-5 mb-8">
-              
+
               {/* Campo: E-mail (Com verificação) */}
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">E-mail</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={kycStatus !== 'pending' || emailStatus === 'verified'}
@@ -155,7 +158,7 @@ export default function Settings() {
                   {emailStatus === 'verified' ? (
                     <CheckCircle2 className="w-4 h-4 text-[#00E676] ml-2 flex-shrink-0" />
                   ) : (
-                    <button 
+                    <button
                       onClick={handleVerifyEmail}
                       disabled={!isEmailValid || emailStatus === 'sending'}
                       className="ml-2 text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap"
@@ -171,8 +174,8 @@ export default function Settings() {
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">WhatsApp</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     disabled={kycStatus !== 'pending' || phoneStatus === 'verified'}
@@ -183,7 +186,7 @@ export default function Settings() {
                   {phoneStatus === 'verified' ? (
                     <CheckCircle2 className="w-4 h-4 text-[#00E676] ml-2 flex-shrink-0" />
                   ) : (
-                    <button 
+                    <button
                       onClick={handleVerifyPhone}
                       disabled={!isPhoneValid || phoneStatus === 'sending'}
                       // Usamos um tom de verde levemente diferente para remeter ao WhatsApp, ou o verde do tema
@@ -200,8 +203,8 @@ export default function Settings() {
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">Nome Completo</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     disabled={kycStatus !== 'pending'}
@@ -216,8 +219,8 @@ export default function Settings() {
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">CPF</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={cpf}
                     onChange={(e) => setCpf(e.target.value)}
                     disabled={kycStatus !== 'pending'}
@@ -232,8 +235,8 @@ export default function Settings() {
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">Data de Nascimento</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     disabled={kycStatus !== 'pending'}
@@ -248,8 +251,8 @@ export default function Settings() {
               <div className="relative">
                 <label className="text-xs text-gray-500 mb-1 block">Endereço Residencial Completo</label>
                 <div className="flex items-center border-b border-white/10 focus-within:border-[#00E676] transition-colors pb-2">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     disabled={kycStatus !== 'pending'}
@@ -265,14 +268,14 @@ export default function Settings() {
             <div className="mb-8">
               <label className="text-xs text-gray-500 mb-3 block">Documentação Necessária</label>
               <div className="grid grid-cols-2 gap-4">
-                
+
                 {/* Botão de Upload de Documento */}
-                <button 
+                <button
                   onClick={() => setDocumentUploaded(!documentUploaded)}
                   disabled={kycStatus !== 'pending'}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 border-dashed transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-                    ${documentUploaded 
-                      ? 'border-[#00E676] bg-[#00E676]/5 text-[#00E676]' 
+                    ${documentUploaded
+                      ? 'border-[#00E676] bg-[#00E676]/5 text-[#00E676]'
                       : 'border-white/10 hover:border-white/20 text-gray-400 hover:text-white bg-black/20'}`}
                 >
                   {documentUploaded ? <CheckCircle2 className="w-6 h-6 mb-2" /> : <UploadCloud className="w-6 h-6 mb-2" />}
@@ -280,12 +283,12 @@ export default function Settings() {
                 </button>
 
                 {/* Botão de Captura de Selfie */}
-                <button 
+                <button
                   onClick={() => setSelfieCaptured(!selfieCaptured)}
                   disabled={kycStatus !== 'pending'}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 border-dashed transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed
-                    ${selfieCaptured 
-                      ? 'border-[#00E676] bg-[#00E676]/5 text-[#00E676]' 
+                    ${selfieCaptured
+                      ? 'border-[#00E676] bg-[#00E676]/5 text-[#00E676]'
                       : 'border-white/10 hover:border-white/20 text-gray-400 hover:text-white bg-black/20'}`}
                 >
                   {selfieCaptured ? <CheckCircle2 className="w-6 h-6 mb-2" /> : <Camera className="w-6 h-6 mb-2" />}
@@ -297,7 +300,7 @@ export default function Settings() {
 
             {/* Botão de Ação Principal (Verificar Identidade) */}
             {kycStatus !== 'verified' && (
-              <button 
+              <button
                 onClick={handleVerify}
                 disabled={!canSubmit || kycStatus === 'processing'}
                 className="w-full flex items-center justify-center gap-2 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-4 rounded-xl font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(0,230,118,0.15)]"
@@ -318,16 +321,28 @@ export default function Settings() {
         {/* Seção 2: Informações da Carteira Web3 */}
         <section>
           <h2 className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-4">Carteira Web3</h2>
-          
+
           <div className="bg-[#161616] rounded-[24px] p-6 border border-white/5 shadow-lg">
             <label className="text-xs text-gray-500 mb-2 block">Endereço Stellar</label>
-            
+
             {/* Exibição do Endereço Público (Public Key) */}
             <div className="flex items-center justify-between bg-black/50 border border-white/10 p-4 rounded-xl">
               <span className="text-sm text-gray-300 truncate mr-4 font-mono">
-                GABCDEFGHIJKLM...XYZ1234567890
+                {profile?.stellar_address
+                  ? `${profile.stellar_address.substring(0, 8)}...${profile.stellar_address.substring(profile.stellar_address.length - 8)}`
+                  : 'Gerando carteira...'
+                }
               </span>
-              <button className="text-gray-500 hover:text-[#00E676] transition-colors">
+              <button
+                onClick={() => {
+                  if (profile?.stellar_address) {
+                    navigator.clipboard.writeText(profile.stellar_address);
+                    // Opcional: Adicionar um Toast de sucesso aqui
+                  }
+                }}
+                className="text-gray-500 hover:text-[#00E676] transition-colors"
+                title="Copiar Endereço"
+              >
                 <Copy className="w-5 h-5" />
               </button>
             </div>
@@ -340,8 +355,11 @@ export default function Settings() {
         </section>
 
         {/* Botão de Logout */}
-        <button 
-          onClick={() => navigate('/')}
+        <button
+          onClick={async () => {
+            await supabase.auth.signOut();
+            navigate('/');
+          }}
           className="w-full py-4 text-red-500 font-medium hover:bg-red-500/10 rounded-2xl transition-colors"
         >
           Sair da Conta

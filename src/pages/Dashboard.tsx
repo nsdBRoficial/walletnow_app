@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DepositModal from '../components/modals/DepositModal';
 import SendModal from '../components/modals/SendModal';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Tela do Dashboard Principal (The Money Layer)
@@ -13,7 +14,12 @@ import SendModal from '../components/modals/SendModal';
  */
 export default function Dashboard() {
   const navigate = useNavigate();
-  
+  // Consumindo dados do Usuário Logado e seu Profile (que contem o endereco Stellar)
+  const { user } = useAuth();
+
+  // Pegamos o e-mail do usuário e extraímos apenas a parte antes do "@" para usar de nome
+  const userFirstName = user?.email ? user.email.split('@')[0] : 'Usuário';
+
   // Estados (State) para controlar se os modais (janelas sobrepostas) estão abertos ou fechados.
   // 'false' significa que começam fechados.
   const [isDepositOpen, setIsDepositOpen] = useState(false);
@@ -29,7 +35,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] animate-in fade-in duration-500">
-      
+
       {/* Cabeçalho (Header) */}
       <header className="px-6 pt-8 pb-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
@@ -40,47 +46,49 @@ export default function Dashboard() {
           {/* Saudação ao Usuário */}
           <div>
             <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">WalletNow</p>
-            <p className="text-sm text-white font-semibold">Olá, Usuário</p>
+            <p className="text-sm text-white font-semibold capitalize">Olá, {userFirstName}</p>
           </div>
         </div>
-        
+
         {/* Botão de Configurações (Leva para a tela de KYC/Settings) */}
-        <button 
-          onClick={() => navigate('/settings')} 
+        <button
+          onClick={() => navigate('/settings')}
           className="p-2.5 bg-[#161616] rounded-full text-gray-400 hover:text-white border border-white/5 transition-colors shadow-lg"
         >
           <SettingsIcon className="w-5 h-5" />
         </button>
       </header>
-      
+
       {/* Card Principal de Saldo */}
       <div className="px-6 py-4">
         <div className="bg-gradient-to-br from-[#161616] to-[#0A0A0A] rounded-[32px] p-8 border border-white/5 shadow-2xl relative overflow-hidden">
-          
+
           {/* Efeito visual de brilho (Glow) no canto superior direito do card */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E676]/10 rounded-full blur-3xl"></div>
-          
+
           <p className="text-sm text-gray-400 font-medium mb-2">Saldo Disponível</p>
-          
+
           {/* Exibição do Saldo (Sempre formatado em R$) */}
-          <div className="flex items-baseline gap-2 mb-8">
-            <span className="text-2xl text-gray-500 font-semibold">R$</span>
-            <h2 className="text-5xl font-bold text-white tracking-tight">605,00</h2>
+          <div className="flex flex-col mb-8">
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl text-gray-500 font-semibold">R$</span>
+              <h2 className="text-5xl font-bold text-white tracking-tight">0,00</h2>
+            </div>
           </div>
 
           {/* Botões de Ação Principais */}
           <div className="flex gap-4">
             {/* Botão Depositar: Abre o modal de PIX */}
-            <button 
+            <button
               onClick={() => setIsDepositOpen(true)}
               className="flex-1 flex items-center justify-center gap-2 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-3.5 rounded-2xl font-bold transition-colors shadow-[0_0_15px_rgba(0,230,118,0.2)]"
             >
               <ArrowDownLeft className="w-5 h-5" />
               Depositar
             </button>
-            
+
             {/* Botão Sacar/Enviar: Abre o modal de envio de pagamento */}
-            <button 
+            <button
               onClick={() => setIsSendOpen(true)}
               className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white py-3.5 rounded-2xl font-semibold transition-colors border border-white/5"
             >
