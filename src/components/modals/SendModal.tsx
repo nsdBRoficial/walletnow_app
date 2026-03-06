@@ -1,10 +1,14 @@
-import { X, Fingerprint, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+import { X, Fingerprint, ArrowRight, CheckCircle2, Loader2, ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { WalletFactory } from '../../services/walletFactory';
+import { PaymentService } from '../../services/paymentService';
 
 // Define quais propriedades (props) este componente espera receber.
 interface SendModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 /**
@@ -15,10 +19,12 @@ interface SendModalProps {
  * O conceito "Gasless" significa que o usuário não paga taxas de rede (XLM),
  * o backend do WalletNow assina a transação como pagador da taxa (Fee Bumper).
  */
-export default function SendModal({ isOpen, onClose }: SendModalProps) {
+export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps) {
+  const { profile } = useAuth();
   // Estado para armazenar o valor digitado pelo usuário.
   const [amount, setAmount] = useState('');
-  
+  const [pixKey, setPixKey] = useState('');
+
   // Estado para controlar a fase atual da transação:
   // 'idle' = parado/aguardando digitação
   // 'authenticating' = carregando/esperando biometria
@@ -31,25 +37,36 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
   /**
    * Função que simula o fluxo completo de um pagamento Web3.
    */
-  const handleSend = () => {
-    // Se não tiver valor digitado, não faz nada.
-    if (!amount) return;
-    
-    // Muda o status para mostrar o "spinner" de carregamento.
+  const handleSend = async () => {
+    // Se não tiver valor ou PIX digitado, aborta.
+    if (!amount || !pixKey || !profile?.id) return;
+
+    // Muda o status para mostrar o "spinner" de carregamento e autenticação
     setStatus('authenticating');
-    
-    // Simulação 1: Aguarda 2 segundos (simulando o tempo do usuário colocar o dedo no leitor biométrico)
-    setTimeout(() => {
-      // Muda o status para sucesso (mostra o check verde animado)
+
+    try {
+      // 1. O Mock espera um pouco para simular a biometria
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // 2. Extrai a Chave Privada Local do usuario guardada pela WalletFactory
+      const secretKey = WalletFactory.getSecretKey(profile.id);
+      if (!secretKey) throw new Error("Chave Passkey local não encontrada. Impossível assinar a saída.");
+
+      // 3. Dispara a Transação de Resgate na Blockchain Stellar
+      await PaymentService.burnBRZToPix(secretKey, amount, pixKey);
+
+      // 4. Sucesso!
       setStatus('success');
-      
-      // Simulação 2: Aguarda mais 2 segundos mostrando a tela de sucesso e depois fecha o modal sozinho.
+      if (onSuccess) onSuccess(); // Força o refresh lá no Dashboard
+
       setTimeout(() => {
-        setStatus('idle'); // Reseta o status
-        setAmount('');     // Limpa o valor digitado
-        onClose();         // Fecha o modal chamando a função do Dashboard
-      }, 2000);
-    }, 2000);
+        closeModal();
+      }, 2500);
+
+    } catch (e: any) {
+      alert("Falha no Saque/Envio Blockchain: " + e.message);
+      setStatus('idle');
+    }
   };
 
   /**
@@ -60,16 +77,17 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
     if (status === 'authenticating') return;
     setStatus('idle');
     setAmount('');
+    setPixKey('');
     onClose();
   };
 
   return (
     // Fundo escuro semi-transparente (backdrop)
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      
+
       {/* Container do Modal */}
       <div className="w-full max-w-md bg-[#161616] rounded-t-[32px] sm:rounded-[32px] p-6 border border-white/5 shadow-2xl animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-8 duration-500">
-        
+
         {/* Cabeçalho do Modal */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-white">Enviar Pagamento</h2>
@@ -84,7 +102,7 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
             Senão, mostra o formulário de digitação de valor.
         */}
         {status === 'success' ? (
-          
+
           // Tela de Sucesso (Transação Concluída)
           <div className="flex flex-col items-center justify-center py-12 animate-in zoom-in duration-300">
             <div className="w-20 h-20 bg-[#00E676]/20 rounded-full flex items-center justify-center mb-4">
@@ -93,19 +111,19 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
             <h3 className="text-2xl font-bold text-white mb-2">Enviado!</h3>
             <p className="text-gray-400">Transação confirmada na rede.</p>
           </div>
-          
+
         ) : (
-          
+
           // Formulário de Envio
           <div className="flex flex-col space-y-6">
-            
+
             {/* Campo de Digitação do Valor (Input) */}
             <div className="flex flex-col items-center justify-center py-8 bg-black/30 rounded-2xl border border-white/5">
               <span className="text-sm text-gray-500 font-medium mb-2">Valor em Reais</span>
               <div className="flex items-center justify-center text-4xl font-bold text-white">
                 <span className="text-gray-500 mr-2 text-2xl">R$</span>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0,00"
@@ -116,11 +134,28 @@ export default function SendModal({ isOpen, onClose }: SendModalProps) {
               </div>
             </div>
 
+            {/* Campo de Chave PIX */}
+            <div className="w-full">
+              <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 block">Chave PIX de Destino</label>
+              <input
+                type="text"
+                value={pixKey}
+                placeholder="celular, cpf ou email"
+                onChange={(e) => setPixKey(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 focus:border-[#00E676] text-white p-4 rounded-xl outline-none transition-colors"
+              />
+            </div>
+
+            {/* Aviso Explicativo do Sandbox */}
+            <p className="text-[10px] text-gray-500 text-center uppercase tracking-wider font-mono">
+              Os tokens BRZ on-chain serão descontados e um PIX correspondente seria agendado pela parceira de gateway.
+            </p>
+
             {/* Botão de Ação (Confirmar com Passkey) */}
-            <button 
+            <button
               onClick={handleSend}
-              // O botão fica desabilitado se não tiver valor digitado OU se já estiver autenticando
-              disabled={!amount || status === 'authenticating'}
+              // O botão fica desabilitado se faltar infos OU se já estiver autenticando
+              disabled={!amount || !pixKey || status === 'authenticating'}
               className="w-full flex items-center justify-center gap-3 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-4 px-6 rounded-2xl transition-all duration-300 font-bold disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(0,230,118,0.2)]"
             >
               {/* Se estiver autenticando, mostra o ícone girando (Loader2). Senão, mostra a digital. */}

@@ -1,9 +1,10 @@
-import { ArrowDownLeft, ArrowUpRight, History, Settings as SettingsIcon, Wallet } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowDownLeft, ArrowUpRight, History, Settings as SettingsIcon, Wallet, ShieldCheck, Award, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DepositModal from '../components/modals/DepositModal';
 import SendModal from '../components/modals/SendModal';
 import { useAuth } from '../contexts/AuthContext';
+import { WalletFactory } from '../services/walletFactory';
 
 /**
  * Tela do Dashboard Principal (The Money Layer)
@@ -14,8 +15,8 @@ import { useAuth } from '../contexts/AuthContext';
  */
 export default function Dashboard() {
   const navigate = useNavigate();
-  // Consumindo dados do Usuário Logado e seu Profile (que contem o endereco Stellar)
-  const { user } = useAuth();
+  // Consumindo dados do Usuário Logado e seu Profile (que contem o endereco Stellar e Dados de KYC)
+  const { user, profile } = useAuth();
 
   // Pegamos o e-mail do usuário e extraímos apenas a parte antes do "@" para usar de nome
   const userFirstName = user?.email ? user.email.split('@')[0] : 'Usuário';
@@ -25,13 +26,42 @@ export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isSendOpen, setIsSendOpen] = useState(false);
 
-  // Mock (Dados falsos) de transações para preencher a tela enquanto não temos o backend.
-  // No futuro, buscaremos isso do Supabase ou direto da rede Stellar.
-  const transactions = [
-    { id: 1, type: 'deposit', title: 'Depósito PIX', amount: '+ R$ 150,00', date: 'Hoje, 14:30', status: 'Concluído' },
-    { id: 2, type: 'send', title: 'Pagamento FitNow', amount: '- R$ 45,00', date: 'Ontem, 09:15', status: 'Concluído' },
-    { id: 3, type: 'deposit', title: 'Depósito PIX', amount: '+ R$ 500,00', date: '02 Mar, 18:20', status: 'Concluído' },
-  ];
+  // Estados de Saldo (Extraídos do Blockchain via Stellar Horizon)
+  const [brzBalance, setBrzBalance] = useState<string>('0.00');
+  const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  // Função isolada do Efeito para que possamos repassa-la como 'refresh'
+  const fetchOnChainBalance = async () => {
+    if (!profile?.stellar_address) return;
+    setIsLoadingBalance(true);
+
+    try {
+      // Busca Blockchain (Saldo BRZ & Histórico)
+      const [balances, history] = await Promise.all([
+        WalletFactory.getBalances(profile.stellar_address),
+        WalletFactory.getHistory(profile.stellar_address)
+      ]);
+
+      if (balances) {
+        setBrzBalance(parseFloat(balances.brz).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+      }
+      if (history) {
+        setTransactions(history);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  };
+
+  // Efeito Executado na montagem da tela
+  useEffect(() => {
+    fetchOnChainBalance();
+  }, [profile?.stellar_address]);
+
+  // Transações On-Chain alimentam o State `transactions`
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] animate-in fade-in duration-500">
@@ -72,7 +102,13 @@ export default function Dashboard() {
           <div className="flex flex-col mb-8">
             <div className="flex items-baseline gap-2">
               <span className="text-2xl text-gray-500 font-semibold">R$</span>
-              <h2 className="text-5xl font-bold text-white tracking-tight">0,00</h2>
+              {isLoadingBalance ? (
+                <div className="flex items-center text-gray-600 gap-2 h-12">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                </div>
+              ) : (
+                <h2 className="text-5xl font-bold text-white tracking-tight">{brzBalance}</h2>
+              )}
             </div>
           </div>
 
@@ -109,38 +145,82 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Lista de Transações (Renderizando o array 'transactions' criado acima) */}
+        {/* Lista de Transações (Renderizando o array 'transactions' On-Chain) */}
         <div className="space-y-4">
-          {transactions.map((tx) => (
-            <div key={tx.id} className="flex items-center justify-between p-4 bg-[#161616] rounded-2xl border border-white/5 hover:border-white/10 transition-colors cursor-pointer">
-              <div className="flex items-center gap-4">
-                {/* Ícone dinâmico: Verde para depósito, Branco para envio */}
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.type === 'deposit' ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-white/5 text-white'}`}>
-                  {tx.type === 'deposit' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
+          {transactions.length > 0 ? (
+            transactions.map((tx) => (
+              <a
+                key={tx.id}
+                href={`https://stellar.expert/explorer/testnet/tx/${tx.hash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-4 bg-[#161616] rounded-2xl border border-white/5 hover:border-white/10 transition-colors cursor-pointer block"
+              >
+                <div className="flex items-center gap-4">
+                  {/* Ícone dinâmico: Verde para depósito, Branco para envio */}
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.type === 'deposit' ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-white/5 text-white'}`}>
+                    {tx.type === 'deposit' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">{tx.title}</p>
+                    <p className="text-xs text-gray-500">{tx.date}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-medium">{tx.title}</p>
-                  <p className="text-xs text-gray-500">{tx.date}</p>
+                <div className="text-right">
+                  {/* Cor do valor dinâmica: Verde para entrada, Branco para saída */}
+                  <p className={`font-semibold ${tx.type === 'deposit' ? 'text-[#00E676]' : 'text-white'}`}>
+                    {tx.amount}
+                  </p>
+                  <p className="text-xs text-gray-500">{tx.status}</p>
                 </div>
-              </div>
-              <div className="text-right">
-                {/* Cor do valor dinâmica: Verde para entrada, Branco para saída */}
-                <p className={`font-semibold ${tx.type === 'deposit' ? 'text-[#00E676]' : 'text-white'}`}>
-                  {tx.amount}
-                </p>
-                <p className="text-xs text-gray-500">{tx.status}</p>
-              </div>
+              </a>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              {isLoadingBalance ? (
+                <Loader2 className="w-5 h-5 text-gray-500 animate-spin mx-auto" />
+              ) : (
+                <p className="text-sm text-gray-500">Nenhuma transação encontrada na sua carteira.</p>
+              )}
             </div>
-          ))}
+          )}
         </div>
       </div>
+
+      {/* Seção de NFTs / Identidade ZK */}
+      {profile?.kyc_verified && (
+        <div className="px-6 pb-24 bg-[#0A0A0A]">
+          <h3 className="text-lg font-semibold text-white mb-6">Ativos Digitais (NFTs)</h3>
+
+          <div className="bg-gradient-to-br from-[#161616] to-[#0A0A0A] p-5 rounded-2xl border border-[#00E676]/20 relative overflow-hidden flex items-center gap-4 group hover:border-[#00E676]/40 transition-colors cursor-pointer shadow-lg shadow-[#00E676]/5">
+            {/* Efeito visual de brilho no card */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E676]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#00E676]/20 transition-all"></div>
+
+            <div className="w-14 h-14 rounded-xl bg-[#00E676]/10 flex flex-shrink-0 items-center justify-center border border-[#00E676]/30">
+              <ShieldCheck className="w-7 h-7 text-[#00E676]" />
+            </div>
+
+            <div className="flex-1 w-full overflow-hidden">
+              <p className="text-xs text-[#00E676] font-bold tracking-widest uppercase mb-1 flex items-center gap-1.5">
+                KYCZK Token <Award className="w-3.5 h-3.5" />
+              </p>
+              <p className="text-white font-medium text-sm">Selo de Identidade ZK-STARK</p>
+              {profile.kyczk_hash && (
+                <p className="text-xs text-gray-500 mt-1 truncate" title={`Hash Completo: ${profile.kyczk_hash}`}>
+                  Hash: {profile.kyczk_hash}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Renderização dos Modais 
           Eles ficam "escondidos" no código e só aparecem quando os estados 
           isDepositOpen ou isSendOpen se tornam 'true'.
           Passamos a função onClose para que o modal saiba como se fechar.
       */}
-      <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} />
+      <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} onSuccess={fetchOnChainBalance} />
       <SendModal isOpen={isSendOpen} onClose={() => setIsSendOpen(false)} />
 
     </div>

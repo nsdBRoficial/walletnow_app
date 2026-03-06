@@ -4,31 +4,35 @@ Bem-vindo ao repositório do **WalletNow**, uma infraestrutura de *Wallet-as-a-S
 
 ## 📌 Status Atual do Projeto
 
-**Fase:** Prototipação UI/UX de Alta Fidelidade Concluída.
-**Próximo Passo:** Integração com Backend (Supabase) e Web3 (Stellar SDK).
+**Fase:** Prototipação UI/UX e Integração On-Chain Core Web3 Concluídas!
+O código atua como um app híbrido Web2 ➔ Web3, onde operações fiduciárias (PIX) são perfeitamente espelhadas na Blockchain Stellar utilizando patrocínios gasless e contratos em background.
 
-O código atual contém o frontend completo e navegável, simulando todas as interações e fluxos de usuário. O design segue o padrão Dark Mode com acentos verdes (`#00E676`), focado em mobile-first.
+### 📱 Módulos Implementados e Arquitetura
 
-### 📱 Telas Implementadas
+1.  **KYC Híbrido com ZK-STARKS (`IdentityService`)**:
+    * Verificação visual de ID (IA Gemini OCR) cruzando dados do cliente.
+    * Uma prova criptográfica de *"Conhecimento Zero"* (Zero-Knowledge Hash via SHA3) é emitida e gravada eternamente na blockchain como um Memo/NFT atestando a validade do usuário.
 
-1.  **Login/Onboarding (`/`)**: Interface limpa com opções de login via Google OAuth e Passkeys (WebAuthn).
-2.  **Dashboard (`/dashboard`)**: Visão geral do saldo em Reais (BRZ), histórico de transações com status visuais e botões de ação rápida (Depositar/Sacar).
-3.  **Modal de Depósito (PIX)**: Simulação de depósito via PIX Copia e Cola com geração de QR Code.
-4.  **Modal de Envio (Gasless)**: Fluxo de envio de saldo com confirmação biométrica simulada, abstraindo o conceito de "Gas Fee".
-5.  **Configurações e Identidade (`/settings`)**: Fluxo robusto de KYC (Know Your Customer) com:
-    *   Validação visual de dados pessoais (Nome, CPF, Data de Nascimento, Endereço).
-    *   Verificação simulada de E-mail e WhatsApp.
-    *   Módulo de upload de documentos e captura de Selfie (Liveness).
-    *   Simulação de geração de prova criptográfica **ZK-STARK** para validação de identidade na rede.
-    *   Exibição segura do endereço público Stellar.
+2.  **On-Ramp/Off-Ramp Gasless (`PaymentService` & `WalletFactory`)**:
+    *   **Lazy Onboarding Mágico**: Usuários recém-chegados não possuem a conta ativada na rede Stellar. O app intercepta o primeiro depósito (PIX), usa o cofre corporativo (Master) para *patrocinar (Sponsor)* a criação da conta na Ledger e abre a *Trustline* de forma invisível. Tudo em uma única transação no Stellar Horizon.
+    *   **Abstraction de Gás (Off-Ramp)**: Ao sacar (Enviar Pix), a carteira do usuário envia os fundos com zero XLM em saldo de taxas, pois a co-assinatura do Saque joga as *fees* de bloqueio (Gas) pro banco corporativo.
+
+3.  **Money Layer & Dashboard Automático**:
+    *   **Saldo On-chain**: O dashboard exibe instantaneamente o saldo indexado diretamente na Testnet.
+    *   **Histórico Descentralizado Real**: As transações não são listas mentirosas; o feed do Dashboard busca as `Payments Operations` autênticas do registro Ledger da conta.
+    *   Links dinâmicos levam direto para a auditoria de Hash do **Stellar Expert Explorer**.
+
+4.  **Câmbio Interno Direto (`SwapModal`)**:
+    * Sistema emulado de Procura de Rotas (Pathfinding) onde o usuário pode converter `BRZ` (Stablecoin Pareada) em outros ativos (`USDC`, `BTC`, `XLM`) de forma descentralizada pelo painel Pro Mode na configuração - acompanhado por interfaces ricas e Feedback Visual unificado.
 
 ## 🛠 Stack Tecnológica
 
 *   **Frontend:** React 19, Vite, Tailwind CSS v4.
-*   **Roteamento:** React Router DOM.
-*   **Ícones:** Lucide React.
-*   **Backend (Planejado):** Supabase (Auth, Database, Edge Functions).
-*   **Web3 (Planejado):** Stellar SDK (Contas, Transações, Trustlines para BRZ).
+*   **Contratos Inteligentes & Redes:** `@stellar/stellar-sdk` (Sponsoring, Keypairs, Payments).
+*   **Inteligência Artificial:** `Google GenAI` OCR e Análise de Conformidade Documental.
+*   **Iconografia & Componentização:** `Lucide React`
+*   **Backend Híbrido (Planejado):** `Supabase` para cache de chaves públicas.
+*   **Criptografia:** `js-sha3`.
 
 ## 🚀 Como Rodar o Projeto Localmente
 
@@ -37,20 +41,24 @@ O código atual contém o frontend completo e navegável, simulando todas as int
     npm install
     ```
 
-2.  **Inicie o servidor de desenvolvimento:**
+2.  **Variáveis Obrigatórias no `.env` Ambiental:**
+    Para que as transações na Blockchain Stellar operem através do "Cofre" do banco virtual, defina as variáveis na sua raiz:
+    ```env
+    VITE_STELLAR_ISSUER_PUBLIC="GB7B4NBWHT6N773S4R3Y4BJV3W5EJV6M63Y66GTRT2423UADQO6M44M5"
+    VITE_STELLAR_ISSUER_SECRET="[CHAVE-SECRETA-MINT]"
+    VITE_GEMINI_API_KEY="[CHAVE-IA-OCR-KYC]"
+    ```
+
+3.  **Inicie o servidor de desenvolvimento:**
     ```bash
     npm run dev
     ```
 
-3.  **Acesse no navegador:**
-    O terminal exibirá a URL local (geralmente `http://localhost:3000` ou `http://localhost:5173`).
+4.  **Acesse no navegador:**
+    A aplicação estará em `http://localhost:3000` (ou porta alternativa).
 
-## 🧠 Arquitetura e Decisões de Design
+## 🧠 Filosofia de Design e UX
 
-*   **Mobile-First:** A interface foi construída pensando primariamente na experiência em dispositivos móveis, utilizando os prefixos responsivos do Tailwind (`sm:`, `md:`) para adaptar a telas maiores.
-*   **Componentização:** Modais e layouts foram separados para facilitar a manutenção e reutilização.
-*   **Comentários Didáticos:** Todo o código fonte está ricamente comentado em Português do Brasil, explicando não apenas *o que* o código faz, mas *por que* foi feito dessa forma, facilitando o onboarding de novos desenvolvedores e a transição para ferramentas de IA (como o Arkham IDX).
+Todo nosso ecossistema foi desenhado sob o dogma: *"O usuário não se importa com a tecnologia do motor; ele só quer dirigir fácil"* (Full Abstraction). Alertas do navegador (`alert()`) foram eliminados e substituídos por modais modulares, com Loader Spinners (Tratamento Async) e CheckMarks de completude, proporcionando um ar Premium a todas as interfaces web3.
 
-## ⏭ Próximos Passos (Handoff para Arkham IDX)
-
-O próximo passo é iniciar a integração real do backend. Para isso, utilize o arquivo `PROMPT_ARKHAM_IDX.md` incluído neste repositório. Ele contém as instruções exatas para o próximo agente de IA continuar o desenvolvimento a partir deste ponto.
+Desenvolvido para revolucionar o acesso Financeiro.

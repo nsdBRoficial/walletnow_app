@@ -1,10 +1,14 @@
-import { ArrowLeft, Camera, CheckCircle2, Copy, Loader2, ShieldAlert, ShieldCheck, UploadCloud, Mail, MessageCircle } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Camera, CheckCircle2, Copy, Loader2, ShieldAlert, ShieldCheck, UploadCloud, Mail, MessageCircle, ArrowDownLeft, ArrowUpRight, RefreshCw, Coins, ExternalLink } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { IdentityService } from '../services/identityService';
 import { WalletFactory } from '../services/walletFactory';
+import { OracleService } from '../services/oracleService';
+import ReceiveCryptoModal from '../components/modals/ReceiveCryptoModal';
+import SwapModal from '../components/modals/SwapModal';
+import SendModal from '../components/modals/SendModal';
 
 /**
  * Tela de Configurações e Identidade (The Trust Layer)
@@ -39,6 +43,58 @@ export default function Settings() {
   // Estados dos módulos de documentação (Simulação de Upload/Selfie)
   const [documentUploaded, setDocumentUploaded] = useState(false);
   const [selfieCaptured, setSelfieCaptured] = useState(false);
+
+  // Estados PRO Mode (Carteira Web3)
+  const [brzBalance, setBrzBalance] = useState<string>('0.00');
+  const [xlmBalance, setXlmBalance] = useState<string>('0.00');
+  const [xlmBrlPrice, setXlmBrlPrice] = useState<number>(0);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+
+  // Estados para os Modais Web3
+  const [isReceiveOpen, setIsReceiveOpen] = useState(false);
+  const [isSendOpen, setIsSendOpen] = useState(false);
+  const [isSwapOpen, setIsSwapOpen] = useState(false);
+
+  // Efeito para carregar os saldos da Blockchain no Pro Mode
+  useEffect(() => {
+    async function loadWeb3Data() {
+      if (!profile?.stellar_address) return;
+      setIsLoadingBalance(true);
+      try {
+        const [balances, brlPrice] = await Promise.all([
+          WalletFactory.getBalances(profile.stellar_address),
+          OracleService.getXlmToBrlPrice()
+        ]);
+        if (balances) {
+          setBrzBalance(balances.brz);
+          setXlmBalance(balances.xlm);
+        }
+        setXlmBrlPrice(brlPrice);
+      } catch (e) {
+        console.error("Falha ao carregar Web3 Pro Mode", e);
+      } finally {
+        setIsLoadingBalance(false);
+      }
+    }
+    loadWeb3Data();
+  }, [profile?.stellar_address]);
+
+  // Efeito para carregar os dados se o perfil já foi verificado
+  useEffect(() => {
+    if (profile?.kyc_verified) {
+      setKycStatus('verified');
+      setName(profile.full_name || '');
+      setCpf(profile.cpf || '');
+      setPhone(profile.whatsapp || '');
+      setBirthDate(profile.birth_date || '');
+      setAddress(profile.address || '');
+      // Mock de verificações aprovadas
+      setEmailStatus('verified');
+      setPhoneStatus('verified');
+      setDocumentUploaded(true);
+      setSelfieCaptured(true);
+    }
+  }, [profile]);
 
   // Lógica simples de validação visual (Retorna true se o campo estiver preenchido corretamente)
   const isNameValid = name.length > 5;
@@ -387,39 +443,116 @@ export default function Settings() {
           </div>
         </section>
 
-        {/* Seção 2: Informações da Carteira Web3 */}
         <section>
-          <h2 className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-4">Carteira Web3</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm text-gray-400 font-medium uppercase tracking-wider flex items-center gap-2">
+              Carteira Web3 <span className="text-[10px] bg-[#00E676]/20 text-[#00E676] px-2 py-0.5 rounded uppercase font-bold tracking-widest border border-[#00E676]/30">Pro Mode</span>
+            </h2>
+          </div>
 
-          <div className="bg-[#161616] rounded-[24px] p-6 border border-white/5 shadow-lg">
-            <label className="text-xs text-gray-500 mb-2 block">Endereço Stellar</label>
+          <div className="bg-[#161616] rounded-[24px] p-6 border border-white/5 shadow-lg space-y-6">
+            <div>
+              <label className="text-xs text-gray-500 mb-2 block">Endereço Public (Ledger Stellar)</label>
 
-            {/* Exibição do Endereço Público (Public Key) */}
-            <div className="flex items-center justify-between bg-black/50 border border-white/10 p-4 rounded-xl">
-              <span className="text-sm text-gray-300 truncate mr-4 font-mono">
-                {profile?.stellar_address
-                  ? `${profile.stellar_address.substring(0, 8)}...${profile.stellar_address.substring(profile.stellar_address.length - 8)}`
-                  : 'Gerando carteira...'
-                }
-              </span>
-              <button
-                onClick={() => {
-                  if (profile?.stellar_address) {
-                    navigator.clipboard.writeText(profile.stellar_address);
-                    // Opcional: Adicionar um Toast de sucesso aqui
+              {/* Exibição do Endereço Público (Public Key) */}
+              <div className="flex items-center justify-between bg-black/50 border border-white/10 p-4 rounded-xl group hover:border-white/20 transition-colors">
+                <span className="text-sm text-gray-300 truncate mr-4 font-mono">
+                  {profile?.stellar_address
+                    ? `${profile.stellar_address.substring(0, 8)}...${profile.stellar_address.substring(profile.stellar_address.length - 8)}`
+                    : 'Gerando carteira...'
                   }
-                }}
-                className="text-gray-500 hover:text-[#00E676] transition-colors"
-                title="Copiar Endereço"
-              >
-                <Copy className="w-5 h-5" />
-              </button>
+                </span>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      if (profile?.stellar_address) {
+                        navigator.clipboard.writeText(profile.stellar_address);
+                      }
+                    }}
+                    className="text-gray-500 hover:text-[#00E676] transition-colors"
+                    title="Copiar Endereço"
+                  >
+                    <Copy className="w-5 h-5" />
+                  </button>
+                  {profile?.stellar_address && (
+                    <a
+                      href={`https://stellar.expert/explorer/testnet/account/${profile.stellar_address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-500 hover:text-[#00E676] transition-colors"
+                      title="Explorar na Stellar Expert"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
 
-            {/* Texto educativo para o usuário */}
-            <p className="text-xs text-gray-500 mt-4 leading-relaxed">
-              Esta é a sua chave pública na rede Stellar. Suas chaves privadas são protegidas por criptografia e acessíveis apenas via sua biometria (Passkey).
-            </p>
+            {/* Balanços On-Chain Transparentes */}
+            <div>
+              <label className="text-xs text-gray-500 mb-2 block">Seus Ativos Blockchain</label>
+              <div className="space-y-3">
+                {/* Stablecoin BRZ */}
+                <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full border border-white/10 bg-[#161616] flex items-center justify-center">
+                      <span className="text-xs font-bold text-white">BRZ</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">BRZ Token</p>
+                      <p className="text-[10px] text-gray-500">Brazilian Digital Token</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(brzBalance).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-[10px] text-[#00E676]">Transfero (Issuer)</p>
+                  </div>
+                </div>
+
+                {/* Cripto Nativa XLM */}
+                <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full border border-[#00E676]/20 bg-[#00E676]/5 flex items-center justify-center">
+                      <Coins className="w-5 h-5 text-[#00E676]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Lúmens (XLM)</p>
+                      <p className="text-[10px] text-gray-500">Moeda Nativa da Rede</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(xlmBalance).toFixed(4)} <span className="text-xs text-gray-500">XLM</span></p>
+                    {(xlmBrlPrice > 0 && !isLoadingBalance) && (
+                      <p className="text-[10px] text-gray-500">~ R$ {(parseFloat(xlmBalance) * xlmBrlPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ações Hardcore (Pro Mode) */}
+            <div className="pt-2">
+              <label className="text-xs text-gray-500 mb-3 block">Ações Cripto Descentralizadas</label>
+              <div className="grid grid-cols-3 gap-2">
+                <button onClick={() => setIsReceiveOpen(true)} className="flex flex-col items-center justify-center py-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 text-gray-400 hover:text-white">
+                  <ArrowDownLeft className="w-5 h-5 mb-2" />
+                  <span className="text-[10px] font-medium uppercase">Receber</span>
+                </button>
+                <button onClick={() => setIsSendOpen(true)} className="flex flex-col items-center justify-center py-4 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 text-gray-400 hover:text-white">
+                  <ArrowUpRight className="w-5 h-5 mb-2" />
+                  <span className="text-[10px] font-medium uppercase">Enviar</span>
+                </button>
+                <button onClick={() => setIsSwapOpen(true)} className="flex flex-col items-center justify-center py-4 bg-white/5 hover:bg-[#F27D26]/20 hover:border-[#F27D26]/30 rounded-xl transition-colors border border-white/10 text-[#F27D26]">
+                  <RefreshCw className="w-5 h-5 mb-2" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider">Swap</span>
+                </button>
+              </div>
+              <p className="text-[10px] text-gray-600 mt-4 text-center">
+                Aviso: O Modo PRO permite interagir diretamente com Contratos e Ativos que não são moedas fiduciárias garantidas e a responsabilidade das transações é custodiada inteiramente na sua Biometria Pessoal.
+              </p>
+            </div>
+
           </div>
         </section>
 
@@ -435,6 +568,14 @@ export default function Settings() {
         </button>
 
       </div>
+
+      <ReceiveCryptoModal isOpen={isReceiveOpen} onClose={() => setIsReceiveOpen(false)} />
+      <SwapModal isOpen={isSwapOpen} onClose={() => setIsSwapOpen(false)} />
+      <SendModal
+        isOpen={isSendOpen}
+        onClose={() => setIsSendOpen(false)}
+        onSuccess={() => { }}
+      />
     </div>
   );
 }
