@@ -52,11 +52,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .from('profiles')
                 .select('*')
                 .eq('id', userId)
-                .single();
+                .maybeSingle(); // Usa maybeSingle para não lançar erro se a linha não existir
 
             if (error) {
                 console.error('Erro ao buscar profile do BD:', error);
                 return;
+            }
+
+            // Fallback de Segurança: Se o banco não rodou o Trigger, nós forçamos a inserção do usuário!
+            if (!data) {
+                console.warn('⚠️ Perfil não encontrado na base. Forçando a inserção (Upsert)...');
+                const { data: newProfile, error: insertError } = await supabase
+                    .from('profiles')
+                    .upsert([{ id: userId }])
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error('Erro fatal tentando criar perfil:', insertError);
+                    return;
+                }
+                data = newProfile;
             }
 
             // 2. A MÁGICA WaaS OCCORRE AQUI: O usuário não possui endereço ainda?

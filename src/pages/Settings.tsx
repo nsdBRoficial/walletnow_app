@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { IdentityService } from '../services/identityService';
+import { WalletFactory } from '../services/walletFactory';
 
 /**
  * Tela de Configurações e Identidade (The Trust Layer)
@@ -75,19 +77,63 @@ export default function Settings() {
   };
 
   /**
-   * Função que simula o processamento criptográfico (ZK-STARK) final
+   * Função que Processa a auditoria e Criptografa na Blockchain (ZK-STARK)
    */
-  const handleVerify = () => {
-    if (!canSubmit) return;
+  const handleVerify = async () => {
+    if (!canSubmit || !profile) return;
 
-    // 1. Muda o status para 'processing' (Mostra o spinner principal)
     setKycStatus('processing');
 
-    // 2. Aguarda 3 segundos simulando a comunicação com a rede blockchain
-    setTimeout(() => {
-      // 3. Muda o status para 'verified' (Desabilita campos e mostra mensagem de sucesso)
+    try {
+      console.log('⏳ Iniciando Validação Zero-Knowledge KYC...');
+
+      // 1. Gera o Super Hash Híbrido Criptografando todos os dados do formulário
+      const secretSalt = profile.id; // Nosso 'Salt' inquebrável será o UUID interno do usuário
+      const zkHash = IdentityService.generateZKHash(name, cpf, phone, email, birthDate, address, secretSalt);
+
+      // 2. Garantia de Carteira WaaS (WalletFactory)
+      // Caso a internet falhou no login e ele ainda não tem carteira criada, forçamos criação
+      let targetAddress = profile.stellar_address;
+      if (!targetAddress) {
+        console.log('Criando a carteira do usuário no ato da validação KYC...');
+        targetAddress = await WalletFactory.provisionWalletForUser(profile.id);
+        if (!targetAddress) throw new Error('Falha ao instanciar carteira digital para mintagem KMS.');
+      }
+
+      // 3. Recuperação do Segredo Local e Mintagem ZK (CAP-33 Dual Signature)
+      const userSecretKey = WalletFactory.getSecretKey(profile.id);
+      if (!userSecretKey) throw new Error('Credencial secreta indisponível no dispositivo.');
+
+      const txHash = await IdentityService.mintReputationZK(targetAddress, userSecretKey, zkHash);
+      if (!txHash) throw new Error('A Blockchain rejeitou a transação do Selo KYC.');
+
+      console.log('✅ Token ZK-STARK Mintado. Ledger TX:', txHash);
+
+      // 4. Salvaguardando a Confiança Master no BD
+      // Só gravamos no banco DEPOIS da Blockchain atestar que mintou o hash pra sempre.
+      const { error: dbError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: name,
+          cpf: cpf.replace(/\D/g, ''),
+          whatsapp: phone.replace(/\D/g, ''),
+          birth_date: birthDate,
+          address: address,
+          kyc_verified: true,
+          kyczk_hash: zkHash // Guardamos o Hash para o front-end poder validar futuramente
+        })
+        .eq('id', profile.id);
+
+      if (dbError) throw new Error(`Banco de Dados Database Rejeitou Update: ${dbError.message}`);
+
+      // Tudo perfeito, marca a UI com selo imutável ✅
       setKycStatus('verified');
-    }, 3000);
+
+    } catch (err: any) {
+      console.error('❌ Falha na Camada de KYC ZK-STARK:', err.message);
+      setKycStatus('pending'); // Rebote para o usuário conseguir tentar novamente
+      alert(err.message); // Temporário para MVP
+    }
   };
 
   return (
@@ -177,9 +223,19 @@ export default function Settings() {
                   <input
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      // Se a pessoa colar com 55 na frente (ex: 5511999999999), tiramos o 55 pra formatar limpo
+                      if (val.startsWith('55') && val.length > 11) val = val.slice(2);
+
+                      if (val.length > 11) val = val.slice(0, 11);
+                      if (val.length > 7) val = `(${val.slice(0, 2)}) ${val.slice(2, 7)}-${val.slice(7)}`;
+                      else if (val.length > 2) val = `(${val.slice(0, 2)}) ${val.slice(2)}`;
+
+                      setPhone(val);
+                    }}
                     disabled={kycStatus !== 'pending' || phoneStatus === 'verified'}
-                    placeholder="+55 (11) 90000-0000"
+                    placeholder="(11) 90000-0000"
                     className="w-full bg-transparent text-white outline-none disabled:opacity-50"
                   />
                   {/* Se verificado, mostra o check verde. Se não, mostra o botão de verificar via WhatsApp. */}
@@ -222,7 +278,14 @@ export default function Settings() {
                   <input
                     type="text"
                     value={cpf}
-                    onChange={(e) => setCpf(e.target.value)}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 11) val = val.slice(0, 11);
+                      if (val.length > 9) val = val.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+                      else if (val.length > 6) val = val.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+                      else if (val.length > 3) val = val.replace(/(\d{3})(\d{1,3})/, "$1.$2");
+                      setCpf(val);
+                    }}
                     disabled={kycStatus !== 'pending'}
                     placeholder="000.000.000-00"
                     className="w-full bg-transparent text-white outline-none disabled:opacity-50"
@@ -238,7 +301,13 @@ export default function Settings() {
                   <input
                     type="text"
                     value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 8) val = val.slice(0, 8);
+                      if (val.length > 4) val = val.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
+                      else if (val.length > 2) val = val.replace(/(\d{2})(\d{1,2})/, "$1/$2");
+                      setBirthDate(val);
+                    }}
                     disabled={kycStatus !== 'pending'}
                     placeholder="DD/MM/AAAA"
                     className="w-full bg-transparent text-white outline-none disabled:opacity-50"
