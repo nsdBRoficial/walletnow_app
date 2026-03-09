@@ -63,22 +63,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .eq('id', userId)
                 .maybeSingle(); // Usa maybeSingle para não lançar erro vermelho se a linha for recém-nascida
 
-            // [AUTO-LINKING OAUTH FIX]
-            // Se não encontrou dados e o usuário acabou de logar via OAuth (Google),
-            // Vamos verificar silenciosamente se JÁ EXISTE um profile com esse mesmo e-mail na base de dados
-            // criado por outro provedor (Magic Link). Se existir, adotaremos a conta antiga como mestre.
-            if (!data && user && user.email) {
-                const { data: existingProfile } = await supabase
+            // [AUTO-LINKING OAUTH FIX PRO]
+            // O trigger de banco de dados (handle_new_user) cria uma linha vazia assim que o usuário loga, 
+            // então `data` raramente será nulo.
+            // Para forçar a fusão de contas duplicadas de OAuth (Google) e Magic Link,
+            // vamos escanear a base procurando se existe QUALQUER OUTRA linha com este email que JÁ tenha KYC Verificado,
+            // e forçaremos a UI a adotar ela como Perfil Mestre!
+            if (user && user.email) {
+                const { data: existingProfiles } = await supabase
                     .from('profiles')
                     .select('*')
                     .eq('email', user.email)
-                    .maybeSingle();
+                    .order('kyc_verified', { ascending: false }); // Traz os perfis verificados (true) no topo da lista
 
-                if (existingProfile) {
-                    console.log(`🔗 Identidade Fundida Automática: O e-mail ${user.email} logou como ${user.id} mas assumirá o perfil mestre herdado ${existingProfile.id}.`);
-                    // Não alteramos a sessão root do Supabase (para evitar logout), 
-                    // apenas entregamos para a UI os dados ricos do ID antigo (Selo KYC de volta)!
-                    data = existingProfile;
+                if (existingProfiles && existingProfiles.length > 0) {
+                    const masterProfile = existingProfiles[0]; // Pega o perfil mais "rico"
+
+                    // Se o perfil mestre detectado for diferente do esqueleto recém-criado para este fluxo de login:
+                    if (masterProfile.id !== userId && masterProfile.kyc_verified) {
+                        console.log(`🔗 Identidade Fundida Automática: O navegador conectou em ${userId} mas a UI usará a bagagem de ${masterProfile.id} pois já possui KYC.`);
+                        // Substituímos os "dados vazios" recém nascidos pelos dados plenos do perfil antigo!
+                        data = masterProfile;
+                    } else if (!data) {
+                        // Caso a inserção do banco falhou e data for falsy
+                        data = masterProfile;
+                    }
                 }
             }
 
