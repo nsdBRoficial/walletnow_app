@@ -63,6 +63,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .eq('id', userId)
                 .maybeSingle(); // Usa maybeSingle para não lançar erro vermelho se a linha for recém-nascida
 
+            // [AUTO-LINKING OAUTH FIX]
+            // Se não encontrou dados e o usuário acabou de logar via OAuth (Google),
+            // Vamos verificar silenciosamente se JÁ EXISTE um profile com esse mesmo e-mail na base de dados
+            // criado por outro provedor (Magic Link). Se existir, adotaremos a conta antiga como mestre.
+            if (!data && user && user.email) {
+                const { data: existingProfile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('email', user.email)
+                    .maybeSingle();
+
+                if (existingProfile) {
+                    console.log(`🔗 Identidade Fundida Automática: O e-mail ${user.email} logou como ${user.id} mas assumirá o perfil mestre herdado ${existingProfile.id}.`);
+                    // Não alteramos a sessão root do Supabase (para evitar logout), 
+                    // apenas entregamos para a UI os dados ricos do ID antigo (Selo KYC de volta)!
+                    data = existingProfile;
+                }
+            }
+
             if (error) {
                 console.error('Erro ao buscar profile do BD:', error);
                 return;
