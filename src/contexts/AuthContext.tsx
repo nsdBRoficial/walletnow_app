@@ -10,7 +10,13 @@ export interface UserProfile {
     id: string;
     email: string;
     stellar_address: string | null;
-    // Outros campos futuros como nome, KYC status, etc.
+    full_name?: string | null;
+    cpf?: string | null;
+    whatsapp?: string | null;
+    birth_date?: string | null;
+    address?: string | null;
+    kyc_verified?: boolean;
+    kyczk_hash?: string | null;
 }
 
 /**
@@ -48,11 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadProfileAndWallet = async (userId: string) => {
         try {
             // 1. Buscamos o registro atual na database 'profiles'
+            // O Supabase associa cada método de login (Google vs Magic Link) a um UUID (id) independente 
+            // a não ser que a opção "Link Identities" esteja ativada no Painel Auth do Supabase!
+            // Por isso, se você logar no Google com um email que já logou via Link, ele pode vir limpo (novo UUID).
             let { data, error } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', userId)
-                .maybeSingle(); // Usa maybeSingle para não lançar erro se a linha não existir
+                .maybeSingle(); // Usa maybeSingle para não lançar erro vermelho se a linha for recém-nascida
 
             if (error) {
                 console.error('Erro ao buscar profile do BD:', error);

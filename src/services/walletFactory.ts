@@ -83,7 +83,12 @@ export const WalletFactory = {
      * pois precisaremos dessa chave para "assinar/autorizar" a transação na rede Stellar.
      */
     getSecretKey(userId: string): string | null {
-        return localStorage.getItem(`${STORAGE_KEY_PREFIX}${userId}`);
+        try {
+            return localStorage.getItem(`${STORAGE_KEY_PREFIX}${userId}`);
+        } catch (e) {
+            console.error("📛 WalletFactory: Acesso negado ao LocalStorage (Modo Anônimo?).", e);
+            return null;
+        }
     },
 
     /**

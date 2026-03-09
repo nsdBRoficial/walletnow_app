@@ -1,64 +1,67 @@
-# 🚀 WalletNow - Web3 Abstraction Layer (MVP)
+# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.7)
 
-Bem-vindo ao repositório do **WalletNow**, uma infraestrutura de *Wallet-as-a-Service* (WaaS) projetada para abstrair toda a complexidade da Web3 (chaves privadas, taxas de rede, etc.) e entregar uma experiência de usuário ("UX Zero") idêntica à de um banco digital moderno.
+*O fim da complexidade na Web3.* 
 
-## 📌 Status Atual do Projeto
+**WalletNow** é o Protótipo Front-End de uma "Wallet-as-a-Service" (WaaS) projetado para demonstrar uma experiência de usuário (UX) revolucionária e "Zero-Knowledge". O objetivo principal é abstrair a percepção de que o usuário está utilizando uma Blockchain, fornecendo a interface elegante e imediata de um banco digital moderno.
 
-**Fase:** Prototipação UI/UX e Integração On-Chain Core Web3 Concluídas!
-O código atua como um app híbrido Web2 ➔ Web3, onde operações fiduciárias (PIX) são perfeitamente espelhadas na Blockchain Stellar utilizando patrocínios gasless e contratos em background.
+---
 
-### 📱 Módulos Implementados e Arquitetura
+## 🎯 Proposta de Valor e MVP v0.7
 
-1.  **KYC Híbrido com ZK-STARKS (`IdentityService`)**:
-    * Verificação visual de ID (IA Gemini OCR) cruzando dados do cliente.
-    * Uma prova criptográfica de *"Conhecimento Zero"* (Zero-Knowledge Hash via SHA3) é emitida e gravada eternamente na blockchain como um Memo/NFT atestando a validade do usuário.
+O aplicativo simula e desenha com altíssima fidelidade a fundação para:
+1. **Passkeys Bridge (Em Desenvolvimento - Sprint 8):** Login sem senha verdadeira utilizando Sensores Biométricos do Celular via WebAuthn, garantindo que "A sua digital/rosto é a chave privada".
+2. **Ledger Abstraction (Stellar Network):** O usuário enxerga Saldo em `BRZ` (Brazilian Digital Token) e realiza ações de "PIX Copia e Cola", enquanto por debaixo dos panos ocorrem transações de Smart Contracts na Blockchain Stellar.
+3. **Identity Layer (Sprint 7 Concluída ✔️):** Um fluxo nativo integrando API de Câmera, OCR Multimodal Inteligente Liveness (via Google Gemini) e Criptografia Híbrida salva no Supabase Storage via RLS. O CPF do usuário vira um "Hash Pós-Quântico" e é persistido via protocolo CAP-33 de *Sponsored Reserves*!
+4. **On-Chain Send (Pro Mode):** Aba oculta para transferências descentralizadas em Lumens, USDC, BTC e BRZ para especialistas.
 
-2.  **On-Ramp/Off-Ramp Gasless (`PaymentService` & `WalletFactory`)**:
-    *   **Lazy Onboarding Mágico**: Usuários recém-chegados não possuem a conta ativada na rede Stellar. O app intercepta o primeiro depósito (PIX), usa o cofre corporativo (Master) para *patrocinar (Sponsor)* a criação da conta na Ledger e abre a *Trustline* de forma invisível. Tudo em uma única transação no Stellar Horizon.
-    *   **Abstraction de Gás (Off-Ramp)**: Ao sacar (Enviar Pix), a carteira do usuário envia os fundos com zero XLM em saldo de taxas, pois a co-assinatura do Saque joga as *fees* de bloqueio (Gas) pro banco corporativo.
+## 🚀 Tecnologias Utilizadas (A Stack do Futuro)
+- **React 19 + Vite** (Performance PWA)
+- **Tailwind CSS v4** + **Lucide Icons** (Aparência Dark-Mode Premium de Neomorfismo)
+- **Google Gemini 1.5 Pro** (Validação Inteligente Biometria/Facial Liveness/OCR)
+- **Supabase** (Autenticação E-mail/Phone OTP, Storage RLS e Banco de Dados Serverless)
+- **Stellar SDK v12.x** (Conexão Horizon RPC para Transações e Mintagem)
 
-3.  **Money Layer & Dashboard Automático**:
-    *   **Saldo On-chain**: O dashboard exibe instantaneamente o saldo indexado diretamente na Testnet.
-    *   **Histórico Descentralizado Real**: As transações não são listas mentirosas; o feed do Dashboard busca as `Payments Operations` autênticas do registro Ledger da conta.
-    *   Links dinâmicos levam direto para a auditoria de Hash do **Stellar Expert Explorer**.
+## 📁 Estrutura de Arquivos
 
-4.  **Câmbio Interno Direto (`SwapModal`)**:
-    * Sistema emulado de Procura de Rotas (Pathfinding) onde o usuário pode converter `BRZ` (Stablecoin Pareada) em outros ativos (`USDC`, `BTC`, `XLM`) de forma descentralizada pelo painel Pro Mode na configuração - acompanhado por interfaces ricas e Feedback Visual unificado.
+A organização do código foi feita seguindo o princípio da responsabilidade única (*"Ridiculamente Didático"*):
+*   `/src/pages/`
+    *   `Login.tsx` (Entrada via OAuth/Passkeys)
+    *   `Dashboard.tsx` (Homepage com gráficos e saldos reais)
+    *   `Settings.tsx` (The Trust Layer: Documentação e KYC Zero-Knowledge)
+*   `/src/components/modals/` 
+    *   `DepositModal.tsx`, `ReceiveCryptoModal.tsx`, `OnChainSendModal.tsx`, `SwapModal.tsx`
+*   `/src/services/`
+    *   `walletFactory.ts` (Instancia carteiras na Stellar Testnet e embute o Segredo localmente)
+    *   `identityService.ts` (Cérebro do Liveness e Hash ZK-STARK com o Gemini)
+    *   `storageService.ts` (Persistência segura no Supabase KYC Docs)
 
-## 🛠 Stack Tecnológica
+## 🛠️ Como rodar o MVP (v0.7) no seu computador
 
-*   **Frontend:** React 19, Vite, Tailwind CSS v4.
-*   **Contratos Inteligentes & Redes:** `@stellar/stellar-sdk` (Sponsoring, Keypairs, Payments).
-*   **Inteligência Artificial:** `Google GenAI` OCR e Análise de Conformidade Documental.
-*   **Iconografia & Componentização:** `Lucide React`
-*   **Backend Híbrido (Planejado):** `Supabase` para cache de chaves públicas.
-*   **Criptografia:** `js-sha3`.
+### Pré-requisitos
+Ter o [Node.js](https://nodejs.org/) instalado.
 
-## 🚀 Como Rodar o Projeto Localmente
+```bash
+# 1. Instale as dependências (Rápido via Vite)
+npm install
 
-1.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
+# 2. Inicie o Servidor de Desenvolvimento
+npm run dev
+```
 
-2.  **Variáveis Obrigatórias no `.env` Ambiental:**
-    Para que as transações na Blockchain Stellar operem através do "Cofre" do banco virtual, defina as variáveis na sua raiz:
-    ```env
-    VITE_STELLAR_ISSUER_PUBLIC="GB7B4NBWHT6N773S4R3Y4BJV3W5EJV6M63Y66GTRT2423UADQO6M44M5"
-    VITE_STELLAR_ISSUER_SECRET="[CHAVE-SECRETA-MINT]"
-    VITE_GEMINI_API_KEY="[CHAVE-IA-OCR-KYC]"
-    ```
+*Nota:* Para os testes da Blockchain (Testnet) e Gemini (IA) funcionarem, você deve criar um arquivo `.env` na raiz e preencher conforme o modelo `.env.example`. Não se esqueça de provisionar as Migrations do Supabase (`/supabase/migrations/`).
 
-3.  **Inicie o servidor de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
+---
 
-4.  **Acesse no navegador:**
-    A aplicação estará em `http://localhost:3000` (ou porta alternativa).
+## 🗺️ Roadmap de Lançamento e Testes Manuais
 
-## 🧠 Filosofia de Design e UX
+### Fase Atual: Aprovada (v0.7 Finalizada)
+- [x] Sprints 1 a 6: UI, Tailwind, Dashboard, Criação Oculta de Carteiras.
+- [x] Sprint 7: Verificação OTP (Twilio e Magic Links), Extração Multimodal e KYC ZK-STARK.
+  - **Como Testar:** Acesse `Configurações`, coloque o e-mail, valide-o no seu provedor (via Supabase), tire uma foto visivelmente falsa da ID e do rosto (Gemini irá rejeitar), refaça com sucesso para a Transação de Liveness ser mintada e registrada no Bucket `/kyc_docs` do Supabase!
 
-Todo nosso ecossistema foi desenhado sob o dogma: *"O usuário não se importa com a tecnologia do motor; ele só quer dirigir fácil"* (Full Abstraction). Alertas do navegador (`alert()`) foram eliminados e substituídos por modais modulares, com Loader Spinners (Tratamento Async) e CheckMarks de completude, proporcionando um ar Premium a todas as interfaces web3.
+### Próximos Passos (Sprints Futuras)
+- **Sprint 8:** Integração defintiva da *SimpleWebAuthn* no Login (Fim das senhas convencionais).
+- **Sprint 9:** Transformar os botões de Enviar e Sacar (Simulados) em despachos transacionais reativos conectados via `PaymentService`.
 
-Desenvolvido para revolucionar o acesso Financeiro.
+---
+*Disclaimer Técnico: Este repositório foca no Frontend e integrações PaaS. Em "Produção", o gerenciamento das chaves privadas (`localStorage`) precisa ser movido para um enclave TEE criptografado.*
