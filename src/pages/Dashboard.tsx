@@ -18,8 +18,10 @@ export default function Dashboard() {
   // Consumindo dados do Usuário Logado e seu Profile (que contem o endereco Stellar e Dados de KYC)
   const { user, profile } = useAuth();
 
-  // Pegamos o e-mail do usuário e extraímos apenas a parte antes do "@" para usar de nome
-  const userFirstName = user?.email ? user.email.split('@')[0] : 'Usuário';
+  // Prioriza o nome validado no KYC, fazendo fallback para o email ou 'Usuário' genérico
+  const userFirstName = profile?.full_name
+    ? profile.full_name.split(' ')[0]
+    : (user?.email ? user.email.split('@')[0] : 'Usuário');
 
   // Estados (State) para controlar se os modais (janelas sobrepostas) estão abertos ou fechados.
   // 'false' significa que começam fechados.

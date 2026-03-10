@@ -38,8 +38,11 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
    * Função que simula o fluxo completo de um pagamento Web3.
    */
   const handleSend = async () => {
-    // Se não tiver valor ou PIX digitado, aborta.
-    if (!amount || !pixKey || !profile?.id) return;
+    // 1. Determina a Chave PIX final. Obrigatória ser o CPF se o usuário for validado (Prevenção à Lavagem de Dinheiro)
+    const finalPixKey = profile?.kyc_verified && profile?.cpf ? profile.cpf : pixKey;
+
+    // Se não tiver valor ou PIX, aborta.
+    if (!amount || !finalPixKey || !profile?.id) return;
 
     // Muda o status para mostrar o "spinner" de carregamento e autenticação
     setStatus('authenticating');
@@ -53,7 +56,7 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
       if (!secretKey) throw new Error("Chave Passkey local não encontrada. Impossível assinar a saída.");
 
       // 3. Dispara a Transação de Resgate na Blockchain Stellar
-      await PaymentService.burnBRZToPix(secretKey, amount, pixKey);
+      await PaymentService.burnBRZToPix(secretKey, amount, finalPixKey);
 
       // 4. Sucesso!
       setStatus('success');
@@ -134,15 +137,19 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
               </div>
             </div>
 
-            {/* Campo de Chave PIX */}
+            {/* Campo de Chave PIX (Travado no CPF se KYC estiver válido) */}
             <div className="w-full">
-              <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 block">Chave PIX de Destino</label>
+              <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 flex items-center justify-between">
+                <span>Chave PIX de Destino</span>
+                {profile?.kyc_verified && <span className="text-[#00E676] text-[10px] bg-[#00E676]/10 px-2 py-0.5 rounded-full">CPF Vinculado (KYC)</span>}
+              </label>
               <input
                 type="text"
-                value={pixKey}
+                value={profile?.kyc_verified && profile?.cpf ? profile.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") : pixKey}
+                disabled={!!profile?.kyc_verified}
                 placeholder="celular, cpf ou email"
                 onChange={(e) => setPixKey(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 focus:border-[#00E676] text-white p-4 rounded-xl outline-none transition-colors"
+                className="w-full bg-black/50 border border-white/10 focus:border-[#00E676] text-white p-4 rounded-xl outline-none transition-colors disabled:opacity-60 disabled:text-[#00E676] disabled:font-bold disabled:cursor-not-allowed"
               />
             </div>
 
