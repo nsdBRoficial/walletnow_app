@@ -192,7 +192,13 @@ export default function Dashboard() {
         <div className="px-6 pb-24 bg-[#0A0A0A]">
           <h3 className="text-lg font-semibold text-white mb-6">Ativos Digitais (NFTs)</h3>
 
-          <div className="bg-gradient-to-br from-[#161616] to-[#0A0A0A] p-5 rounded-2xl border border-[#00E676]/20 relative overflow-hidden flex items-center gap-4 group hover:border-[#00E676]/40 transition-colors cursor-pointer shadow-lg shadow-[#00E676]/5">
+          {/* Card Interativo: Leva para o Explorer da Transação na Blockchain */}
+          <a
+            href={`https://stellar.expert/explorer/testnet/tx/${profile.kyczk_hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-br from-[#161616] to-[#0A0A0A] p-5 rounded-2xl border border-[#00E676]/20 relative overflow-hidden flex items-center gap-4 group hover:border-[#00E676]/40 text-left transition-colors cursor-pointer shadow-lg shadow-[#00E676]/5 block"
+          >
             {/* Efeito visual de brilho no card */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E676]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#00E676]/20 transition-all"></div>
 
@@ -206,12 +212,16 @@ export default function Dashboard() {
               </p>
               <p className="text-white font-medium text-sm">Selo de Identidade ZK-STARK</p>
               {profile.kyczk_hash && (
-                <p className="text-xs text-gray-500 mt-1 truncate" title={`Hash Completo: ${profile.kyczk_hash}`}>
+                <p className="text-xs text-gray-500 mt-1 truncate" title={`Ver no Explorer: ${profile.kyczk_hash}`}>
                   Hash: {profile.kyczk_hash}
                 </p>
               )}
             </div>
-          </div>
+
+            <div className="flex-shrink-0 text-gray-600 group-hover:text-[#00E676] transition-colors">
+              <ArrowUpRight className="w-5 h-5 opacity-50 group-hover:opacity-100" />
+            </div>
+          </a>
         </div>
       )}
 
