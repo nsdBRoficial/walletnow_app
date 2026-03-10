@@ -451,7 +451,7 @@ export default function Settings() {
           birth_date: birthDate,
           address: address,
           kyc_verified: true,
-          kyczk_hash: zkHash // Guardamos o Hash para o front-end poder validar futuramente
+          kyczk_hash: txHash // [CORREÇÃO] Guardamos o TX Hash real da rede Stellar, não o payload interno
         })
         .eq('id', profile.id);
 
