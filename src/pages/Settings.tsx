@@ -394,7 +394,7 @@ export default function Settings() {
     setKycStatus('processing');
 
     try {
-      console.log('⏳ Iniciando Validação Zero-Knowledge KYC...');
+      // Sanitizado para Produção
 
       // 0. Inteligência Artificial: Perícia Documental e Facial Liveness
       // [OTIMIZAÇÃO] Adicionada validação preventiva de tamanho. Imagens imensas estouram a API da Gemini.
@@ -438,7 +438,7 @@ export default function Settings() {
       const txHash = await IdentityService.mintReputationZK(targetAddress, userSecretKey, zkHash);
       if (!txHash) throw new Error('A Blockchain rejeitou a transação do Selo KYC.');
 
-      console.log('✅ Token ZK-STARK Mintado. Ledger TX:', txHash);
+      // Sanitizado para Produção
 
       // 4. Salvaguardando a Confiança Master no BD
       // Só gravamos no banco DEPOIS da Blockchain atestar que mintou o hash pra sempre.
@@ -509,7 +509,7 @@ export default function Settings() {
       // Não tenha que digitar João e o CPF tudo dnv toda hora 
       // (a menos que recarreguem a página - mas a doc/selfie já foram apagadas da tela requirindo novo upload)
 
-      console.log('🔄 Ambiente de Testes Resetado');
+      // Sanitizado para Produção
       alert('Selo revogado! Você pode reiniciar a simulação preenchendo o fluxo novamente.');
 
     } catch (err: any) {

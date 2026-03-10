@@ -42,7 +42,7 @@ export const IdentityService = {
         const payload = `${name.toLowerCase().trim()}:${cleanCpf}:${cleanPhone}:${email.toLowerCase().trim()}:${birthDate.trim()}:${address.toLowerCase().trim()}:${secretSalt}`;
 
         const zkHash = sha3_256(payload);
-        console.log(`🔐 Super-Hash ZK (SHA3-256) Computado: ${zkHash}`);
+        // Sanitizado para Produção: Não exibe o ZK Hash no F12
 
         return zkHash; // 32 bytes de pura segurança matemática
     },
@@ -63,7 +63,7 @@ export const IdentityService = {
         const errorDetails: string[] = [];
 
         try {
-            console.log('🤖 Iniciando varredura pericial multi-modal de IA no Google Gemini...');
+            // Sanitizado para Produção
 
             // [OTIMIZAÇÃO] Filtro Criptográfico de Estouro de Memória
             if (documentBase64.length > 8000000 || selfieBase64.length > 8000000) {
@@ -124,7 +124,7 @@ export const IdentityService = {
             });
 
             const responseText = response.text || '';
-            console.log('🧠 Perícia do Gemini finalizada. Saída Bruta:', responseText);
+            // Sanitizado para Produção: Não vazamos a saída bruta do JSON do Gemini no client
 
             // Remoção de formatações Markdown da resposta
             const cleanJson = responseText.replace(/\`\`\`json|\`\`\`/gi, '').trim();
@@ -209,7 +209,7 @@ export const IdentityService = {
      */
     async mintReputationZK(userPublicKey: string, userSecretKey: string, zkHash: string): Promise<string | null> {
         try {
-            console.log('⛓️ Blockchain: Preparando gravação do Ledger e Token de Conformidade (KYCZK)...');
+            // Sanitizado para Produção
 
             // ATENÇÃO: Contas Emissoras (Issuers) custeiam as taxas.
             // Esta seria a carteira MASTER da empresa, abastecida de Lúmens.
@@ -223,7 +223,7 @@ export const IdentityService = {
             const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET);
             const userKeypair = Keypair.fromSecret(userSecretKey);
 
-            console.log('📡 Cores: Buscando sequência de transação no Horizon Network...');
+            // Sanitizado para Produção
             const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
 
             // Protocolo CAP-33 (Sponsored Reserves)
@@ -296,10 +296,9 @@ export const IdentityService = {
             transaction.sign(issuerKeypair);
             transaction.sign(userKeypair);
 
-            console.log('🚀 Transmitindo assinatura ZK-STARK (Sponsored) para a Stellar Testnet...');
+            // Sanitizado para Produção
             const response = await server.submitTransaction(transaction);
 
-            console.log(`✅ Sucesso Histórico! Cripto Identidade gerada!`);
             // Retorna a "Placa do Carro" da transação, você poderá buscá-la Explorer da Stellar!
             return response.hash;
 

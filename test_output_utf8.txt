@@ -1,0 +1,119 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/Usu├írio/Documents/GitHub/walletnow_app[39m
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Faker: Deve retornar falha por Face Mismatch
+[22m[39m­ƒñû Iniciando varredura pericial multi-modal de IA no Google Gemini...
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Faker: Deve retornar falha por Face Mismatch
+[22m[39m­ƒºá Per├¡cia do Gemini finalizada. Sa├¡da Bruta: {"tipo_documento":"RG","nome":"Jo├úo Teste","cpf":"12345678900","data_nascimento":"01/01/1990","facial_match":false,"is_valid_document":true}
+
+node.exe : [90mstderr[2m | 
+src/services/identityService.test.ts[2m > 
+[22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m 
+> [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > 
+[22m[2mMock_Faker: Deve retornar falha por Face Mismatch
+No C:\Program Files\nodejs\npx.ps1:29 caractere:3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m   
+ ...r Face Mismatch:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39mÔÜá´©Å ALERTA KYC! Falha de Per├¡cia. Dados 
+divergentes ou Facial Match Negado. [
+  [32m'Ô£à Legibilidade: Documento reconhecido como RG.'[39m,
+  [32m'Ô£à CPF: Autenticado com sucesso.'[39m,
+  [32m'Ô£à Titularidade: Nome confere com documento.'[39m,
+  [32m'Ô£à Maioridade: Data de Nascimento confere. 
+(01011990)'[39m,
+  [32m'ÔØî Biometria Facial: A pessoa da Selfie tem tra├ºos 
+divergentes da foto no Documento.'[39m
+]
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Fraude: Deve retornar falha por Data Mismatch (CPF Divergente do OCR)
+[22m[39m­ƒñû Iniciando varredura pericial multi-modal de IA no Google Gemini...
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Fraude: Deve retornar falha por Data Mismatch (CPF Divergente do OCR)
+[22m[39m­ƒºá Per├¡cia do Gemini finalizada. Sa├¡da Bruta: {"tipo_documento":"RG","nome":"Jo├úo Teste","cpf":"99999999999","data_nascimento":"01/01/1990","facial_match":true,"is_valid_document":true}
+
+[90mstderr[2m | src/services/identityService.test.ts[2m > 
+[22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m 
+> [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > 
+[22m[2mMock_Fraude: Deve retornar falha por Data Mismatch 
+(CPF Divergente do OCR)
+[22m[39mÔÜá´©Å ALERTA KYC! Falha de Per├¡cia. Dados 
+divergentes ou Facial Match Negado. [
+  [32m'Ô£à Legibilidade: Documento reconhecido como RG.'[39m,
+  [32m'ÔØî CPF: Divergente. Digitado: 12345678900 | Lido: 
+99999999999'[39m,
+  [32m'Ô£à Titularidade: Nome confere com documento.'[39m,
+  [32m'Ô£à Maioridade: Data de Nascimento confere. 
+(01011990)'[39m,
+  [32m'Ô£à Biometria Facial: Selfie aut├¬ntica (Liveness 
+Match).'[39m
+]
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Aprovado: Deve retornar status aprovado e vazio errorDetails ao ter match total
+[22m[39m­ƒñû Iniciando varredura pericial multi-modal de IA no Google Gemini...
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m1. Mocks de IA Multimodal (Gemini API)[2m > [22m[2mMock_Aprovado: Deve retornar status aprovado e vazio errorDetails ao ter match total
+[22m[39m­ƒºá Per├¡cia do Gemini finalizada. Sa├¡da Bruta: {"tipo_documento":"RG","nome":"Jo├úo Teste","cpf":"12345678900","data_nascimento":"01/01/1990","facial_match":true,"is_valid_document":true}
+Ô£à IA aprovou! O documento do usu├írio ├® leg├¡timo, id├¬ntico ao formul├írio e o rosto confere.
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m2. Estabilidade P├│s-Qu├óntica (js-sha3)[2m > [22m[2mGarante robustez do Hash H├¡brido sem random seeds mut├íveis
+[22m[39m­ƒöÉ Super-Hash ZK (SHA3-256) Computado: f4609401227d0f04c4b3e64c73e2a3cdbdecd5a91d77c1c0b7e287d3571bb7a0
+­ƒöÉ Super-Hash ZK (SHA3-256) Computado: f4609401227d0f04c4b3e64c73e2a3cdbdecd5a91d77c1c0b7e287d3571bb7a0
+
+[90mstdout[2m | src/services/identityService.test.ts[2m > [22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m > [22m[2m3. Intercepta├º├úo On-Chain (Stellar SDK)[2m > [22m[2mDeve emitir transa├º├úo de Patroc├¡nio CAP-33 e incorporar Memo.hash corretamente
+[22m[39mÔøô´©Å Blockchain: Preparando grava├º├úo do Ledger e Token de Conformidade (KYCZK)...
+­ƒôí Cores: Buscando sequ├¬ncia de transa├º├úo no Horizon Network...
+
+[90mstderr[2m | src/services/identityService.test.ts[2m > 
+[22m[2mIdentityService & Core Integrity Tests (Sprint 8)[2m 
+> [22m[2m3. Intercepta├º├úo On-Chain (Stellar SDK)[2m > 
+[22m[2mDeve emitir transa├º├úo de Patroc├¡nio CAP-33 e 
+incorporar Memo.hash corretamente
+[22m[39mÔØî Blockchain Cr├¡tico: Falha na transa├º├úo: 
+invalid encoded string
+
+ [31mÔØ»[39m src/services/identityService.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 109[2mms[22m[39m
+       [32mÔ£ô[39m Mock_Faker: Deve retornar falha por Face Mismatch[32m 4[2mms[22m[39m
+       [32mÔ£ô[39m Mock_Fraude: Deve retornar falha por Data Mismatch (CPF Divergente do OCR)[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m Mock_Aprovado: Deve retornar status aprovado e vazio errorDetails ao ter match total[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m Garante robustez do Hash H├¡brido sem random seeds mut├íveis[32m 3[2mms[22m[39m
+[31m       [31m├ù[31m Deve emitir transa├º├úo de Patroc├¡nio CAP-33 e incorporar Memo.hash corretamente[39m[32m 97[2mms[22m[39m
+       [32mÔ£ô[39m Recupera endere├ºo original e status KYC de uma conta magic link legada evitando Wallet Factory duplicada[32m 1[2mms[22m[39m
+
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 1 
+[49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m 
+src/services/identityService.test.ts[2m > 
+[22mIdentityService & Core Integrity Tests (Sprint 8)[2m > 
+[22m3. Intercepta├º├úo On-Chain (Stellar SDK)[2m > [22mDeve 
+emitir transa├º├úo de Patroc├¡nio CAP-33 e incorporar 
+Memo.hash corretamente
+[31m[1mError[22m: Falha Horizon: invalid encoded string[39m
+[36m [2mÔØ»[22m Object.mintReputationZK 
+src/services/identityService.ts:[2m316:19[22m[39m
+    [90m314| [39m                detailError [33m=[39m 
+err[33m.[39mmessage[33m;[39m
+    [90m315| [39m            }
+    [90m316| [39m            [35mthrow[39m [35mnew[39m 
+[33mError[39m([32m`Falha Horizon: 
+[39m[36m${[39mdetailError[36m}[39m[32m`[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m317| [39m        }
+    [90m318| [39m    }
+[90m [2mÔØ»[22m 
+src/services/identityService.test.ts:[2m152:32[22m[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 18:19:15
+[2m   Duration [22m 833ms[2m (transform 116ms, setup 0ms, import 495ms, tests 109ms, environment 0ms)[22m
+
