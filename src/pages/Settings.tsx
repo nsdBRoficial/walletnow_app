@@ -329,47 +329,31 @@ export default function Settings() {
   };
 
   /**
-   * Envio de código de verificação para o WhatsApp (Via Supabase Auth OTP + Twilio)
+   * Envio de código de verificação para o WhatsApp (MOCK para pular bloqueio Twilio Free)
    */
   const handleVerifyPhone = async () => {
     if (!isPhoneValid) return;
     setPhoneStatus('sending');
 
-    // Formatar número para padrão E.164 livre do 9º Dígito
-    const formattedPhone = formatTwilioPhone(phone);
-
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        phone: formattedPhone,
-        options: {
-          channel: 'whatsapp'
-        }
-      });
-      if (error) throw error;
-
+    // MOCK: Simular o carregamento e mostrar um OTP de teste em vez de bater na API restrita
+    setTimeout(() => {
       setPhoneStatus('idle');
       setShowPhoneOtp(true);
-    } catch (err: any) {
-      console.error(err);
-      setPhoneStatus('idle');
-      alert(`Erro no WhatsApp OTP: ${err.message || 'Verifique configurações do Twilio no Supabase.'}`);
-    }
+      alert('MODO MOCK ATIVADO: Como o Twilio Trial bloqueia números não verificados, use o código "123456" para aprovar este WhatsApp.');
+    }, 1500);
   };
 
   const handleConfirmPhoneOtp = async () => {
     if (phoneOtp.length < 6) return;
 
+    // MOCK: Validar o código fake "123456"
+    if (phoneOtp !== '123456') {
+      alert('Token OTP de WhatsApp Inválido. No Modo Mock, use "123456".');
+      return;
+    }
+
     try {
-      const formattedPhone = formatTwilioPhone(phone);
-      const { error } = await supabase.auth.verifyOtp({
-        phone: formattedPhone,
-        token: phoneOtp,
-        type: 'sms' // o Supabase usa "sms" na verificação final mesmo enviado por whatsapp
-      });
-
-      if (error) throw error;
-
-      // [CORREÇÃO] O OTP validou. Precisamos garantir que este número seja
+      // O OTP (Mock) validou. Precisamos garantir que este número seja
       // salvo no Perfil do Banco de Dados imediatamente, para não sumir no F5
       // antes do usuário enviar o formulário ZK completo.
       if (profile?.id) {
@@ -380,7 +364,7 @@ export default function Settings() {
       setShowPhoneOtp(false);
     } catch (err: any) {
       console.error(err);
-      alert('Token OTP de WhatsApp Inválido ou Expirado.');
+      alert('Erro Crítico ao atualizar o perfil com o WhatsApp simulado.');
     }
   };
 
