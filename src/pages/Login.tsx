@@ -40,7 +40,8 @@ export default function Login() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          // Precisamos adicionar /walletnow/ para bater com a subpasta do Hostinger, senão o supabase volta para a raiz '/' e renderiza a Landing
+          redirectTo: `${window.location.origin}/walletnow/dashboard`
         }
       });
       if (error) throw error;

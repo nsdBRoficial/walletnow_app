@@ -67,6 +67,22 @@ export const WalletFactory = {
 
             console.log('✅ WalletFactory: Carteira gerada, vinculada ao usuário e chave privada salva localmente!');
 
+            // 4. ATIVAÇÃO BLOCKCHAIN (MUITO IMPORTANTE!)
+            // Uma chave matemática da Stellar só passa a existir fisicamente no Ledger (Livro-Razão)
+            // quando ela recebe o depósito mínimo de ativação (1 XLM).
+            // Em produção, a Plataforma (Sponsor) paga isso. Na Testnet, chamamos o Robô (Friendbot).
+            try {
+                console.log(`🤖 WalletFactory: Acordando o Friendbot para ativar a conta [${publicKey.slice(0,5)}...] na blockchain...`);
+                // O Friendbot vai dar 10.000 XLM de graça para essa nova carteira para fins de teste.
+                const response = await fetch(`https://horizon-testnet.stellar.org/friendbot?addr=${encodeURIComponent(publicKey)}`);
+                const responseJSON = await response.json();
+                console.log("SUCCESS! You have a new account :)", responseJSON);
+            } catch (e) {
+                console.error("ERROR! Algo deu errado ao ativar a conta via Friendbot:", e);
+                // Mesmo que o Friendbot falhe (rate limit etc), retornamos a chave pública
+                // e o Sponsor precisará ativá-la manualmente no momento da Carga de BRZ.
+            }
+
             // Devolvemos apenas a Chave Pública para que o nosso Front-end (React) possa exibi-la na tela de Configurações
             return publicKey;
 
