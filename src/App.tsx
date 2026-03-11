@@ -23,8 +23,8 @@ export default function App() {
   return (
     // Envolve a aplicação com o estado global de Autenticação (Supabase)
     <AuthProvider>
-      {/* BrowserRouter: Habilita o roteamento baseado na URL do navegador */}
-      <BrowserRouter>
+      {/* BrowserRouter: Habilita o roteamento baseado na URL do navegador com Subdiretório */}
+      <BrowserRouter basename="/walletnow">
         {/* Routes: Container que agrupa todas as rotas possíveis da aplicação */}
         <Routes>
 
