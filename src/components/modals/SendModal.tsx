@@ -34,12 +34,13 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
   // Se o modal não estiver aberto, não renderiza nada.
   if (!isOpen) return null;
 
+  // 1. Determina a Chave PIX final. Obrigatória ser o CPF se o usuário for validado (Prevenção à Lavagem de Dinheiro)
+  const finalPixKey = profile?.kyc_verified && profile?.cpf ? profile.cpf : pixKey;
+
   /**
    * Função que simula o fluxo completo de um pagamento Web3.
    */
   const handleSend = async () => {
-    // 1. Determina a Chave PIX final. Obrigatória ser o CPF se o usuário for validado (Prevenção à Lavagem de Dinheiro)
-    const finalPixKey = profile?.kyc_verified && profile?.cpf ? profile.cpf : pixKey;
 
     // Se não tiver valor ou PIX, aborta.
     if (!amount || !finalPixKey || !profile?.id) return;
@@ -162,7 +163,7 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
             <button
               onClick={handleSend}
               // O botão fica desabilitado se faltar infos OU se já estiver autenticando
-              disabled={!amount || !pixKey || status === 'authenticating'}
+              disabled={!amount || !finalPixKey || status === 'authenticating'}
               className="w-full flex items-center justify-center gap-3 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-4 px-6 rounded-2xl transition-all duration-300 font-bold disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(0,230,118,0.2)]"
             >
               {/* Se estiver autenticando, mostra o ícone girando (Loader2). Senão, mostra a digital. */}

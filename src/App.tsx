@@ -5,6 +5,7 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RootLayout from './components/layout/RootLayout';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
@@ -28,14 +29,15 @@ export default function App() {
         <Routes>
 
           {/* 
-            O RootLayout atua como um "Wrapper" (Embrulho). 
-            Todas as rotas aninhadas dentro dele herdarão seu layout base 
-            (como o fundo escuro, padding padrão, etc).
+            O RootLayout atua como "Wrapper" apenas para as páginas do App (Dashboard/Settings)
+            A Landing Page é injetada FORA do RootLayout para ter tela cheia sem paddings/navbars.
           */}
-          <Route element={<RootLayout />}>
+          
+          <Route path="/" element={<Landing />} />
 
-            {/* Rota de Login/Onboarding (Ponto de entrada público) */}
-            <Route path="/" element={<Login />} />
+          <Route element={<RootLayout />}>
+            {/* Rota de Login/Onboarding */}
+            <Route path="/login" element={<Login />} />
 
             {/* 🚀 Grupo de Rotas Protegidas (Exige Login para acessar) */}
             <Route element={<ProtectedRoute />}>

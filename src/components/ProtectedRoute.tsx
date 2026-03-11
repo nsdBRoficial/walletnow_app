@@ -24,7 +24,7 @@ export const ProtectedRoute: React.FC = () => {
 
     // Se não tem sessão ativa, joga de volta para o Onboarding (Login)
     if (!session) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     // Usuário autenticado, permite o acesso.
