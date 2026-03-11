@@ -101,7 +101,9 @@ export default function Login() {
               { type: "public-key", alg: -257 }
             ],
             authenticatorSelection: {
-              authenticatorAttachment: "platform",
+              // Removido "authenticatorAttachment: 'platform'" intencionalmente.
+              // Isso permite que o usuário use o celular (Cross-Device via QR Code) para liberar a Passkey
+              // num PC Desk que não tenha biometria embutida (Windows Hello), evitando a tela travada de "Insira o USB".
               userVerification: "preferred"
             },
             timeout: 60000,
@@ -135,8 +137,10 @@ export default function Login() {
       // Erro "NotAllowedError" ocorre se o usuário clicar no (X) do Modal de Biometria do Windows/Mac
       if (err.name === 'NotAllowedError') {
         setErrorMsg('Operação de Biometria cancelada pelo usuário.');
+      } else if (err.name === 'NotSupportedError') {
+        setErrorMsg('Este navegador/dispositivo não suporta Passkeys.');
       } else {
-        setErrorMsg(err.message || 'Falha ao autenticar Passkey. Verifique o log (F12).');
+        setErrorMsg('Falha de hardware/Passkey. Tente logar via Celular ou use o Google. Detalhes (F12).');
       }
     } finally {
       setIsLoading(false);
