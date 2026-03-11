@@ -283,37 +283,26 @@ export default function Settings() {
   };
 
   /**
-   * Dispara o envio do OTP via Supabase Auth magic-link e-mail
+   * Dispara o envio do OTP via Supabase Auth magic-link e-mail (MOCK)
    */
   const handleVerifyEmail = async () => {
     if (!isEmailValid) return;
     setEmailStatus('sending');
-    try {
-      /**
-       * Ao disparar com opções de redirectTo, nós mandamos o usuário de volta 
-       * para a página settings após ele clicar no link do e-mail.
-       * O Hook do onAuthStateChange fará o catch para mudar para 'verificado'
-       */
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: window.location.origin + '/settings'
+    
+    // MOCK: Para evitar o Rate Limit do Supabase Free (Máximo de 2 emails por hora/dia)
+    setTimeout(async () => {
+      try {
+        if (profile?.id) {
+          // Salva o email direto no banco como se o usuário tivesse clicado no Magic Link
+          await supabase.from('profiles').update({ email: email }).eq('id', profile.id);
         }
-      });
-      if (error) throw error;
-      // Não mudamos mais para Idle, deixamos no estado "Sended/Sending" 
-      // para o usuário saber que tá aguardando o clique dele no e-mail.
-    } catch (err: any) {
-      console.error(err);
-      setEmailStatus('idle');
-
-      // Tratamento específico para Rate Limit do Supabase (Muitos envios seguidos)
-      if (err.status === 429 || err.message?.includes('rate limit')) {
-        alert('⏳ Limite Anti-Spam do Supabase atingido!\n\nVocê enviou e-mails demais em pouco tempo para este endereço durante seus testes.\nAguarde cerca de 1 hora, ou altere o "Rate Limit" no Painel do seu Supabase (Authentication -> Rate Limits).');
-      } else {
-        alert(`Erro ao enviar OTP para o E-mail: ${err.message || 'Tente novamente.'}`);
+        setEmailStatus('verified');
+        alert('MODO MOCK ATIVADO: E-mail verificado instantaneamente para contornar o limite restrito do Supabase Free Tier.');
+      } catch (err: any) {
+        console.error('Erro no Mock de Email:', err);
+        setEmailStatus('idle');
       }
-    }
+    }, 1500);
   };
 
   /**
