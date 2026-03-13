@@ -156,17 +156,18 @@ class WooviSDK {
 
     const amountInCents = Math.round(amountBRL * 100);
     const correlationID = `saque-${Date.now()}`;
+    const cleanCPF = pixKey.replace(/\D/g, ''); // Garante apenas números
 
-    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch)
+    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch v2)
     const payload = {
       correlationID,
-      value: amountInCents,
-      pixKey,
-      pixKeyType: 'CPF', // Forçado para compliance X402
-      taxID: pixKey      // O taxID (CPF) é obrigatório para transferências para pessoas físicas
+      value: amountInCents, // Inteiro (centavos)
+      pixKey: cleanCPF,
+      pixKeyType: 'CPF', 
+      taxID: cleanCPF      
     };
 
-    // ── DEBUG: Log do Payload enviado para Woovi (Necessário para validar 404/400) ──
+    // ── DEBUG: Log do Payload enviado para Woovi ──
     console.debug('[WooviService] transferPix | Enviando Payload:', JSON.stringify(payload, null, 2));
 
     const response = await fetch(`${WOOVI_BASE_URL}/pix-payment`, {
