@@ -1,4 +1,4 @@
-import { Keypair, Operation, TransactionBuilder, Networks, Asset, Horizon } from "@stellar/stellar-sdk";
+import { Keypair, Memo, Operation, TransactionBuilder, Networks, Asset, Horizon } from "@stellar/stellar-sdk";
 
 const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
 const BASE_FEE = '100000'; // Alta para prevenir delay na Testnet (0.01 XLM)
@@ -20,10 +20,18 @@ export const PaymentService = {
      * @param targetPublicKey A chave pública G... do cliente
      * @param amount Em BRL, ex: '150.00'
      * @param userSecretKey Necessário apenas no primeiro depósito (para assinar TrustLine CAP-33)
+     * @param correlationID (X402) ID de correlação da Woovi. Gravado no Stellar Memo para rastreabilidade completa.
      */
-    async mintBRW(targetPublicKey: string, amount: string, userSecretKey?: string): Promise<string | null> {
+    async mintBRW(targetPublicKey: string, amount: string, userSecretKey?: string, correlationID?: string): Promise<string | null> {
         try {
-            console.log(`🏦 PaymentService: Woovi PIX Confirmado! Mintando BRW R$ ${amount} para ${targetPublicKey.slice(0,5)}...`);
+            // X402 Memo: Formata o correlationID da Woovi como Memo da transação Stellar.
+            // Padrão: "X402:" + primeiros 22 chars do correlationID (limite Stellar = 28 chars).
+            // Isso garante rastreabilidade ponta-a-ponta: Woovi Gateway → Stellar Ledger.
+            const x402Memo = correlationID
+                ? Memo.text(`X402:${correlationID.slice(0, 22)}`)
+                : Memo.none();
+            console.log(`🏦 PaymentService: Woovi PIX Confirmado! Mintando BRW R$ ${amount} para ${targetPublicKey.slice(0,5)}... | ${correlationID ? `X402:${correlationID.slice(0,8)}...` : 'sem correlationID'}`);
+
 
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET!);
@@ -91,9 +99,11 @@ export const PaymentService = {
             }));
 
             // Construímos o pacote de Blocos (Transaction)
+            // O Memo X402 carrega o correlationID da Woovi para rastreabilidade no Ledger.
             const transactionBuilder = new TransactionBuilder(issuerAccount, {
                 fee: BASE_FEE,
-                networkPassphrase: Networks.TESTNET
+                networkPassphrase: Networks.TESTNET,
+                memo: x402Memo,
             }).setTimeout(30);
 
             operations.forEach(op => transactionBuilder.addOperation(op));
@@ -128,9 +138,9 @@ export const PaymentService = {
     /**
      * @deprecated Use mintBRW() em vez disso. Alias de retrocompatibilidade.
      */
-    async mintPixToBRZ(targetPublicKey: string, amount: string, userSecretKey?: string): Promise<string | null> {
+    async mintPixToBRZ(targetPublicKey: string, amount: string, userSecretKey?: string, correlationID?: string): Promise<string | null> {
         console.warn('⚠️ mintPixToBRZ está depreciado. Use mintBRW()');
-        return this.mintBRW(targetPublicKey, amount, userSecretKey);
+        return this.mintBRW(targetPublicKey, amount, userSecretKey, correlationID);
     },
 
     /**

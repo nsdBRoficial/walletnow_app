@@ -82,7 +82,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         if (status === 'COMPLETED') {
           // O Cliente PAGOU! Parar de perguntar ao gateway.
           clearInterval(pollingInterval);
-          triggerMinting(depositAmount);
+          triggerMinting(depositAmount, correlationID);
         } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
           clearInterval(pollingInterval);
           alert("A transação PIX expirou ou falhou no Gateway Woovi.");
@@ -103,7 +103,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     return () => clearInterval(pollingInterval);
   };
 
-  const triggerMinting = async (depositAmount: number) => {
+  const triggerMinting = async (depositAmount: number, correlationID?: string) => {
     if (!profile?.stellar_address || !profile.id) return;
 
     setPhase('minting');
@@ -113,7 +113,13 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       const userSecret = WalletFactory.getSecretKey(profile.id);
 
       // Conversão BRW real: PIX (BRL confirmado pela Woovi) ➔ BRW na Stellar Testnet
-      await PaymentService.mintBRW(profile.stellar_address, depositAmount.toString(), userSecret || undefined);
+      // O correlationID é passado como X402 Memo para rastreabilidade no Ledger
+      await PaymentService.mintBRW(
+        profile.stellar_address,
+        depositAmount.toString(),
+        userSecret || undefined,
+        correlationID  // X402: correlationID Woovi gravado no Stellar Memo
+      );
 
       setPhase('success');
       if (onSuccess) onSuccess();
@@ -123,7 +129,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       }, 3500);
     } catch (e: any) {
       alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar BRW Onchain: " + e.message);
-      setPhase('input'); // Volta pro input pra ele ver o saldo off chain possivelmente se tivermos feito cache, mas no MVP isso é tragédia.
+      setPhase('input');
     }
   };
 
@@ -195,9 +201,24 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
               <p className="text-2xl font-bold text-[#00E676] mt-1">R$ {pixData.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             </div>
 
-            {/* Simulated QR Code (Placeholder visual) */}
-            <div className="w-48 h-48 bg-white rounded-2xl p-4 flex items-center justify-center shadow-[0_0_30px_rgba(0,230,118,0.1)]">
-              <QrCode className="w-full h-full text-black" strokeWidth={1} />
+            {/* QR Code REAL gerado a partir do brCode EMV retornado pela Woovi. */}
+            {/* Usamos api.qrserver.com: zero npm extra, zero custo, apenas uma URL de imagem. */}
+            <div className="w-52 h-52 bg-white rounded-2xl p-3 flex items-center justify-center shadow-[0_0_30px_rgba(0,230,118,0.15)]">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixData.brCode)}&bgcolor=ffffff&color=000000&margin=0&format=png`}
+                alt="QR Code PIX — escaneie no app do seu banco"
+                width={200}
+                height={200}
+                className="w-full h-full rounded-xl"
+                onError={(e) => {
+                  // Fallback: Se a API de QR falhar, mostra texto
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                  if (target.parentElement) {
+                    target.parentElement.innerHTML = '<p class="text-black text-xs text-center font-mono p-2">⚠️ QR indisponível. Use Copia e Cola abaixo.</p>';
+                  }
+                }}
+              />
             </div>
 
             <div className="w-full">
@@ -229,7 +250,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
           <div className="flex flex-col items-center justify-center py-16 animate-in fade-in">
             <Zap className="w-12 h-12 text-[#F27D26] animate-bounce mb-4 fill-[#F27D26]/20" />
             <p className="text-white text-lg font-bold">PIX Sincronizado!</p>
-            <p className="text-gray-400 font-medium text-sm mt-1">Acioando Smart Contracts na Stellar Network...</p>
+            <p className="text-gray-400 font-medium text-sm mt-1">Emitindo BRW na Rede Stellar...</p>
             <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest font-mono">Mintando BRW On-Chain</p>
           </div>
         )}
