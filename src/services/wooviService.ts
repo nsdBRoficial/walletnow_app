@@ -2,15 +2,25 @@
  * Sprint 9.1: Woovi Gateway Service (PIX / OpenPix)
  *
  * Substitui o motor de pagamentos da Transfero pelo gateway da Woovi.
- * A Woovi (antiga OpenPix) é a switch bancária que gera cobranças PIX dinâmicas (EMV)
- * e notifica via Webhook/Polling quando o pagamento é confirmado pelo BACEN.
+ * Autenticação: Authorization: {AppID} no header (sem "Bearer", sem "Basic")
+ * O AppID é o Base64(ClientId:ClientSecret) gerado no painel Woovi → Autorização → AppID.
  *
  * Documentação: https://developers.woovi.com/api
- * Sandbox: https://app.woovi.com.br (usar as credenciais de homologação)
+ * Sandbox: https://app.woovi.com.br
  */
 
-const WOOVI_AUTH_TOKEN = import.meta.env.VITE_WOOVI_AUTH_TOKEN;
+// Header Woovi: Authorization: {AppID}
+// O VITE_WOOVI_APP_ID É o token Base64(ClientId:ClientSecret) — não é separado do auth token.
 const WOOVI_APP_ID = import.meta.env.VITE_WOOVI_APP_ID;
+
+// ── DEBUG: Exibe no Console se o AppID está chegando preenchido ou undefined ──
+// Remove este bloco antes de ir para produção.
+console.debug(
+  '[WooviService] VITE_WOOVI_APP_ID:',
+  WOOVI_APP_ID
+    ? `✅ Preenchido (${WOOVI_APP_ID.slice(0, 12)}...${WOOVI_APP_ID.slice(-6)})`
+    : '❌ UNDEFINED — verifique o .env.development e reinicie o servidor Vite'
+);
 
 // Base URL via Vite Proxy para evitar CORS no browser.
 // Em produção real, essa chamada deveria vir de um Backend (Edge Function / Worker).
@@ -25,7 +35,7 @@ const mockDatabase = new Map<string, { status: string; createdAt: number }>();
 export interface WooviCharge {
   correlationID: string;
   brCode: string; // A string Copia e Cola do PIX (EMV)
-  amount: number; // Em centavos
+  amount: number; // Em Reais (já convertido de centavos)
   status: 'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'ERROR_ON_CREATE';
 }
 
@@ -33,12 +43,15 @@ class WooviSDK {
   private isMockMode: boolean;
 
   constructor() {
-    // Opera em modo Mock se as credenciais não estiverem no .env
-    this.isMockMode = !WOOVI_AUTH_TOKEN || !WOOVI_APP_ID;
+    // Opera em modo Mock se o AppID não estiver configurado no .env
+    this.isMockMode = !WOOVI_APP_ID;
     if (this.isMockMode) {
-      console.warn('⚠️ WooviService: Credenciais não encontradas. Operando em MODO MOCK. Adicione VITE_WOOVI_AUTH_TOKEN e VITE_WOOVI_APP_ID ao .env.development para usar o Sandbox real.');
+      console.warn('⚠️ WooviService: VITE_WOOVI_APP_ID ausente. Operando em MODO MOCK. Adicione a variável ao .env.development e reinicie o Vite.');
+    } else {
+      console.info('✅ WooviService: AppID carregado. Modo SANDBOX REAL ativo.');
     }
   }
+
 
   /**
    * GET /api/v1/charge/:correlationID
@@ -52,7 +65,8 @@ class WooviSDK {
     const response = await fetch(`${WOOVI_BASE_URL}/charge/${correlationID}`, {
       method: 'GET',
       headers: {
-        'Authorization': WOOVI_AUTH_TOKEN,
+        // Woovi: Authorization header = AppID direto (Base64 do painel)
+        'Authorization': WOOVI_APP_ID,
         'Content-Type': 'application/json',
       },
     });
@@ -91,10 +105,15 @@ class WooviSDK {
       expiresIn: 3600, // 1 hora de validade
     };
 
+    // DEBUG: Confirma qual AppID está sendo usado no request
+    console.debug('[WooviService] createCharge | Authorization sendo enviado:',
+      WOOVI_APP_ID ? `${WOOVI_APP_ID.slice(0, 12)}...` : 'VAZIO!');
+
     const response = await fetch(`${WOOVI_BASE_URL}/charge`, {
       method: 'POST',
       headers: {
-        'Authorization': WOOVI_AUTH_TOKEN,
+        // Woovi: Authorization header = AppID direto (Base64 do painel → Autorização)
+        'Authorization': WOOVI_APP_ID,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
