@@ -32,54 +32,23 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     }
   }, [isOpen]);
 
-  // Se o modal não estiver aberto (isOpen === false), não renderiza nada na tela.
-  if (!isOpen) return null;
-
-  const handleCopy = () => {
-    if (!pixData?.brCode) return;
-    navigator.clipboard.writeText(pixData.brCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  /**
-   * Fase 1: Gerar o PIX Dinâmico via Woovi
-   */
-  const handleGeneratePix = async () => {
-    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0 || !profile?.id) return;
-
-    setPhase('generating');
-
-    try {
-      // 1. Chama o Gateway Woovi para gerar a cobrança Pix (QR Code EMV)
-      const result = await WooviService.createCharge(Number(amount), profile.id);
-
-      setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
-      setPhase('waiting_payment');
-
-    } catch (e: any) {
-      alert("Falha de Comunicação com Gateway Woovi: " + e.message);
-      setPhase('input');
-    }
-  };
-
   /**
    * Fase 2: Observador de Pagamento (Polling Woovi)
-   * Movemos a lógica para um useEffect para que o intervalo seja limpo 
-   * automaticamente se o modal fechar ou a fase mudar.
+   * Deve ficar no topo (Rules of Hooks)
    */
   useEffect(() => {
     let pollingInterval: NodeJS.Timeout;
 
-    if (phase === 'waiting_payment' && pixData?.correlationID) {
+    // Só inicia o polling se estivermos esperando e houver um correlationID
+    if (isOpen && phase === 'waiting_payment' && pixData?.correlationID) {
       const checkTick = async () => {
         try {
-          const status = await WooviService.checkPaymentStatus(pixData.correlationID);
+          const status = await WooviService.checkPaymentStatus(pixData.correlationID!);
           console.log(`📡 Polling PIX Woovi [${pixData.correlationID}] -> Status: ${status}`);
 
           if (status === 'COMPLETED') {
             clearInterval(pollingInterval);
-            triggerMinting(pixData.amount, pixData.correlationID);
+            triggerMinting(pixData.amount, pixData.correlationID!);
           } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
             clearInterval(pollingInterval);
             alert("A transação PIX expirou ou falhou no Gateway Woovi.");
@@ -98,9 +67,13 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     return () => {
       if (pollingInterval) clearInterval(pollingInterval);
     };
-  }, [phase, pixData]);
+  }, [isOpen, phase, pixData?.correlationID]);
 
-  const triggerMinting = async (depositAmount: number, correlationID?: string) => {
+  // Se o modal não estiver aberto (isOpen === false), não renderiza nada na tela.
+  // MAS os hooks devem ficar acima disto.
+  if (!isOpen) return null;
+
+  const triggerMinting = async (depositAmount: number, correlationID: string) => {
     if (!profile?.stellar_address || !profile.id) return;
 
     setPhase('minting');
@@ -110,24 +83,49 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       const userSecret = WalletFactory.getSecretKey(profile.id);
 
       // Conversão BRW real: PIX (BRL confirmado pela Woovi) ➔ BRW na Stellar Testnet
-      // O correlationID é passado como X402 Memo para rastreabilidade no Ledger
       await PaymentService.mintBRW(
         profile.stellar_address,
         depositAmount.toString(),
         userSecret || undefined,
-        correlationID  // X402: correlationID Woovi gravado no Stellar Memo
+        correlationID
       );
 
       setPhase('success');
       if (onSuccess) onSuccess();
 
+      // Fechamento automático solicitado: 3 segundos
       setTimeout(() => {
         onClose();
-      }, 3500);
+      }, 3000);
     } catch (e: any) {
       alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar BRW Onchain: " + e.message);
       setPhase('input');
     }
+  };
+
+  const handleGeneratePix = async () => {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0 || !profile?.id) return;
+
+    setPhase('generating');
+
+    try {
+      // 1. Chama o Gateway Woovi para gerar a cobrança Pix (QR Code EMV)
+      const result = await WooviService.createCharge(Number(amount), profile.id);
+
+      setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
+      setPhase('waiting_payment');
+
+    } catch (e: any) {
+      alert("Falha de Comunicação com Gateway Woovi: " + e.message);
+      setPhase('input');
+    }
+  };
+
+  const handleCopy = () => {
+    if (!pixData?.brCode) return;
+    navigator.clipboard.writeText(pixData.brCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
