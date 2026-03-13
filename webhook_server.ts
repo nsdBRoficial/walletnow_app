@@ -9,6 +9,9 @@ app.use(cors());
 
 const PORT = 4000;
 
+// Configurações do Issuer para Webhook (Produção)
+const ISSUER_SECRET = process.env.VITE_STELLAR_ISSUER_SECRET;
+
 // O Banco de Dados em Memória do Mock Server
 const fakeDatabase = new Map<string, {
     status: string,
@@ -73,6 +76,27 @@ app.get('/api/v1/deposits/:id', (req, res) => {
         id: transferoId,
         status: deposit.status
     });
+});
+
+// ROTA 4: WOOVI WEBHOOK (PLACEHOLDER)
+// Em produção, este endpoint receberia o aviso da Woovi quando o PIX fosse pago.
+app.post('/api/v1/webhooks/woovi', (req, res) => {
+    const event = req.body;
+    
+    console.log('🔔 [WEBHOOK WOOVI] Evento recebido:', event?.event);
+
+    if (event?.event === 'OPENPIX:CHARGE_COMPLETED') {
+        const correlationID = event?.charge?.correlationID;
+        const value = event?.charge?.value / 100;
+
+        console.log(`✅ [WEBHOOK WOOVI] Pagamento confirmado via Webhook! ID: ${correlationID} | Valor: R$ ${value}`);
+        
+        // Em um sistema real, aqui o backend chamaria o PaymentService.mintBRW 
+        // usando a chave do Issuer persistida no servidor.
+        console.info('ℹ️  A mintagem automática via Webhook exige integração com Secret Key no Backend.');
+    }
+
+    return res.status(200).json({ status: 'ok' });
 });
 
 app.listen(PORT, () => {

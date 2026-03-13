@@ -57,9 +57,6 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
       setPhase('waiting_payment');
 
-      // 2. Inicia o Observador Assíncrono (Polling) usando o correlationID da Woovi
-      startPixObserver(result.correlationID, result.amount);
-
     } catch (e: any) {
       alert("Falha de Comunicação com Gateway Woovi: " + e.message);
       setPhase('input');
@@ -67,41 +64,41 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   };
 
   /**
-   * Fase 2: Observador de Pagamento (Polling Woovi) e Fase 3: Mintagem BRW On-Chain
+   * Fase 2: Observador de Pagamento (Polling Woovi)
+   * Movemos a lógica para um useEffect para que o intervalo seja limpo 
+   * automaticamente se o modal fechar ou a fase mudar.
    */
-  const startPixObserver = (correlationID: string, depositAmount: number) => {
+  useEffect(() => {
     let pollingInterval: NodeJS.Timeout;
 
-    // Função que checa o status silenciosamente
-    const checkTick = async () => {
-      try {
-        const status = await WooviService.checkPaymentStatus(correlationID);
-        console.log(`📡 Polling PIX Woovi [${correlationID}] -> Status: ${status}`);
+    if (phase === 'waiting_payment' && pixData?.correlationID) {
+      const checkTick = async () => {
+        try {
+          const status = await WooviService.checkPaymentStatus(pixData.correlationID);
+          console.log(`📡 Polling PIX Woovi [${pixData.correlationID}] -> Status: ${status}`);
 
-        // A Woovi confirma depósitos com status COMPLETED.
-        if (status === 'COMPLETED') {
-          // O Cliente PAGOU! Parar de perguntar ao gateway.
-          clearInterval(pollingInterval);
-          triggerMinting(depositAmount, correlationID);
-        } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
-          clearInterval(pollingInterval);
-          alert("A transação PIX expirou ou falhou no Gateway Woovi.");
-          setPhase('input');
+          if (status === 'COMPLETED') {
+            clearInterval(pollingInterval);
+            triggerMinting(pixData.amount, pixData.correlationID);
+          } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
+            clearInterval(pollingInterval);
+            alert("A transação PIX expirou ou falhou no Gateway Woovi.");
+            setPhase('input');
+          }
+        } catch (err) {
+          console.warn("Erro no tick de polling, ignorando...", err);
         }
-      } catch (err) {
-        console.warn("Erro no tick de polling, ignorando...", err);
-      }
+      };
+
+      // Tenta imediatamente e depois a cada 5s
+      checkTick();
+      pollingInterval = setInterval(checkTick, 5000);
+    }
+
+    return () => {
+      if (pollingInterval) clearInterval(pollingInterval);
     };
-
-    // Bater no Endpoint GET status a cada 5 segundos
-    pollingInterval = setInterval(checkTick, 5000);
-
-    // Bate agora a primeira vez pra não atrasar
-    checkTick();
-
-    // Cleanup: Se o usuário fechar o modal ou desmontar a tela no meio do depósito, para de berrar na API.
-    return () => clearInterval(pollingInterval);
-  };
+  }, [phase, pixData]);
 
   const triggerMinting = async (depositAmount: number, correlationID?: string) => {
     if (!profile?.stellar_address || !profile.id) return;
@@ -240,7 +237,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
 
             <div className="w-full bg-[#00E676]/10 border border-[#00E676]/20 py-3 px-4 rounded-xl flex items-center justify-center gap-3">
               <Loader2 className="w-4 h-4 text-[#00E676] animate-spin" />
-              <span className="text-xs font-semibold text-[#00E676] uppercase tracking-wider">Aguardando Pagamento Fiduciário (Polling)</span>
+              <span className="text-xs font-semibold text-[#00E676] uppercase tracking-wider">Aguardando pagamento PIX...</span>
             </div>
           </div>
         )}
@@ -249,9 +246,9 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         {phase === 'minting' && (
           <div className="flex flex-col items-center justify-center py-16 animate-in fade-in">
             <Zap className="w-12 h-12 text-[#F27D26] animate-bounce mb-4 fill-[#F27D26]/20" />
-            <p className="text-white text-lg font-bold">PIX Sincronizado!</p>
-            <p className="text-gray-400 font-medium text-sm mt-1">Emitindo BRW na Rede Stellar...</p>
-            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest font-mono">Mintando BRW On-Chain</p>
+            <p className="text-white text-lg font-bold text-center">Pagamento confirmado!</p>
+            <p className="text-gray-400 font-medium text-sm mt-1 text-center">Emitindo seus tokens BRW na Blockchain...</p>
+            <p className="text-[10px] text-gray-600 mt-4 uppercase tracking-widest font-mono">X402 Ledger Sync active</p>
           </div>
         )}
 

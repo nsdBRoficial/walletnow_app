@@ -149,19 +149,28 @@ class WooviSDK {
    * @param amountBRL - Valor em Reais
    */
   async transferPix(pixKey: string, amountBRL: number): Promise<{ correlationID: string }> {
-    if (this.isMockMode) {
+    const correlationID = `saque-${Date.now()}`;
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // [SPRINT 9.5 PIVOT] Trava Total de Request (Sandbox Bypass)
+    // A Woovi não possui endpoint de "Pix Out" em Sandbox.
+    // Retornamos imediatamente o Mock de Sucesso para evitar 404 e prosseguir com o BURN real.
+    // ─────────────────────────────────────────────────────────────────────────────
+    const isActuallySandbox = WOOVI_APP_ID?.toLowerCase().includes('sandbox') || this.isMockMode || import.meta.env.DEV;
+
+    if (isActuallySandbox) {
+      console.log('🛠️ [Woovi-Driver] Saque Sandbox detectado. Ignorando chamada de API e simulando aprovação bancária.');
       await new Promise(resolve => setTimeout(resolve, 2000));
-      return { correlationID: `mock-transfer-${Date.now()}` };
+      return { correlationID };
     }
 
     const amountInCents = Math.round(amountBRL * 100);
-    const correlationID = `saque-${Date.now()}`;
     const cleanCPF = pixKey.replace(/\D/g, ''); // Garante apenas números (SEM pontos ou traços)
 
-    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch v3)
+    // Payload de Produção
     const payload = {
       correlationID,
-      value: amountInCents, // Inteiro (centavos)
+      value: amountInCents,
       pixKey: cleanCPF,
       pixKeyType: 'CPF', 
       taxID: cleanCPF      
@@ -169,14 +178,9 @@ class WooviSDK {
 
     const finalUrl = 'https://api.woovi.com/api/v1/pix/payment';
 
-    // ── DEBUG: Isolamento de Erro ──
-    console.log('🚀 Iniciando Chamada Direta Woovi (Bypass Proxy)');
-    console.log('URL Final:', finalUrl);
-    console.debug('[WooviService] transferPix | Payload Sanitizado:', JSON.stringify(payload, null, 2));
-
     const response = await fetch(finalUrl, {
       method: 'POST',
-      mode: 'cors', // Força modo CORS conforme solicitado
+      mode: 'cors',
       headers: {
         'Authorization': WOOVI_APP_ID,
         'Content-Type': 'application/json',
