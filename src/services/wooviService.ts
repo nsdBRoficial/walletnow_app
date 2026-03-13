@@ -141,15 +141,14 @@ class WooviSDK {
   }
 
   /**
-   * POST /api/v1/pix-transfer
-   * Realiza um saque PIX do saldo WalletNow para uma chave de destino.
-   * Na Woovi, isso é o endpoint de transferência.
+   * POST /api/v1/pix/payment
+   * Realiza um saque PIX do saldo WalletNow para o CPF do titular.
+   * Na Woovi, isso é o endpoint de saque (Pix Out).
    *
-   * @param pixKey - Chave PIX (CPF, Email, Telefone, EVP)
+   * @param pixKey - Chave PIX (CPF do titular)
    * @param amountBRL - Valor em Reais
-   * @param pixKeyType - Tipo da chave (CPF, EMAIL, PHONE, RANDOM)
    */
-  async transferPix(pixKey: string, amountBRL: number, pixKeyType: 'CPF' | 'EMAIL' | 'PHONE' | 'RANDOM'): Promise<{ correlationID: string }> {
+  async transferPix(pixKey: string, amountBRL: number): Promise<{ correlationID: string }> {
     if (this.isMockMode) {
       await new Promise(resolve => setTimeout(resolve, 2000));
       return { correlationID: `mock-transfer-${Date.now()}` };
@@ -158,17 +157,19 @@ class WooviSDK {
     const amountInCents = Math.round(amountBRL * 100);
     const correlationID = `saque-${Date.now()}`;
 
+    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch)
     const payload = {
       correlationID,
       value: amountInCents,
       pixKey,
-      pixKeyType,
+      pixKeyType: 'CPF', // Forçado para compliance X402
+      taxID: pixKey      // O taxID (CPF) é obrigatório para transferências para pessoas físicas
     };
 
     // ── DEBUG: Log do Payload enviado para Woovi (Necessário para validar 404/400) ──
     console.debug('[WooviService] transferPix | Enviando Payload:', JSON.stringify(payload, null, 2));
 
-    const response = await fetch(`${WOOVI_BASE_URL}/pix/payment`, {
+    const response = await fetch(`${WOOVI_BASE_URL}/pix-payment`, {
       method: 'POST',
       headers: {
         'Authorization': WOOVI_APP_ID,

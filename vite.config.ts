@@ -26,6 +26,20 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // Woovi / OpenPix PIX Gateway (Sprint 9.1)
         // O Authorization é injetado SERVER-SIDE aqui para evitar stripping de headers pelo browser.
+        '/api/woovi/pix-payment': {
+          target: 'https://api.woovi-sandbox.com',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/api\/woovi\/pix-payment/, '/api/v1/pix/payment'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              if (wooviAppId) {
+                proxyReq.setHeader('Authorization', wooviAppId);
+                proxyReq.setHeader('Content-Type', 'application/json');
+              }
+            });
+          }
+        },
         '/api/woovi': {
           target: 'https://api.woovi-sandbox.com',
           changeOrigin: true,

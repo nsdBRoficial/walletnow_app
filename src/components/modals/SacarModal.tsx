@@ -62,15 +62,11 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
       setStatus('burning_blockchain');
       const correlationID = `saque-${Date.now()}`;
       
-      // Tentativa de inferir o tipo de chave
-      const keyType = pixKey.includes('@') ? 'EMAIL' : (pixKey.length > 11 ? 'RANDOM' : 'CPF');
-      
       const { hash } = await PaymentService.executeOffRampWithRollback(
           secretKey, 
           amount, 
           correlationID, 
-          pixKey, 
-          keyType
+          pixKey
       );
 
       setTxHash(hash);
@@ -80,6 +76,9 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
       if (onSuccess) onSuccess();
 
     } catch (e: any) {
+      console.error("Erro no Saque:", e);
+      // Se tiver txHash, significa que a queima ocorreu mas a Woovi falhou (mesmo com rollback se o rollback falhar)
+      // Ou a mensagem de erro já contém o hash se veio do executeOffRampWithRollback
       alert("Falha no Saque: " + e.message);
       setStatus('idle');
     }
@@ -110,7 +109,7 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
               <CheckCircle2 className="w-10 h-10 text-[#00E676]" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Saque Concluído!</h3>
-            <p className="text-gray-400 text-center text-sm mb-6">O valor chegará em instantes na sua conta bancária via PIX.</p>
+            <p className="text-gray-400 text-center text-sm mb-6">O valor chegará em instantes na sua conta bancária via PIX (CPF).</p>
             
             {txHash && (
               <a 
@@ -151,19 +150,22 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
               </p>
             </div>
 
-            {/* Input de Chave PIX */}
+            {/* Input de Chave PIX - Agora restrito a CPF */}
             <div className="w-full">
               <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 block">
-                Chave PIX (CPF, Email ou Telefone)
+                Chave PIX (Apenas CPF)
               </label>
               <input
                 type="text"
                 value={pixKey}
-                onChange={(e) => setPixKey(e.target.value)}
-                placeholder="Insira sua chave PIX"
+                onChange={(e) => setPixKey(e.target.value.replace(/\D/g, '').slice(0, 11))} // Só números, max 11
+                placeholder="Insira seu CPF (Chave PIX)"
                 disabled={status !== 'idle' || (profile?.kyc_verified && !!profile?.cpf)}
                 className="w-full bg-black/50 border border-white/10 focus:border-[#00E676] text-white p-4 rounded-xl outline-none transition-colors disabled:opacity-50"
               />
+              <p className="mt-2 text-[10px] text-gray-500 italic">
+                * Por segurança, o saque é permitido apenas para o CPF do titular da conta.
+              </p>
             </div>
 
             {/* Stepper Visual de Processamento */}

@@ -374,8 +374,9 @@ export const PaymentService = {
                 throw new Error(`Saldo insuficiente de BRW. Você tem R$ ${brwBalance?.balance || '0.00'}.`);
             }
 
-            // 2. Memo X402: Identificado como SAQUE para conciliação
-            const x402Memo = Memo.text(`X402:SAQUE:${correlationID.slice(0, 16)}`);
+            // 2. Memo X402: Identificado como SAQUE para conciliação (Compliance Patch)
+            // Formato solicitado: "saque-pix:" + correlationID
+            const x402Memo = Memo.text(`saque-pix:${correlationID.slice(0, 18)}`);
 
             const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
             const brwAsset = new Asset('BRW', issuerKeypair.publicKey());
@@ -415,7 +416,7 @@ export const PaymentService = {
      * 2. Dispara o PIX via Woovi.
      * 3. Rollback: Se o PIX falhar, devolve o token (Refund) na mesma sessão.
      */
-    async executeOffRampWithRollback(userSecretKey: string, amount: string, correlationID: string, pixKey: string, pixKeyType: any): Promise<{ hash: string, wooviId: string }> {
+    async executeOffRampWithRollback(userSecretKey: string, amount: string, correlationID: string, pixKey: string): Promise<{ hash: string, wooviId: string }> {
         let burnHash: string | null = null;
         
         try {
@@ -426,7 +427,7 @@ export const PaymentService = {
             try {
                 // Passo 2: Transferência PIX via Woovi
                 const numAmount = parseFloat(amount);
-                const { correlationID: wooviId } = await WooviService.transferPix(pixKey, numAmount, pixKeyType);
+                const { correlationID: wooviId } = await WooviService.transferPix(pixKey, numAmount);
                 
                 return { hash: burnHash!, wooviId };
             } catch (wooviError: any) {
@@ -440,11 +441,11 @@ export const PaymentService = {
                 try {
                     await this.mintBRW(userKeypair.publicKey(), amount, userSecretKey, refundMemo);
                     console.log('✅ Rollback Concluído: BRW devolvido ao usuário.');
+                    throw new Error(`O Saque na Blockchain funcionou, mas o Banco (Woovi) falhou. Seu saldo foi estornado automaticamente para sua carteira. Tente novamente mais tarde.`);
                 } catch (refundError: any) {
-                    console.error('❌ FALHA CRÍTICA NO ROLLBACK: Ativo queimado mas não estornado. Intervenção manual necessária!', refundError.message);
+                    console.error('❌ FALHA CRÍTICA NO ROLLBACK:', refundError.message);
+                    throw new Error(`Tokens queimados, mas erro no envio PIX. Entre em contato com o suporte com o Hash: ${burnHash}`);
                 }
-                
-                throw new Error(`O Saque na Blockchain funcionou (TX: ${burnHash}), mas o Banco (Woovi) falhou. Seu saldo foi estornado e devolvido para sua carteira. Tente novamente mais tarde.`);
             }
         } catch (error: any) {
             throw error;
