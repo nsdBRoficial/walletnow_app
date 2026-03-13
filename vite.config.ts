@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   
   // Woovi / OpenPix AppID
-  const wooviAppId = env.VITE_WOOVI_APP_ID || '';
+  const wooviAppId = (env.VITE_WOOVI_APP_ID || '').trim();
 
   return {
     base: '/walletnow/',
@@ -33,8 +33,11 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api\/woovi/, '/api/v1'),
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', wooviAppId);
-              proxyReq.setHeader('Content-Type', 'application/json');
+              // Garante que o header seja setado com o valor limpo do .env
+              if (wooviAppId) {
+                proxyReq.setHeader('Authorization', wooviAppId);
+                proxyReq.setHeader('Content-Type', 'application/json');
+              }
             });
           }
         }
