@@ -156,9 +156,9 @@ class WooviSDK {
 
     const amountInCents = Math.round(amountBRL * 100);
     const correlationID = `saque-${Date.now()}`;
-    const cleanCPF = pixKey.replace(/\D/g, ''); // Garante apenas números
+    const cleanCPF = pixKey.replace(/\D/g, ''); // Garante apenas números (SEM pontos ou traços)
 
-    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch v2)
+    // Payload compatível com a API de "Pix Out" da Woovi (Sprint 9.5 Patch v3)
     const payload = {
       correlationID,
       value: amountInCents, // Inteiro (centavos)
@@ -167,11 +167,16 @@ class WooviSDK {
       taxID: cleanCPF      
     };
 
-    // ── DEBUG: Log do Payload enviado para Woovi ──
-    console.debug('[WooviService] transferPix | Enviando Payload:', JSON.stringify(payload, null, 2));
+    const finalUrl = 'https://api.woovi.com/api/v1/pix/payment';
 
-    const response = await fetch(`${WOOVI_BASE_URL}/pix-payment`, {
+    // ── DEBUG: Isolamento de Erro ──
+    console.log('🚀 Iniciando Chamada Direta Woovi (Bypass Proxy)');
+    console.log('URL Final:', finalUrl);
+    console.debug('[WooviService] transferPix | Payload Sanitizado:', JSON.stringify(payload, null, 2));
+
+    const response = await fetch(finalUrl, {
       method: 'POST',
+      mode: 'cors', // Força modo CORS conforme solicitado
       headers: {
         'Authorization': WOOVI_APP_ID,
         'Content-Type': 'application/json',
