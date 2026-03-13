@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DepositModal from '../components/modals/DepositModal';
 import SendModal from '../components/modals/SendModal';
+import SacarModal from '../components/modals/SacarModal';
 import { useAuth } from '../contexts/AuthContext';
 import { WalletFactory } from '../services/walletFactory';
 
@@ -27,6 +28,7 @@ export default function Dashboard() {
   // 'false' significa que começam fechados.
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isSendOpen, setIsSendOpen] = useState(false);
+  const [isSacarOpen, setIsSacarOpen] = useState(false);
 
   // Estados de Saldo (Extraídos do Blockchain via Stellar Horizon)
   const [totalBalance, setTotalBalance] = useState<string>('0.00');
@@ -139,13 +141,13 @@ export default function Dashboard() {
               Depositar
             </button>
 
-            {/* Botão Sacar/Enviar: Abre o modal de envio de pagamento */}
+            {/* Botão Sacar: Abre o novo modal de Saque PIX via Woovi */}
             <button
-              onClick={() => setIsSendOpen(true)}
+              onClick={() => setIsSacarOpen(true)}
               className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white py-3.5 rounded-2xl font-semibold transition-colors border border-white/5"
             >
               <ArrowUpRight className="w-5 h-5" />
-              Sacar / Enviar
+              Sacar para PIX
             </button>
           </div>
         </div>
@@ -253,6 +255,12 @@ export default function Dashboard() {
           Passamos a função onClose para que o modal saiba como se fechar.
       */}
       <DepositModal isOpen={isDepositOpen} onClose={() => setIsDepositOpen(false)} onSuccess={fetchOnChainBalance} />
+      <SacarModal 
+        isOpen={isSacarOpen} 
+        onClose={() => setIsSacarOpen(false)} 
+        onSuccess={fetchOnChainBalance} 
+        brwBalance={parseFloat(assetDetails.brw).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      />
       <SendModal isOpen={isSendOpen} onClose={() => setIsSendOpen(false)} onSuccess={fetchOnChainBalance} />
 
     </div>

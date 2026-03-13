@@ -140,6 +140,49 @@ class WooviSDK {
     };
   }
 
+  /**
+   * POST /api/v1/pix-transfer
+   * Realiza um saque PIX do saldo WalletNow para uma chave de destino.
+   * Na Woovi, isso é o endpoint de transferência.
+   *
+   * @param pixKey - Chave PIX (CPF, Email, Telefone, EVP)
+   * @param amountBRL - Valor em Reais
+   * @param pixKeyType - Tipo da chave (CPF, EMAIL, PHONE, RANDOM)
+   */
+  async transferPix(pixKey: string, amountBRL: number, pixKeyType: 'CPF' | 'EMAIL' | 'PHONE' | 'RANDOM'): Promise<{ correlationID: string }> {
+    if (this.isMockMode) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return { correlationID: `mock-transfer-${Date.now()}` };
+    }
+
+    const amountInCents = Math.round(amountBRL * 100);
+    const correlationID = `saque-${Date.now()}`;
+
+    const payload = {
+      correlationID,
+      value: amountInCents,
+      pixKey,
+      pixKeyType,
+    };
+
+    const response = await fetch(`${WOOVI_BASE_URL}/pix-transfer`, {
+      method: 'POST',
+      headers: {
+        'Authorization': WOOVI_APP_ID,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error(`Woovi transferPix HTTP Error: ${response.status} - ${errBody}`);
+    }
+
+    const data = await response.json();
+    return { correlationID: data.correlationID || correlationID };
+  }
+
   // ─────────────────────────────────────────────────────────────────────────────
   // HELPERS DE MOCK (Modo Desenvolvimento sem credenciais Woovi)
   // ─────────────────────────────────────────────────────────────────────────────

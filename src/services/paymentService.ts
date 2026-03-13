@@ -344,5 +344,67 @@ export const PaymentService = {
             }
             throw new Error(error.message);
         }
+    },
+
+    /**
+     * [SPRINT 9.5] Saque PIX (Off-Ramp)
+     * Queima tokens BRW do usuário (enviando para o Issuer) para liberar o PIX via Woovi.
+     * 
+     * @param userSecretKey Chave S... do cliente
+     * @param amount Valor em Reais (ex: '10.00')
+     * @param correlationID ID gerado para rastrear o saque
+     */
+    async executeOffRamp(userSecretKey: string, amount: string, correlationID: string): Promise<string | null> {
+        try {
+            console.log(`🏦 PaymentService: Iniciando Saque (Off-Ramp) de R$ ${amount} BRW | Correlation: ${correlationID}`);
+
+            const server = new Horizon.Server('https://horizon-testnet.stellar.org');
+            const userKeypair = Keypair.fromSecret(userSecretKey);
+            const userPublicKey = userKeypair.publicKey();
+            const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET!);
+
+            // 1. Validar Saldo de BRW
+            const account = await server.loadAccount(userPublicKey);
+            const brwBalance = account.balances.find(
+                (b: any) => b.asset_code === 'BRW' && b.asset_issuer === issuerKeypair.publicKey()
+            );
+
+            if (!brwBalance || parseFloat(brwBalance.balance) < parseFloat(amount)) {
+                throw new Error(`Saldo insuficiente de BRW. Você tem R$ ${brwBalance?.balance || '0.00'}.`);
+            }
+
+            // 2. Memo X402: Identificado como SAQUE para conciliação
+            const x402Memo = Memo.text(`X402:SAQUE:${correlationID.slice(0, 16)}`);
+
+            const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+            const brwAsset = new Asset('BRW', issuerKeypair.publicKey());
+
+            // 3. Transação de Queima (Burn): Usuário -> Issuer
+            const transaction = new TransactionBuilder(issuerAccount, {
+                fee: BASE_FEE,
+                networkPassphrase: Networks.TESTNET,
+                memo: x402Memo
+            })
+            .addOperation(Operation.payment({
+                source: userPublicKey,
+                destination: issuerKeypair.publicKey(),
+                asset: brwAsset,
+                amount: amount
+            }))
+            .setTimeout(30)
+            .build();
+
+            // Assinatura: Cliente (pagador) + Master (pagador da taxa)
+            transaction.sign(userKeypair, issuerKeypair);
+
+            console.log('🚀 Transmitindo Queima (Burn) BRW para a Blockchain...');
+            const response = await server.submitTransaction(transaction);
+            console.log('✅ Queima confirmada! Hash:', response.hash);
+
+            return response.hash;
+        } catch (error: any) {
+            console.error('❌ Falha no Off-Ramp Blockchain:', error?.response?.data || error.message);
+            throw error;
+        }
     }
 };
