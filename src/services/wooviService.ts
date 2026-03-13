@@ -165,7 +165,10 @@ class WooviSDK {
       pixKeyType,
     };
 
-    const response = await fetch(`${WOOVI_BASE_URL}/pix-transfer`, {
+    // ── DEBUG: Log do Payload enviado para Woovi (Necessário para validar 404/400) ──
+    console.debug('[WooviService] transferPix | Enviando Payload:', JSON.stringify(payload, null, 2));
+
+    const response = await fetch(`${WOOVI_BASE_URL}/pix/payment`, {
       method: 'POST',
       headers: {
         'Authorization': WOOVI_APP_ID,

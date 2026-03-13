@@ -58,19 +58,24 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
       const secretKey = WalletFactory.getSecretKey(profile.id);
       if (!secretKey) throw new Error("Chave Passkey local não encontrada.");
 
-      // 2. Blockchain Burn (X402 Memo)
+      // Orquestração Atômica (Blockchain + Woovi + Rollback automático se falhar)
       setStatus('burning_blockchain');
       const correlationID = `saque-${Date.now()}`;
-      const hash = await PaymentService.executeOffRamp(secretKey, amount, correlationID);
+      
+      // Tentativa de inferir o tipo de chave
+      const keyType = pixKey.includes('@') ? 'EMAIL' : (pixKey.length > 11 ? 'RANDOM' : 'CPF');
+      
+      const { hash } = await PaymentService.executeOffRampWithRollback(
+          secretKey, 
+          amount, 
+          correlationID, 
+          pixKey, 
+          keyType
+      );
+
       setTxHash(hash);
 
-      // 3. Woovi transferPix
-      setStatus('sending_pix');
-      // Tentativa de inferir o tipo de chave (simplificado para MVP)
-      const keyType = pixKey.includes('@') ? 'EMAIL' : (pixKey.length > 11 ? 'RANDOM' : 'CPF');
-      await WooviService.transferPix(pixKey, numAmount, keyType as any);
-
-      // 4. Sucesso!
+      // Sucesso!
       setStatus('success');
       if (onSuccess) onSuccess();
 

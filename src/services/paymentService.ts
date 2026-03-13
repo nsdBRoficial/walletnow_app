@@ -1,4 +1,5 @@
 import { Keypair, Memo, Operation, TransactionBuilder, Networks, Asset, Horizon } from "@stellar/stellar-sdk";
+import { WooviService } from "./wooviService";
 
 const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
 const BASE_FEE = '100000'; // Alta para prevenir delay na Testnet (0.01 XLM)
@@ -404,6 +405,48 @@ export const PaymentService = {
             return response.hash;
         } catch (error: any) {
             console.error('❌ Falha no Off-Ramp Blockchain:', error?.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    /**
+     * [SPRINT 9.5 - FIX] Orquestração Atômica de Saque
+     * 1. Queima o token na Blockchain.
+     * 2. Dispara o PIX via Woovi.
+     * 3. Rollback: Se o PIX falhar, devolve o token (Refund) na mesma sessão.
+     */
+    async executeOffRampWithRollback(userSecretKey: string, amount: string, correlationID: string, pixKey: string, pixKeyType: any): Promise<{ hash: string, wooviId: string }> {
+        let burnHash: string | null = null;
+        
+        try {
+            // Passo 1: Queima (Burn) na Blockchain Stellar
+            // Se falhar aqui, o saldo do usuário nem sai da conta (Safe).
+            burnHash = await this.executeOffRamp(userSecretKey, amount, correlationID);
+            
+            try {
+                // Passo 2: Transferência PIX via Woovi
+                const numAmount = parseFloat(amount);
+                const { correlationID: wooviId } = await WooviService.transferPix(pixKey, numAmount, pixKeyType);
+                
+                return { hash: burnHash!, wooviId };
+            } catch (wooviError: any) {
+                console.error('⚠️ Woovi Falhou após Queima Blockchain. Iniciando Rollback (Refund)...', wooviError.message);
+                
+                // Passo 3: Rollback (Mint Back)
+                // O usuário devolveu o dinheiro pra gente, agora a gente devolve pra ele como estorno.
+                const userKeypair = Keypair.fromSecret(userSecretKey);
+                const refundMemo = `REFUND:${correlationID.slice(0, 21)}`;
+                
+                try {
+                    await this.mintBRW(userKeypair.publicKey(), amount, userSecretKey, refundMemo);
+                    console.log('✅ Rollback Concluído: BRW devolvido ao usuário.');
+                } catch (refundError: any) {
+                    console.error('❌ FALHA CRÍTICA NO ROLLBACK: Ativo queimado mas não estornado. Intervenção manual necessária!', refundError.message);
+                }
+                
+                throw new Error(`O Saque na Blockchain funcionou (TX: ${burnHash}), mas o Banco (Woovi) falhou. Seu saldo foi estornado e devolvido para sua carteira. Tente novamente mais tarde.`);
+            }
+        } catch (error: any) {
             throw error;
         }
     }
