@@ -121,6 +121,7 @@ class WooviSDK {
 
     if (!response.ok) {
       const errBody = await response.text();
+      console.error(`❌ Woovi createCharge Error Body:`, errBody);
       throw new Error(`Woovi createCharge HTTP Error: ${response.status} - ${errBody}`);
     }
 
