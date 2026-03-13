@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
         // Woovi / OpenPix PIX Gateway (Sprint 9.1)
         // O Authorization é injetado SERVER-SIDE aqui para evitar stripping de headers pelo browser.
         '/api/woovi': {
-          target: 'https://api.woovi.com',
+          target: 'https://api.woovi-sandbox.com',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/api\/woovi/, '/api/v1'),
