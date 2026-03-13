@@ -21,11 +21,14 @@ export default defineConfig(({ mode }) => {
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
-        '/api/transfero': {
-          target: 'https://sandbox-api-baasic.transfero.com',
+        // Woovi / OpenPix PIX Gateway (Sprint 9.1)
+        // Roteia /api/woovi para o Sandbox OpenPix evitando CORS no browser.
+        // Em produção, essas chamadas devem vir de uma Edge Function ou Worker seguro.
+        '/api/woovi': {
+          target: 'https://api.openpix.com.br',
           changeOrigin: true,
           secure: true,
-          rewrite: (path) => path.replace(/^\/api\/transfero/, '')
+          rewrite: (path) => path.replace(/^\/api\/woovi/, '/api/v1')
         }
       }
     },

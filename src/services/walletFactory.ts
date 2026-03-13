@@ -80,11 +80,52 @@ export const WalletFactory = {
             } catch (e) {
                 console.error("ERROR! Algo deu errado ao ativar a conta via Friendbot:", e);
                 // Mesmo que o Friendbot falhe (rate limit etc), retornamos a chave pública
-                // e o Sponsor precisará ativá-la manualmente no momento da Carga de BRZ.
+                // e o Sponsor precisará ativá-la manualmente no momento da Carga de BRW.
+            }
+
+            // 5. ESTABELECER TRUSTLINE DO BRW (Sprint 9.2)
+            // Para que o usuário RECEBA BRW sem pagar taxa, o Issuer Patrocinador (Sponsor)
+            // abre a TrustLine na conta dele usando CAP-33 (Featherweight).
+            // Assim o usuário tem saldo zero de XLM e ainda pode receber/enviar BRW.
+            try {
+                const { Keypair: StellarKeypair, Horizon: StellarHorizon, TransactionBuilder, Networks, Asset: StellarAsset, Operation } = await import('@stellar/stellar-sdk');
+                const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
+                
+                if (ISSUER_SECRET) {
+                    const server = new StellarHorizon.Server('https://horizon-testnet.stellar.org');
+                    const issuerKeypair = StellarKeypair.fromSecret(ISSUER_SECRET);
+                    const brwAsset = new StellarAsset('BRW', issuerKeypair.publicKey());
+                    const userKeypair = StellarKeypair.fromSecret(secretKey);
+                    
+                    const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+
+                    // CAP-33: Issuer patrocina a TrustLine do BRW para o novo usuário
+                    const transaction = new TransactionBuilder(issuerAccount, {
+                        fee: '100000',
+                        networkPassphrase: Networks.TESTNET
+                    })
+                    .addOperation(Operation.beginSponsoringFutureReserves({ sponsoredId: publicKey }))
+                    .addOperation(Operation.changeTrust({ asset: brwAsset, source: publicKey }))
+                    .addOperation(Operation.endSponsoringFutureReserves({ source: publicKey }))
+                    .setTimeout(30)
+                    .build();
+                    
+                    // Ambos assinam: Issuer como Sponsor, Usuário para autorizar a TrustLine
+                    transaction.sign(issuerKeypair);
+                    transaction.sign(userKeypair);
+                    
+                    await server.submitTransaction(transaction);
+                    console.log('🔗 WalletFactory: TrustLine BRW estabelecida (via CAP-33 Gasless)!');
+                } else {
+                    console.warn('⚠️ WalletFactory: VITE_STELLAR_ISSUER_SECRET ausente. TrustLine BRW não estabelecida automaticamente.');
+                }
+            } catch (e) {
+                console.error("WalletFactory: Falha ao estabelecer TrustLine BRW (isso não é crítico para o onboarding):", e);
             }
 
             // Devolvemos apenas a Chave Pública para que o nosso Front-end (React) possa exibi-la na tela de Configurações
             return publicKey;
+
 
         } catch (error) {
             // Se qualquer coisa der errado nos passos acima, a gente avisa o painel do desenvolvedor (Console)

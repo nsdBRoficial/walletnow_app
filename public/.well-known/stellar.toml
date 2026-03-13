@@ -1,0 +1,51 @@
+# SEP-1 WalletNow Stellar Anchor — stellar.toml
+# https://developers.stellar.org/docs/tokens/publishing-asset-info
+# Este arquivo é servido em https://nsdbr.com/.well-known/stellar.toml
+# e informa à rede Stellar quem somos, quem são nossos ativos e como nos contatar.
+
+VERSION = "2.0.0"
+
+NETWORK_PASSPHRASE = "Test SDF Network ; September 2015"
+FEDERATION_SERVER = "https://nsdbr.com/walletnow/api/federation"
+AUTH_SERVER = "https://nsdbr.com/walletnow/api/auth"
+TRANSFER_SERVER = "https://nsdbr.com/walletnow/api/sep6"
+TRANSFER_SERVER_SEP0024 = "https://nsdbr.com/walletnow/api/sep24"
+
+ACCOUNTS = [
+  "GBI7PGNABMNIDFJADAKSN4HXEYAO25PZQVD7US6H6V7GY5XUQSWKAKM5"
+]
+
+[DOCUMENTATION]
+ORG_NAME = "WalletNow by NSD Brasil"
+ORG_DBA = "WalletNow"
+ORG_URL = "https://nsdbr.com/walletnow"
+ORG_DESCRIPTION = "Web3 fiat ramp abstraction layer. Converts PIX (BRL) to on-chain tokens instantly and gaslessly using Passkeys and Stellar Anchor infrastructure."
+ORG_PHYSICAL_ADDRESS = "Rio de Janeiro, RJ, Brasil"
+ORG_PHONE_NUMBER = "+55 21 00000-0000"
+ORG_OFFICIAL_EMAIL = "contact@nsdbr.com"
+ORG_GITHUB = "https://github.com/nsdBRoficial/walletnow_app"
+ORG_KEYBASE = "nsdBRoficial"
+ORG_TWITTER = "@nsdBRoficial"
+
+[[VALIDATORS]]
+ALIAS = "walletnow-primary"
+DISPLAY_NAME = "WalletNow Primary Validator"
+PUBLIC_KEY = "GBI7PGNABMNIDFJADAKSN4HXEYAO25PZQVD7US6H6V7GY5XUQSWKAKM5"
+HISTORY = "https://nsdbr.com/walletnow/history"
+
+[[CURRENCIES]]
+code = "BRW"
+issuer = "GBI7PGNABMNIDFJADAKSN4HXEYAO25PZQVD7US6H6V7GY5XUQSWKAKM5"
+display_decimals = 2
+name = "WalletNow Real Digital"
+desc = "BRW is a Stellar-native, BRL-backed stablecoin issued by WalletNow. 1 BRW = 1 BRL. Redeemable via PIX at any time. Gasless transfers using Passkeys."
+conditions = "BRW is pegged 1:1 to BRL. Redemption is processed via PIX within 10 seconds on the Testnet."
+image = "https://nsdbr.com/walletnow/brw-logo.png"
+fixed_number = 0
+is_asset_anchored = true
+anchor_asset_type = "fiat"
+anchor_asset = "BRL"
+redemption_instructions = "Use the WalletNow app at nsdbr.com/walletnow to withdraw BRW back to BRL via PIX."
+regulated = false
+approval_server = ""
+approval_criteria = ""

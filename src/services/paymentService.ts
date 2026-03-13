@@ -4,26 +4,32 @@ const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
 const BASE_FEE = '100000'; // Alta para prevenir delay na Testnet (0.01 XLM)
 
 /**
- * On-Ramp Service (Transfero Mockado na Testnet)
- * Recepciona a requisição do PIX confirmada pelo banco parceiro e 
- * converte imediatamente injetando BRZ "em tempo real" via Blockchain Stellar
+ * On-Ramp Service (Woovi PIX Gateway + Stellar Testnet)
+ * Recepciona a confirmação de pagamento da Woovi e
+ * converte imediatamente injetando BRW "em tempo real" via Blockchain Stellar
  * na conta do usuário, encerrando a intermediação.
+ *
+ * Ativo Soberano: BRW (WalletNow Real Digital — lastreado 1:1 em BRL)
+ * Issuer: GBI7PGNABMNIDFJADAKSN4HXEYAO25PZQVD7US6H6V7GY5XUQSWKAKM5
  */
 export const PaymentService = {
     /**
-     * Minta tokens BRZ da carteira Master diretamente para a Carteira do Usuário
-     * 
+     * [SPRINT 9.2] Minta tokens BRW (ativo soberano WalletNow) da carteira Issuer
+     * diretamente para a Carteira do Usuário. Acionado após confirmação Woovi.
+     *
      * @param targetPublicKey A chave pública G... do cliente
      * @param amount Em BRL, ex: '150.00'
+     * @param userSecretKey Necessário apenas no primeiro depósito (para assinar TrustLine CAP-33)
      */
-    async mintPixToBRZ(targetPublicKey: string, amount: string, userSecretKey?: string): Promise<string | null> {
+    async mintBRW(targetPublicKey: string, amount: string, userSecretKey?: string): Promise<string | null> {
         try {
-            console.log(`🏦 PaymentService: Ouvinte de PIX ativado. Depositando R$ ${amount}...`);
+            console.log(`🏦 PaymentService: Woovi PIX Confirmado! Mintando BRW R$ ${amount} para ${targetPublicKey.slice(0,5)}...`);
 
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET!);
             const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
-            const brzAsset = new Asset('BRZ', issuerKeypair.publicKey());
+            // Ativo soberano BRW emitido pela nossa conta Issuer
+            const brwAsset = new Asset('BRW', issuerKeypair.publicKey());
 
             let isNewAccount = false;
             let hasTrustLine = false;
@@ -31,12 +37,13 @@ export const PaymentService = {
             // Tenta localizar a conta na rede. Se der 404, conta não existe fisicamente ainda.
             try {
                 const userAccount = await server.loadAccount(targetPublicKey);
+                // Verifica TrustLine do BRW (nosso novo ativo soberano)
                 hasTrustLine = userAccount.balances.some(
-                    (b: any) => b.asset_type !== 'native' && b.asset_code === 'BRZ' && b.asset_issuer === issuerKeypair.publicKey()
+                    (b: any) => b.asset_type !== 'native' && b.asset_code === 'BRW' && b.asset_issuer === issuerKeypair.publicKey()
                 );
             } catch (error: any) {
                 if (error.response?.status === 404) {
-                    console.log('⚠️ Conta virgên. Preparando Onboarding Mágico (Gasless) na mesma transação...');
+                    console.log('⚠️ Conta virgem. Preparando Onboarding Mágico (Gasless) na mesma transação...');
                     isNewAccount = true;
                 } else {
                     throw error;
@@ -45,13 +52,13 @@ export const PaymentService = {
 
             const operations: any[] = [];
 
-            // Se for conta nova ou não tiver a TrustLine do BRZ, fazemos o Setup patrocinado
+            // Se for conta nova ou não tiver a TrustLine do BRW, fazemos o Setup patrocinado
             if (isNewAccount || !hasTrustLine) {
                 if (!userSecretKey) {
-                    throw new Error("Primeiro depósito requer a Inicialização Mágica (Secret Key indisponível localmente para criar a TrustLine).");
+                    throw new Error("Primeiro depósito requer a Inicialização Mágica (Secret Key indisponível localmente para criar a TrustLine BRW).");
                 }
 
-                // 1. Mestre patrocina a brincadeira (Reservas, Trustlines)
+                // 1. Mestre patrocina as Reservas e TrustLines (CAP-33)
                 operations.push(Operation.beginSponsoringFutureReserves({
                     sponsoredId: targetPublicKey
                 }));
@@ -64,9 +71,9 @@ export const PaymentService = {
                     }));
                 }
 
-                // 3. Abre a TrustLine do BRZ para o cliente (sendo patrocinada)
+                // 3. Abre a TrustLine do BRW para o cliente (sendo patrocinada pelo Issuer)
                 operations.push(Operation.changeTrust({
-                    asset: brzAsset,
+                    asset: brwAsset,
                     source: targetPublicKey
                 }));
 
@@ -76,10 +83,10 @@ export const PaymentService = {
                 }));
             }
 
-            // 5. O DEPOSITO DE FATO (O equivalente em BRZ)
+            // 5. O DEPÓSITO DE FATO (O equivalente em BRW — 1 BRL = 1 BRW)
             operations.push(Operation.payment({
                 destination: targetPublicKey,
-                asset: brzAsset,
+                asset: brwAsset,
                 amount: amount
             }));
 
@@ -101,13 +108,13 @@ export const PaymentService = {
                 transaction.sign(userKeypair);
             }
 
-            console.log('🚀 Transmitindo Depósito Intermediado PIX para a Blockchain...');
+            console.log('🚀 Transmitindo Mintagem BRW para Blockchain Stellar...');
             const response = await server.submitTransaction(transaction);
-            console.log('✅ Depósito Sincronizado. Hash:', response.hash);
+            console.log('✅ BRW Mintado com sucesso! Hash Ledger:', response.hash);
 
             return response.hash;
         } catch (error: any) {
-            console.error('❌ Falha Crítica no OnRamp API:', error?.response?.data || error.message);
+            console.error('❌ Falha Crítica no OnRamp BRW:', error?.response?.data || error.message);
             // Extrai o erro profundo da rede para debug
             const resultCodes = error?.response?.data?.extras?.result_codes;
             let detailError = error.message;
@@ -119,8 +126,16 @@ export const PaymentService = {
     },
 
     /**
-     * Off-Ramp Service (Transfero Mockado Saque PIX)
-     * Transfere o BRZ do cliente de volta para o Issuer (Master),
+     * @deprecated Use mintBRW() em vez disso. Alias de retrocompatibilidade.
+     */
+    async mintPixToBRZ(targetPublicKey: string, amount: string, userSecretKey?: string): Promise<string | null> {
+        console.warn('⚠️ mintPixToBRZ está depreciado. Use mintBRW()');
+        return this.mintBRW(targetPublicKey, amount, userSecretKey);
+    },
+
+    /**
+     * Off-Ramp Service (Saque PIX via Woovi)
+     * Transfere o BRW do cliente de volta para o Issuer,
      * simulando a queima/resgate (burn) para que o Gateway dispare o PIX fiduciário
      * na conta bancária do destino.
      * 

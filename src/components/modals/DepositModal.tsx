@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PaymentService } from '../../services/paymentService';
 import { WalletFactory } from '../../services/walletFactory';
-import { TransferoService } from '../../services/transferoService';
+import { WooviService } from '../../services/wooviService';
 
 // Define quais propriedades (props) este componente espera receber.
 interface DepositModalProps {
@@ -20,7 +20,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
 
   // Dados Inputados e Retornados
   const [amount, setAmount] = useState('');
-  const [pixData, setPixData] = useState<{ pixCode: string, transferoId: string, amount: number } | null>(null);
+  const [pixData, setPixData] = useState<{ brCode: string, correlationID: string, amount: number } | null>(null);
   const [copied, setCopied] = useState(false);
 
   // Zera o modal sempre que ele abrir/fechar
@@ -36,14 +36,14 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   if (!isOpen) return null;
 
   const handleCopy = () => {
-    if (!pixData?.pixCode) return;
-    navigator.clipboard.writeText(pixData.pixCode);
+    if (!pixData?.brCode) return;
+    navigator.clipboard.writeText(pixData.brCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   /**
-   * Fase 1: Gerar o PIX Dinâmico na Transfero
+   * Fase 1: Gerar o PIX Dinâmico via Woovi
    */
   const handleGeneratePix = async () => {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0 || !profile?.id) return;
@@ -51,41 +51,41 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     setPhase('generating');
 
     try {
-      // 1. Chama a Switch Bancária Transfero pedindo QR Code
-      const result = await TransferoService.generatePixDeposit(Number(amount), profile.id);
+      // 1. Chama o Gateway Woovi para gerar a cobrança Pix (QR Code EMV)
+      const result = await WooviService.createCharge(Number(amount), profile.id);
 
-      setPixData(result);
+      setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
       setPhase('waiting_payment');
 
-      // 2. Inicia o Observador Assíncrono (Polling)
-      startPixObserver(result.transferoId, result.amount);
+      // 2. Inicia o Observador Assíncrono (Polling) usando o correlationID da Woovi
+      startPixObserver(result.correlationID, result.amount);
 
     } catch (e: any) {
-      alert("Falha de Comunicação com BaaS Transfero: " + e.message);
+      alert("Falha de Comunicação com Gateway Woovi: " + e.message);
       setPhase('input');
     }
   };
 
   /**
-   * Fase 2: Observador de Pagamento (Polling) e Fase 3: Mintagem On-Chain
+   * Fase 2: Observador de Pagamento (Polling Woovi) e Fase 3: Mintagem BRW On-Chain
    */
-  const startPixObserver = (transferoId: string, depositAmount: number) => {
+  const startPixObserver = (correlationID: string, depositAmount: number) => {
     let pollingInterval: NodeJS.Timeout;
 
     // Função que checa o status silenciosamente
     const checkTick = async () => {
       try {
-        const status = await TransferoService.checkDepositStatus(transferoId);
-        console.log(`📡 Polling PIX Sandbox [${transferoId}] -> Status: ${status}`);
+        const status = await WooviService.checkPaymentStatus(correlationID);
+        console.log(`📡 Polling PIX Woovi [${correlationID}] -> Status: ${status}`);
 
-        // O Sandbox Transfero confirma depósitos retornando status PAID ou COMPLETED.
-        if (status === 'PAID' || status === 'COMPLETED') {
-          // O Cliente PAGOU! Parar de perguntar ao banco.
+        // A Woovi confirma depósitos com status COMPLETED.
+        if (status === 'COMPLETED') {
+          // O Cliente PAGOU! Parar de perguntar ao gateway.
           clearInterval(pollingInterval);
           triggerMinting(depositAmount);
-        } else if (status === 'FAILED' || status === 'ERROR') {
+        } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
           clearInterval(pollingInterval);
-          alert("A transação bancária falhou no Sandbox.");
+          alert("A transação PIX expirou ou falhou no Gateway Woovi.");
           setPhase('input');
         }
       } catch (err) {
@@ -112,8 +112,8 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       // Pega a SecretKey local para assinar a TrustLine se a conta for nova na Rede
       const userSecret = WalletFactory.getSecretKey(profile.id);
 
-      // Conversão real PIX ➔ BRZ na Stellar Testnet
-      await PaymentService.mintPixToBRZ(profile.stellar_address, depositAmount.toString(), userSecret || undefined);
+      // Conversão BRW real: PIX (BRL confirmado pela Woovi) ➔ BRW na Stellar Testnet
+      await PaymentService.mintBRW(profile.stellar_address, depositAmount.toString(), userSecret || undefined);
 
       setPhase('success');
       if (onSuccess) onSuccess();
@@ -122,7 +122,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         onClose();
       }, 3500);
     } catch (e: any) {
-      alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar Ativo Onchain: " + e.message);
+      alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar BRW Onchain: " + e.message);
       setPhase('input'); // Volta pro input pra ele ver o saldo off chain possivelmente se tivermos feito cache, mas no MVP isso é tragédia.
     }
   };
@@ -164,7 +164,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
             </div>
 
             <p className="text-[10px] text-gray-500 text-center uppercase tracking-wider font-mono">
-              Ao gerar o QR Code, nosso Sandbox B2B emitiria a cobrança e o BRZ será convertido Par-a-Par 1:1.
+              Woovi PIX Gateway — Conversão 1:1 BRL ➔ BRW. Fundos bloqueados até recepção na Stellar Testnet.
             </p>
 
             <button
@@ -201,13 +201,13 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
             </div>
 
             <div className="w-full">
-              <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 block">Chave Copia e Cola Oficial</label>
+              <label className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-2 block">Chave Copia e Cola Oficial (Woovi)</label>
               <button
                 onClick={handleCopy}
                 className="w-full flex items-center justify-between bg-black/50 border border-[#00E676]/30 p-4 rounded-xl hover:border-[#00E676]/80 transition-colors group"
               >
                 <span className="text-xs text-gray-300 truncate mr-4 font-mono select-all">
-                  {pixData.pixCode}
+                  {pixData.brCode}
                 </span>
                 {copied ? (
                   <CheckCircle2 className="w-5 h-5 text-[#00E676] flex-shrink-0" />
@@ -230,7 +230,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
             <Zap className="w-12 h-12 text-[#F27D26] animate-bounce mb-4 fill-[#F27D26]/20" />
             <p className="text-white text-lg font-bold">PIX Sincronizado!</p>
             <p className="text-gray-400 font-medium text-sm mt-1">Acioando Smart Contracts na Stellar Network...</p>
-            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest font-mono">Mintando BRZ On-Chain</p>
+            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest font-mono">Mintando BRW On-Chain</p>
           </div>
         )}
 
