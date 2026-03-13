@@ -156,10 +156,10 @@ export const WalletFactory = {
     async getHistory(publicKey: string): Promise<any[]> {
         try {
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
-            const page = await server.payments().forAccount(publicKey).limit(20).order('desc').call();
+            // Usamos .join('transactions') para que o Horizon anexe os dados da transação (incluindo o Memo) em cada record de pagamento.
+            const page = await server.payments().forAccount(publicKey).limit(20).order('desc').join('transactions').call();
 
             const history = page.records.map((record: any) => {
-                // A biblioteca Stellar SDK retorna record.type como 'payment' ou 'create_account' (que também tem um starting_balance)
                 let amount = '0';
                 let asset = 'XLM';
 
@@ -170,7 +170,15 @@ export const WalletFactory = {
                     amount = record.starting_balance;
                 }
 
-                const isDeposit = record.to === publicKey || record.account === publicKey /* para create_account */;
+                const isDeposit = record.to === publicKey || record.account === publicKey;
+
+                // Extração de Memo X402 (CorrelationID da Woovi) da transação anexada via .join()
+                const transaction = (record as any).transaction;
+                const memoValue = transaction?.memo_type === 'text' ? transaction.memo : null;
+                
+                const correlationID = (memoValue && memoValue.startsWith('X402:')) 
+                    ? memoValue.replace('X402:', '') 
+                    : null;
 
                 return {
                     id: record.id,
@@ -180,10 +188,11 @@ export const WalletFactory = {
                     amount: isDeposit ? `+ R$ ${parseFloat(amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : `- R$ ${parseFloat(amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
                     rawAmount: parseFloat(amount),
                     assetCode: asset,
+                    correlationID,
                     date: new Date(record.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
                     status: 'Concluído'
                 };
-            }).filter(tx => tx.rawAmount > 0 && tx.assetCode === 'BRZ'); // Mantém o app focado em Real(BRZ)
+            }).filter(tx => tx.rawAmount > 0 && (tx.assetCode === 'BRZ' || tx.assetCode === 'BRW' || tx.assetCode === 'XLM' /* amigável para debug */));
 
             return history;
         } catch (error) {
@@ -196,12 +205,13 @@ export const WalletFactory = {
      * Helper (Ajudante) para buscar os saldos reais na Blockchain
      * Retorna os balanços em formato de dicionário simplificado.
      */
-    async getBalances(publicKey: string): Promise<{ brz: string, xlm: string, usdc: string, btc: string } | null> {
+    async getBalances(publicKey: string): Promise<{ brz: string, brw: string, xlm: string, usdc: string, btc: string } | null> {
         try {
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const account = await server.loadAccount(publicKey);
 
             let brzBalance = '0.00';
+            let brwBalance = '0.00';
             let xlmBalance = '0.00';
             let usdcBalance = '0.00';
             let btcBalance = '0.00';
@@ -211,6 +221,8 @@ export const WalletFactory = {
                     xlmBalance = balance.balance;
                 } else if (balance.asset_code === 'BRZ') {
                     brzBalance = balance.balance;
+                } else if (balance.asset_code === 'BRW') {
+                    brwBalance = balance.balance;
                 } else if (balance.asset_code === 'USDC') {
                     usdcBalance = balance.balance;
                 } else if (balance.asset_code === 'BTC') {
@@ -218,7 +230,7 @@ export const WalletFactory = {
                 }
             });
 
-            return { brz: brzBalance, xlm: xlmBalance, usdc: usdcBalance, btc: btcBalance };
+            return { brz: brzBalance, brw: brwBalance, xlm: xlmBalance, usdc: usdcBalance, btc: btcBalance };
         } catch (error: any) {
             // Conta pode ainda não existir (404) ou erro de rede
             if (error.response?.status !== 404) {

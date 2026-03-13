@@ -29,7 +29,8 @@ export default function Dashboard() {
   const [isSendOpen, setIsSendOpen] = useState(false);
 
   // Estados de Saldo (Extraídos do Blockchain via Stellar Horizon)
-  const [brzBalance, setBrzBalance] = useState<string>('0.00');
+  const [totalBalance, setTotalBalance] = useState<string>('0.00');
+  const [assetDetails, setAssetDetails] = useState<{brz: string, brw: string}>({brz: '0.00', brw: '0.00'});
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [transactions, setTransactions] = useState<any[]>([]);
 
@@ -46,7 +47,10 @@ export default function Dashboard() {
       ]);
 
       if (balances) {
-        setBrzBalance(parseFloat(balances.brz).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        setAssetDetails({ brz: balances.brz, brw: balances.brw });
+        // Soma dos saldos em Real (BRZ + BRW — ambos 1:1)
+        const total = parseFloat(balances.brz) + parseFloat(balances.brw);
+        setTotalBalance(total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
       }
       if (history) {
         setTransactions(history);
@@ -109,7 +113,17 @@ export default function Dashboard() {
                   <Loader2 className="w-6 h-6 animate-spin" />
                 </div>
               ) : (
-                <h2 className="text-5xl font-bold text-white tracking-tight">{brzBalance}</h2>
+                <div className="flex flex-col">
+                  <h2 className="text-5xl font-bold text-white tracking-tight">{totalBalance}</h2>
+                  <div className="flex gap-3 mt-2">
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider px-2 py-0.5 bg-white/5 rounded-md border border-white/5">
+                      BRW: {parseFloat(assetDetails.brw).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                    <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider px-2 py-0.5 bg-white/5 rounded-md border border-white/5">
+                      BRZ: {parseFloat(assetDetails.brz).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -156,24 +170,30 @@ export default function Dashboard() {
                 href={`https://stellar.expert/explorer/testnet/tx/${tx.hash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 bg-[#161616] rounded-2xl border border-white/5 hover:border-white/10 transition-colors cursor-pointer block"
+                className="flex items-center justify-between p-4 bg-[#161616] rounded-2xl border border-white/5 hover:border-white/10 transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-4">
-                  {/* Ícone dinâmico: Verde para depósito, Branco para envio */}
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.type === 'deposit' ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-white/5 text-white'}`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${tx.type === 'deposit' ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-white/5 text-white'}`}>
                     {tx.type === 'deposit' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
                   </div>
-                  <div>
-                    <p className="text-white font-medium">{tx.title}</p>
-                    <p className="text-xs text-gray-500">{tx.date}</p>
+                  <div className="overflow-hidden">
+                    <p className="text-white font-medium flex items-center gap-2">
+                      {tx.title}
+                      <span className="text-[9px] px-1.5 py-0.5 bg-white/10 rounded text-gray-400 font-bold uppercase">{tx.assetCode}</span>
+                    </p>
+                    <p className="text-xs text-gray-500 flex flex-col">
+                      <span>{tx.date}</span>
+                      {tx.correlationID && (
+                        <span className="text-[10px] text-[#00E676]/60 font-mono mt-0.5">X402: {tx.correlationID}</span>
+                      )}
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  {/* Cor do valor dinâmica: Verde para entrada, Branco para saída */}
                   <p className={`font-semibold ${tx.type === 'deposit' ? 'text-[#00E676]' : 'text-white'}`}>
                     {tx.amount}
                   </p>
-                  <p className="text-xs text-gray-500">{tx.status}</p>
+                  <p className="text-[10px] text-gray-600 font-medium group-hover:text-[#00E676] transition-colors">Ver On-Chain ↗</p>
                 </div>
               </a>
             ))
