@@ -1,4 +1,5 @@
 # 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.7)
+LIVE ON TESTNET: https://nsdbr.com/walletnow
 
 *O fim da complexidade na Web3.* 
 
