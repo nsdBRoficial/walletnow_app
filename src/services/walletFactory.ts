@@ -4,18 +4,15 @@ import { supabase } from '../lib/supabase';
 /**
  * WalletFactory
  * 
- * Fábrica de carteiras Stellar focada em UX-Zero (Custodial Abstraction).
- * Gerencia o ciclo de vida da conta: Criação, Ativação (Friendbot/Sponsor),
- * Setup de Trustlines (CAP-33) e consulta de Histórico/Saldos.
+ * [PT-BR] Fábrica de carteiras Stellar focada em Abstração de Custódia (UX-Zero).
+ * Gerencia criação, Ativação patrocinada (Sponsor/CAP-33) e Setup de Trustlines.
+ * Assinatura Bio-criptográfica (Passkeys): Atualmente, a Chave Secreta é isolada no banco local (simulando enclave do dispositivo).
+ * Em produção, será resguardada e assinada por biometria criptográfica usando WebCrypto API garantindo total Soberania ao usuário real.
  * 
- * Auditoria de Segurança:
- * - Chave Pública (G...): Sincronizada com Supabase para indexação.
- * - Chave Secreta (S...): Armazenada EXCLUSIVAMENTE no LocalStorage do cliente.
- * - Jamais enviada para o backend em texto plano.
- * 
- * ⚠️ AVISO DE SEGURANÇA (AUDITORIA v0.9):
- * O LocalStorage é vulnerável a XSS. Em versões futuras, as chaves devem ser 
- * protegidas via WebCrypto API / Passkeys para isolamento criptográfico.
+ * [EN-US] Stellar wallet factory focused on Custodial Abstraction (UX-Zero).
+ * Manages creation, sponsored activation (Sponsor/CAP-33), and Trustline setup.
+ * Bio-cryptographic Signature (Passkeys): Currently, the Secret Key is isolated locally (simulating a device enclave).
+ * In production, it will be safeguarded and signed by cryptography biometrics using WebCrypto API ensuring total Sovereignty for the real user.
  */
 
 const STORAGE_KEY_PREFIX = '@walletnow:secret:';

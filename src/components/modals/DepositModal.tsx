@@ -1,4 +1,4 @@
-import { X, Copy, QrCode, CheckCircle2, Loader2, Zap } from 'lucide-react';
+import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PaymentService } from '../../services/paymentService';
@@ -22,6 +22,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   const [amount, setAmount] = useState('');
   const [pixData, setPixData] = useState<{ brCode: string, correlationID: string, amount: number } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   // Zera o modal sempre que ele abrir/fechar
   useEffect(() => {
@@ -68,13 +69,14 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       const userSecret = WalletFactory.getSecretKey(profile.id);
 
       // Conversão BRW real: PIX (BRL confirmado pela Woovi) ➔ BRW na Stellar Testnet
-      await PaymentService.mintBRW(
+      const hash = await PaymentService.mintBRW(
         profile.stellar_address,
         depositAmount.toString(),
         userSecret || undefined,
         correlationID
       );
 
+      if (hash) setTxHash(hash);
       setPhase('success');
       if (onSuccess) onSuccess();
 
@@ -242,7 +244,19 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
               <CheckCircle2 className="w-10 h-10 text-[#00E676]" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Depósito Liquidado!</h3>
-            <p className="text-gray-400 text-center text-sm">Transferência Bancária recebida.<br />Saldo refletido On-Chain com Sucesso.</p>
+            <p className="text-gray-400 text-center text-sm mb-6">Transferência Bancária recebida.<br />Saldo refletido On-Chain com Sucesso.</p>
+            
+            {txHash && (
+              <a 
+                href={`https://stellar.expert/explorer/testnet/tx/${txHash}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#00E676] text-xs font-semibold bg-[#00E676]/10 px-4 py-2 rounded-xl border border-[#00E676]/20 hover:bg-[#00E676]/20 transition-all"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                Ver Comprovante Blockchain
+              </a>
+            )}
           </div>
         )}
 

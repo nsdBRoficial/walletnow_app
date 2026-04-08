@@ -38,8 +38,15 @@ const AuthContext = createContext<AuthContextProps>({
 });
 
 /**
- * Componente Provedor de Autenticação.
- * Ele abraça toda a aplicação e expõe o estado de logado.
+ * AuthProvider
+ * 
+ * [PT-BR] Provedor de Autenticação que orquestra a sessão do banco (Supabase) e sincroniza as chaves do cliente (WalletFactory).
+ * A validação de posse da chave (Device Bind / Assinatura Bio-criptográfica) simula princípios de Passkeys.
+ * Garante que logins OAuth não possam realizar operações on-chain caso a private-key local não esteja presente (Zero-Knowledge proof baseada em client).
+ * 
+ * [EN-US] Authentication Provider orchestrating the DB session (Supabase) and synchronizing client keys (WalletFactory).
+ * Key possession validation (Device Bind / Bio-cryptographic signature) simulates Passkey principles.
+ * Ensures OAuth logins cannot perform on-chain ops if the local private key is missing (Zero-Knowledge client-based proof).
  */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);

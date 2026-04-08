@@ -1,12 +1,13 @@
 /**
  * Woovi Gateway Service (PIX / OpenPix)
  *
- * Gerencia a integração com o gateway de pagamentos fiduciários Woovi.
- * Responsável por criar cobranças PIX dinâmicas e processar saques (Pix Out).
- *
- * Arquitetura:
- * - Depósito: Usuário paga PIX -> Gateway confirma -> Backend/Frontend dispara Minting Stellar.
- * - Saque: Usuário queima (Burn) BRW -> Sistema dispara Pix Out via Woovi.
+ * [PT-BR] Gerencia a integração do On-ramp / Off-ramp com a ponte fiduciária Woovi.
+ * Depósito dispara o Mint (Emissão Blockchain 1:1), e Saque dispara o Burn (Queima de ativo on-chain).
+ * Utiliza correlação X402 em todos os lados.
+ * 
+ * [EN-US] Manages On-ramp / Off-ramp integration with the Woovi fiat bridge.
+ * Deposit triggers the Mint (1:1 Blockchain issuance), and Withdrawal triggers the Burn (On-chain asset destruction).
+ * Utilizes X402 correlation across all perimeters.
  */
 
 /**

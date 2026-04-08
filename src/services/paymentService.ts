@@ -4,21 +4,17 @@ import { WooviService } from "./wooviService";
 /**
  * PaymentService
  * 
- * Motor de orquestração financeira da WalletNow.
- * Integra a Blockchain Stellar (Testnet) com o gateway fiduciário Woovi.
+ * [PT-BR] Motor de orquestração financeira da WalletNow. Integra a Blockchain Stellar (Testnet) com o gateway fiduciário Woovi.
+ * Lógica principal de Mint/Burn: Depósitos PIX disparam o 'Mint' On-ramp de tokens BRW, enquanto Saques disparam o 'Burn' e transferem Off-ramp via API Pix.
+ * Sponsorship: Implementa abstração de taxas 'Gasless' via CAP-33 onde o Issuer (Mestre) patrocina a criação de Trustlines e de Conta para usuários leigos.
  * 
- * Ativos:
- * - BRW: WalletNow Real Digital (Lastro 1:1 BRL, Ativo Soberano)
- * - BRZ: Digital Real (Testnet Asset)
+ * [EN-US] Financial orchestration engine for WalletNow. Integrates Stellar Blockchain (Testnet) with the Woovi fiat gateway.
+ * Core Mint/Burn Logic: PIX deposits trigger an On-ramp 'Mint' of BRW tokens, while Withdrawals trigger a 'Burn' and process an Off-ramp transfer via Pix API.
+ * Sponsorship Logic: Implements 'Gasless' fee abstraction via CAP-33, where the Issuer sponsors Trustline and Account creation for end-users.
  * 
- * Conceitos Blockchain Utilizados:
- * - Gasless (CAP-33): O Mestre (Issuer) patrocina a criação de contas e trustlines.
- * - X402 Tracking: Uso do campo MEMO para rastreabilidade entre PIX e Blockchain.
- * - Atomic Rollback: Garantia de estorno em caso de falha no gateway bancário.
- * 
- * ⚠️ AVISO DE SEGURANÇA (AUDITORIA v0.9):
- * O ISSUER_SECRET está sendo carregado via variáveis de ambiente VITE_ para prototipagem (MVP).
- * Em PRODUÇÃO, esta lógica deve ser movida para Backend Functions para evitar exposição no Client-side.
+ * ⚠️ AVISO DE SEGURANÇA / SECURITY WARNING (AUDITORIA v0.9):
+ * O ISSUER_SECRET está carregado em variáveis para MVP. Em produção deve ir para Backend Functions.
+ * ISSUER_SECRET is loaded in env variables for MVP. In production, this must be moved to Backend Functions.
  */
 
 const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
@@ -26,8 +22,11 @@ const BASE_FEE = '100000'; // 0.01 XLM (Alta para prioridade em Testnet)
 
 export const PaymentService = {
     /**
-     * Realiza a emissão (Minting) de tokens BRW para uma carteira de usuário.
-     * Implementa Onboarding Mágico (Gasless) via CAP-33 se a conta for nova.
+     * [PT-BR] Realiza a emissão (Minting) de tokens BRW (On-Ramp).
+     * Usa o conceito "Gasless" patrocinando a operação pelo emissor se a conta for nova (Sponsorship).
+     * 
+     * [EN-US] Executes the BRW token Minting (On-Ramp).
+     * Uses "Gasless" concept by sponsoring the operation via Issuer if the account is new (Sponsorship / CAP-33).
      * 
      * @param targetPublicKey Chave G... do destinatário.
      * @param amount Valor em string (ex: "10.00").
@@ -131,8 +130,13 @@ export const PaymentService = {
     },
 
     /**
-     * Executa a queima (Burn) de tokens BRW para processar um saque PIX.
-     * O token é enviado de volta ao Issuer, o que sinaliza a liquidação do ativo.
+     * [PT-BR] Executa a queima (Burn) de tokens BRW processando o saque (Off-Ramp).
+     * O ativo volta para o Issuer, destruindo liquidez e liquidando para BRL.
+     * Assinatura: Requer a autorização local da chave privada (autenticação bio-criptográfica Passkeys no app real).
+     * 
+     * [EN-US] Executes the Burn of BRW tokens to process a withdrawal (Off-Ramp).
+     * The asset returns to the Issuer, destroying liquidity and settling to fiat BRL.
+     * Signature: Requires local private key authorization (Passkeys bio-cryptographic auth in real app).
      * 
      * @param userSecretKey Chave S... do usuário.
      * @param amount Valor a ser queimado.

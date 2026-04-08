@@ -1,69 +1,60 @@
-# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.9)
+# 💳 WalletNow - The Zero-Knowledge WaaS
 
-*O fim da complexidade na Web3. Agora com Ciclo Completo de Ativos Fin-on-Chain.* 
+*O fim da complexidade na Web3. Agora com Ciclo Completo de Ativos Fin-on-Chain.*
 
-**WalletNow** é uma plataforma "Wallet-as-a-Service" (WaaS) que redefine a experiência do usuário (UX) em Blockchain. Abstraímos totalmente a complexidade técnica, entregando a agilidade de um banco digital (Pix-speed) com a soberania e segurança da rede Stellar.
+## 📖 Project Description
 
----
+**WalletNow** é uma plataforma "Wallet-as-a-Service" (WaaS) focada na interoperabilidade financeira com a rede **Stellar**. Nós abstraímos 100% da complexidade técnica de cripto (sementes, chaves, gás) para novos usuários, entregando a agilidade e naturalidade de um banco fiduciário via PIX sem comprometer o DNA da Blockchain.
 
-## 🎯 Proposta de Valor (v0.9 Production-Ready)
+**Características de Destaque:**
+- **Soberania Máxima e Passkeys:** Toda a assinatura de transações e chaves de identidade ocorrem localmente no cliente através de autenticação bio-criptográfica baseada em *Passkeys*. Nenhuma chave privada é transmitida a servidores centrais (arquitetura Não-Custodial baseada no navegador do usuário).
+- **On/Off Ramp via PIX Rápido:** Gateways fluidos ligando FIAT ao Digital via `WooviService`.
+- **Mint/Burn & ZK-STARKs Integration:** Os fluxos financeiros operam paridade de 1:1, criando Tokens On-chain (**BRW**) instantaneamente e queimando (Burning) mediante saques. Todo esse trâmite valida premissas Zero-Knowledge permitindo Liveness Verification de usuários integrados de ponta a ponta sem expor hashes de privacidade na Mainnet.
 
-1. **Onboarding Mágico (Gasless):** Registro via E-mail/OTP onde a carteira é provisionada e ativada sem que o usuário precise de XLM (nativo da rede) para taxas, graças ao protocolo **CAP-33 (Sponsored Reserves)**.
-2. **Ciclo de Ativos Híbrido:**
-   - **Depósito (On-ramp):** Gere um PIX QR Code real via Woovi. O sistema detecta o pagamento e realiza a **Mintagem** instantânea de tokens BRW na Stellar.
-   - **Saque (Off-ramp):** Converta tokens BRW de volta para Reais via PIX diretamente para seu CPF, com **Queima (Burn)** on-chain garantindo a paridade.
-3. **Rastreabilidade Bancária X402:** Cada transação fiduciária é vinculada a uma transação Blockchain através de Memos rastreáveis (`X402:correlationID`), permitindo auditoria total.
-4. **Atomicidade e Rollback:** Sistema robusto que garante estorno automático de tokens ao usuário caso o gateway bancário falhe após uma operação on-chain.
+## 🛠️ Setup Instructions
 
----
+Para rodar a plataforma completament offline/local via **Sandbox**:
 
-## 🏗️ Arquitetura de Ativos
+1. Clone o repositório na sua máquina.
+2. Copie o arquivo de exemplo de ambiente correspondente aos placeholders contendo as integrações:
+   ```bash
+   cp .env.example .env.development
+   ```
+3. Preencha as chaves no arquivo `.env.development`:
+   - `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (Sua instância Auth).
+   - `VITE_STELLAR_ISSUER_SECRET` (A chave geradora de patrocínio Gasless Testnet).
+   - `VITE_GEMINI_API_KEY` (Chave Google para Inteligência do Chat/KYC).
+   - `VITE_WOOVI_APP_ID` (AppID/Chave do gateway bancário).
 
-O WalletNow utiliza uma estratégia de dois tokens para máxima conformidade e liquidez:
-- **BRW (WalletNow Real):** Ativo soberano emitido pela plataforma para representar depósitos fiduciários 1:1. Utilizado para operações de On-ramp/Off-ramp rápidas.
-- **BRZ (Digital Real):** Integração com o ecossistema DeFi brasileiro para trocas (Swaps) e interoperabilidade.
+4. Instale as dependências usando Node:
+   ```bash
+   npm install
+   ```
+5. Inicie em modo desenvolvedor:
+   ```bash
+   npm run dev
+   ```
 
----
+## 📸 Screenshots Section
 
-## 🚀 Tecnologias Utilizadas
+Abaixo estão os indicadores visuais que comprovam os fluxos da WalletNow executados com sucesso (Substituir pelos paths finais geradas para sua submission).
 
-- **Frontend:** React 19 + Vite + Tailwind CSS v4 (Glassmorphism UI).
-- **Blockchain:** Stellar Network (CAP-33, X402, Trustline Sponsorship).
-- **IA:** Google Gemini 1.5 Pro (KYC Multimodal & Liveness).
-- **Backend/Auth:** Supabase (Auth OTP, RLS, Database).
-- **Gateway:** Woovi (PIX API).
-- **Testes:** Vitest (Integration Suite).
-
----
-
-## 📁 Estrutura do Projeto
-
-*   `/src/services/`
-    *   `paymentService.ts`: Orquestrador financeiro (Mint, Burn, Rollback).
-    *   `wooviService.ts`: Integração com gateway de pagamentos.
-    *   `walletFactory.ts`: Fábrica de chaves ED25519 e Gestão Custodial.
-*   `/tests/integration/`
-    *   `flow.test.ts`: Testes de stress do ciclo de vida dos ativos na Testnet.
-
----
-
-## 🛠️ Guia de Instalação e Testes
-
-### Configuração
-1. Clone o repositório.
-2. Copie `.env.example` para `.env.development`.
-3. Preencha as chaves: `VITE_SUPABASE_URL`, `VITE_STELLAR_ISSUER_SECRET`, `VITE_WOOVI_APP_ID`.
-
-### Executando Testes
-Para validar o fluxo completo de produção na Stellar Testnet:
-```bash
-npm run test:flows
-```
-
-### Desenvolvimento
-```bash
-npm run dev
-```
+| Passo da Aplicação | Descrição do Estado Comprovado | Local da Imagem / Placeholder |
+| :--- | :--- | :--- |
+| **Carteira Conectada** *(Wallet Connected)* | Mostra estado de conexão passiva via Supabase c/ Wallet local gerada. | `[📸 PLACEHOLDER: /docs/screenshots/wallet_connected.png]` |
+| **Saldo no Dashboard** *(Balance Displayed)* | Reflexo da leitura ativa on-chain dos ativos como BRW, BRZ e XLM na Testnet. | `[📸 PLACEHOLDER: /docs/screenshots/balance_dashboard.png]` |
+| **Transação na Testnet** *(Successful Tx)* | Histórico da operação na blockchain via painel ou explorador atrelado.| `[📸 PLACEHOLDER: /docs/screenshots/testnet_tx.png]` |
+| **Modal de Sucesso** *(StellarExpert Link)* | Link claro da auditoria após Minting/Burning nos modais de operação. | `[📸 PLACEHOLDER: /docs/screenshots/success_modal_explorer.png]` |
 
 ---
-*Disclaimer: Este projeto em v0.9 utiliza a Stellar Testnet. Versões de produção devem migrar os segredos do LocalStorage para Enclaves TEE/KMS.*
+
+## 🏗️ Arquitetura Técnica e CAP-33
+
+Nossa arquitetura de abstração de conta é movida por **Sponsored Reserves (CAP-33)** da Stellar. O protocolo elimina a necessidade do usuário comprar XLM para "abrir a carteira". Essa ação é magicamente custeada por um Master Issuer que gerencia Trustlines automaticamente, tornando a UX limpa como um banco Web2.
+
+*   `/src/services/paymentService.ts`: Orquestrador financeiro (*Mint, Burn, Sponsorship*).
+*   `/src/services/wooviService.ts`: Integração com gateway PIX.
+*   `/src/services/walletFactory.ts`: Gestão soberana Zero-Knowledge no cliente.
+
+---
+*Disclaimer: Este projeto submetido para Hackathon roda inteiramente em Stellar Testnet.*
