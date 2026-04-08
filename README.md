@@ -1,60 +1,68 @@
-# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.7)
+# 💳 WalletNow - The Zero-Knowledge WaaS (v1.0)
 
-*O fim da complexidade na Web3. Agora com Ciclo Completo de Ativos Fin-on-Chain.*
+*The end of Web3 complexity. Now with a Full Fin-on-Chain Asset Cycle.*
 
-## 📖 Project Description
+## 📖 Project Description (Pitch-Focus)
 
-**WalletNow** é uma plataforma "Wallet-as-a-Service" (WaaS) focada na interoperabilidade financeira com a rede **Stellar**. Nós abstraímos 100% da complexidade técnica de cripto (sementes, chaves, gás) para novos usuários, entregando a agilidade e naturalidade de um banco fiduciário via PIX sem comprometer o DNA da Blockchain.
+**WalletNow** is a "Wallet-as-a-Service" (WaaS) platform focused on financial interoperability with the **Stellar Network**. We abstract 100% of crypto technical complexities (seeds, keys, gas) for new users, delivering the agility and natural experience of a fiat bank via Instant PIX without compromising the Blockchain DNA.
 
-**Características de Destaque:**
-- **Soberania Máxima e Passkeys:** Toda a assinatura de transações e chaves de identidade ocorrem localmente no cliente através de autenticação bio-criptográfica baseada em *Passkeys*. Nenhuma chave privada é transmitida a servidores centrais (arquitetura Não-Custodial baseada no navegador do usuário).
-- **On/Off Ramp via PIX Rápido:** Gateways fluidos ligando FIAT ao Digital via `WooviService`.
-- **Mint/Burn & ZK-STARKs Integration:** Os fluxos financeiros operam paridade de 1:1, criando Tokens On-chain (**BRW**) instantaneamente e queimando (Burning) mediante saques. Todo esse trâmite valida premissas Zero-Knowledge permitindo Liveness Verification de usuários integrados de ponta a ponta sem expor hashes de privacidade na Mainnet.
+**Key Highlights:**
+- **Maximum Sovereignty & Passkeys:** All transaction signatures and identity keys occur locally on the client through bio-cryptographic authentication based on **Passkeys (WebAuthn)**. No private key is ever transmitted to central servers (Non-Custodial architecture based on the user's secure enclave).
+- **Fast On/Off Ramp via PIX:** Fluid fiat-to-crypto gateways powered by `WooviService`.
+- **Mint/Burn & ZK-STARKs Integration:** Financial flows operate at a 1:1 peg, instantly Minting On-chain Tokens (**BRW**) and Burning them upon withdrawals. This entire flow validates **Zero-Knowledge** premises, allowing end-to-end Liveness Verification of onboarded users without exposing privacy hashes or PII data on the Mainnet, using ZK-STARKs principles to prove identity sovereignty.
 
 ## 🛠️ Setup Instructions
 
-Para rodar a plataforma completament offline/local via **Sandbox**:
+To run the platform completely offline/locally via **Sandbox**:
 
-1. Clone o repositório na sua máquina.
-2. Copie o arquivo de exemplo de ambiente correspondente aos placeholders contendo as integrações:
+1. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/nsdBRoficial/walletnow_app.git
+   cd walletnow_app
+   ```
+2. Copy the environment example file containing the integration placeholders:
    ```bash
    cp .env.example .env.development
    ```
-3. Preencha as chaves no arquivo `.env.development`:
-   - `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` (Sua instância Auth).
-   - `VITE_STELLAR_ISSUER_SECRET` (A chave geradora de patrocínio Gasless Testnet).
-   - `VITE_GEMINI_API_KEY` (Chave Google para Inteligência do Chat/KYC).
-   - `VITE_WOOVI_APP_ID` (AppID/Chave do gateway bancário).
+3. Fill in the required keys in the `.env.development` file:
+   - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (Your Auth instance).
+   - `VITE_STELLAR_ISSUER_SECRET` (The master key for Testnet Gasless sponsorship).
+   - `VITE_GEMINI_API_KEY` (Google Key for Chat/KYC Intelligence).
+   - `VITE_WOOVI_APP_ID` (AppID/Key for the banking gateway).
 
-4. Instale as dependências usando Node:
+4. Install the dependencies using Node:
    ```bash
    npm install
    ```
-5. Inicie em modo desenvolvedor:
+5. Start in developer mode:
    ```bash
    npm run dev
    ```
 
-## 📸 Screenshots Section
+## 📸 Screenshots Table
 
-Abaixo estão os indicadores visuais que comprovam os fluxos da WalletNow executados com sucesso (Substituir pelos paths finais geradas para sua submission).
+Below are the visual indicators proving the successfully executed WalletNow flows.
 
-| Passo da Aplicação | Descrição do Estado Comprovado | Local da Imagem / Placeholder |
+| Application Step | Proven State Description | Image Location / Path |
 | :--- | :--- | :--- |
-| **Carteira Conectada** *(Wallet Connected)* | Mostra estado de conexão passiva via Supabase c/ Wallet local gerada. | `[📸 PLACEHOLDER: /docs/screenshots/wallet_connected.png]` |
-| **Saldo no Dashboard** *(Balance Displayed)* | Reflexo da leitura ativa on-chain dos ativos como BRW, BRZ e XLM na Testnet. | `[📸 PLACEHOLDER: /docs/screenshots/balance_dashboard.png]` |
-| **Transação na Testnet** *(Successful Tx)* | Histórico da operação na blockchain via painel ou explorador atrelado.| `[📸 PLACEHOLDER: /docs/screenshots/testnet_tx.png]` |
-| **Modal de Sucesso** *(StellarExpert Link)* | Link claro da auditoria após Minting/Burning nos modais de operação. | `[📸 PLACEHOLDER: /docs/screenshots/success_modal_explorer.png]` |
+| **Wallet Connected** | Passive connection state via Supabase with locally generated Wallet. | `/docs/screenshots/wallet_connected.png` |
+| **Balance Displayed** | Active on-chain asset reading (BRW, BRZ, XLM) on the Testnet. | `/docs/screenshots/balance_dashboard.png` |
+| **Successful Testnet Tx** | Blockchain operation history via dashboard or attached explorer. | `/docs/screenshots/testnet_tx.png` |
+| **Tx Result Modal** | Clear StellarExpert audit link after Minting/Burning inside operation modals. | `/docs/screenshots/success_modal_explorer.png` |
 
 ---
 
-## 🏗️ Arquitetura Técnica e CAP-33
+## 🏗️ Technical Core & X402 Standard
 
-Nossa arquitetura de abstração de conta é movida por **Sponsored Reserves (CAP-33)** da Stellar. O protocolo elimina a necessidade do usuário comprar XLM para "abrir a carteira". Essa ação é magicamente custeada por um Master Issuer que gerencia Trustlines automaticamente, tornando a UX limpa como um banco Web2.
+### Traceability Standard (X402)
+Every fiat transaction is strongly cryptographically tied to a Blockchain transaction through verifiable Memos (`X402:correlationID`), enabling total end-to-end auditing.
 
-*   `/src/services/paymentService.ts`: Orquestrador financeiro (*Mint, Burn, Sponsorship*).
-*   `/src/services/wooviService.ts`: Integração com gateway PIX.
-*   `/src/services/walletFactory.ts`: Gestão soberana Zero-Knowledge no cliente.
+### Sponsored Reserves (CAP-33)
+Our account abstraction architecture is powered by Stellar's **Sponsored Reserves (CAP-33)**. The protocol eliminates the need for the user to buy XLM just to "open a wallet". This action is magically subsidized by a Master Issuer that manages Trustlines automatically, making the UX as clean as a Web2 application.
+
+*   `/src/services/paymentService.ts`: Financial orchestrator (*Mint, Burn, Sponsorship*).
+*   `/src/services/wooviService.ts`: PIX gateway integration.
+*   `/src/services/walletFactory.ts`: Sovereign Zero-Knowledge management on the client.
 
 ---
-*Disclaimer: Este projeto submetido para Hackathon roda inteiramente em Stellar Testnet.*
+*Disclaimer: This project submitted for the Hackathon runs entirely on the Stellar Testnet.*
