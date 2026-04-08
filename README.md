@@ -1,4 +1,4 @@
-# 💳 WalletNow - The Zero-Knowledge WaaS
+# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.7)
 
 *O fim da complexidade na Web3. Agora com Ciclo Completo de Ativos Fin-on-Chain.*
 
