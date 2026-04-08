@@ -37,11 +37,18 @@ export default function Login() {
     try {
       setIsLoading(true);
       setErrorMsg('');
+
+      // Determinamos a URL de redirecionamento dinâmica.
+      // Em desenvolvimento (localhost), mantemos o origin atual.
+      // Em produção (Hostinger), forçamos a URL nsdbr.com.
+      const redirectURL = window.location.origin.includes('localhost')
+        ? `${window.location.origin}/walletnow/dashboard`
+        : 'https://nsdbr.com/walletnow/dashboard';
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          // Precisamos adicionar /walletnow/ para bater com a subpasta do Hostinger, senão o supabase volta para a raiz '/' e renderiza a Landing
-          redirectTo: `${window.location.origin}/walletnow/dashboard`
+          redirectTo: redirectURL
         }
       });
       if (error) throw error;

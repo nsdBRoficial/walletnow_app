@@ -34,6 +34,8 @@ export default function Dashboard() {
   const [totalBalance, setTotalBalance] = useState<string>('0.00');
   const [assetDetails, setAssetDetails] = useState<{brz: string, brw: string}>({brz: '0.00', brw: '0.00'});
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+  const [isAccountActive, setIsAccountActive] = useState<boolean | null>(null); // null = checking, false = 404
+  const [isActivating, setIsActivating] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
 
   // Função isolada do Efeito para que possamos repassa-la como 'refresh'
@@ -49,18 +51,47 @@ export default function Dashboard() {
       ]);
 
       if (balances) {
+        setIsAccountActive(true);
         setAssetDetails({ brz: balances.brz, brw: balances.brw });
         // Soma dos saldos em Real (BRZ + BRW — ambos 1:1)
         const total = parseFloat(balances.brz) + parseFloat(balances.brw);
         setTotalBalance(total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+      } else {
+        // Se balances for null (404), tentamos ativar
+        setIsAccountActive(false);
+        handleEmergencyActivation();
       }
       if (history) {
         setTransactions(history);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      if (e.message?.includes('404')) {
+        setIsAccountActive(false);
+      }
     } finally {
       setIsLoadingBalance(false);
+    }
+  };
+
+  /**
+   * Ativação de Emergência via Sponsor
+   */
+  const handleEmergencyActivation = async () => {
+    if (!profile?.stellar_address || isActivating || isAccountActive) return;
+    
+    setIsActivating(true);
+    try {
+      const success = await WalletFactory.activateAccount(profile.stellar_address);
+      if (success) {
+        setIsAccountActive(true);
+        // Pequeno delay para o Horizon indexar antes de atualizar saldos
+        setTimeout(fetchOnChainBalance, 2000);
+      }
+    } catch (err) {
+      console.error("Erro na ativação automática:", err);
+    } finally {
+      setIsActivating(false);
     }
   };
 
@@ -135,10 +166,15 @@ export default function Dashboard() {
             {/* Botão Depositar: Abre o modal de PIX */}
             <button
               onClick={() => setIsDepositOpen(true)}
-              className="flex-1 flex items-center justify-center gap-2 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-3.5 rounded-2xl font-bold transition-colors shadow-[0_0_15px_rgba(0,230,118,0.2)]"
+              disabled={isLoadingBalance || isAccountActive === false || isActivating}
+              className="flex-1 flex items-center justify-center gap-2 bg-[#00E676] hover:bg-[#00E676]/90 text-black py-3.5 rounded-2xl font-bold transition-colors shadow-[0_0_15px_rgba(0,230,118,0.2)] disabled:opacity-50 disabled:grayscale transition-all"
             >
-              <ArrowDownLeft className="w-5 h-5" />
-              Depositar
+              {isActivating || (isAccountActive === false && isLoadingBalance) ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <ArrowDownLeft className="w-5 h-5" />
+              )}
+              {isActivating ? 'Ativando...' : (isAccountActive === false ? 'Configurando...' : 'Depositar')}
             </button>
 
             {/* Botão Sacar: Abre o novo modal de Saque PIX via Woovi */}

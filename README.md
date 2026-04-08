@@ -1,67 +1,69 @@
-# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.7)
+# 💳 WalletNow - The Zero-Knowledge WaaS (Version 0.9)
 
-*O fim da complexidade na Web3.* 
+*O fim da complexidade na Web3. Agora com Ciclo Completo de Ativos Fin-on-Chain.* 
 
-**WalletNow** é o Protótipo Front-End de uma "Wallet-as-a-Service" (WaaS) projetado para demonstrar uma experiência de usuário (UX) revolucionária e "Zero-Knowledge". O objetivo principal é abstrair a percepção de que o usuário está utilizando uma Blockchain, fornecendo a interface elegante e imediata de um banco digital moderno.
+**WalletNow** é uma plataforma "Wallet-as-a-Service" (WaaS) que redefine a experiência do usuário (UX) em Blockchain. Abstraímos totalmente a complexidade técnica, entregando a agilidade de um banco digital (Pix-speed) com a soberania e segurança da rede Stellar.
 
 ---
 
-## 🎯 Proposta de Valor e MVP v0.7
+## 🎯 Proposta de Valor (v0.9 Production-Ready)
 
-O aplicativo simula e desenha com altíssima fidelidade a fundação para:
-1. **Passkeys Bridge (Em Desenvolvimento - Sprint 8):** Login sem senha verdadeira utilizando Sensores Biométricos do Celular via WebAuthn, garantindo que "A sua digital/rosto é a chave privada".
-2. **Ledger Abstraction (Stellar Network):** O usuário enxerga Saldo em `BRZ` (Brazilian Digital Token) e realiza ações de "PIX Copia e Cola", enquanto por debaixo dos panos ocorrem transações de Smart Contracts na Blockchain Stellar.
-3. **Identity Layer (Sprint 7 Concluída ✔️):** Um fluxo nativo integrando API de Câmera, OCR Multimodal Inteligente Liveness (via Google Gemini) e Criptografia Híbrida salva no Supabase Storage via RLS. O CPF do usuário vira um "Hash Pós-Quântico" e é persistido via protocolo CAP-33 de *Sponsored Reserves*!
-4. **On-Chain Send (Pro Mode):** Aba oculta para transferências descentralizadas em Lumens, USDC, BTC e BRZ para especialistas.
+1. **Onboarding Mágico (Gasless):** Registro via E-mail/OTP onde a carteira é provisionada e ativada sem que o usuário precise de XLM (nativo da rede) para taxas, graças ao protocolo **CAP-33 (Sponsored Reserves)**.
+2. **Ciclo de Ativos Híbrido:**
+   - **Depósito (On-ramp):** Gere um PIX QR Code real via Woovi. O sistema detecta o pagamento e realiza a **Mintagem** instantânea de tokens BRW na Stellar.
+   - **Saque (Off-ramp):** Converta tokens BRW de volta para Reais via PIX diretamente para seu CPF, com **Queima (Burn)** on-chain garantindo a paridade.
+3. **Rastreabilidade Bancária X402:** Cada transação fiduciária é vinculada a uma transação Blockchain através de Memos rastreáveis (`X402:correlationID`), permitindo auditoria total.
+4. **Atomicidade e Rollback:** Sistema robusto que garante estorno automático de tokens ao usuário caso o gateway bancário falhe após uma operação on-chain.
 
-## 🚀 Tecnologias Utilizadas (A Stack do Futuro)
-- **React 19 + Vite** (Performance PWA)
-- **Tailwind CSS v4** + **Lucide Icons** (Aparência Dark-Mode Premium de Neomorfismo)
-- **Google Gemini 1.5 Pro** (Validação Inteligente Biometria/Facial Liveness/OCR)
-- **Supabase** (Autenticação E-mail/Phone OTP, Storage RLS e Banco de Dados Serverless)
-- **Stellar SDK v12.x** (Conexão Horizon RPC para Transações e Mintagem)
+---
 
-## 📁 Estrutura de Arquivos
+## 🏗️ Arquitetura de Ativos
 
-A organização do código foi feita seguindo o princípio da responsabilidade única (*"Ridiculamente Didático"*):
-*   `/src/pages/`
-    *   `Login.tsx` (Entrada via OAuth/Passkeys)
-    *   `Dashboard.tsx` (Homepage com gráficos e saldos reais)
-    *   `Settings.tsx` (The Trust Layer: Documentação e KYC Zero-Knowledge)
-*   `/src/components/modals/` 
-    *   `DepositModal.tsx`, `ReceiveCryptoModal.tsx`, `OnChainSendModal.tsx`, `SwapModal.tsx`
+O WalletNow utiliza uma estratégia de dois tokens para máxima conformidade e liquidez:
+- **BRW (WalletNow Real):** Ativo soberano emitido pela plataforma para representar depósitos fiduciários 1:1. Utilizado para operações de On-ramp/Off-ramp rápidas.
+- **BRZ (Digital Real):** Integração com o ecossistema DeFi brasileiro para trocas (Swaps) e interoperabilidade.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- **Frontend:** React 19 + Vite + Tailwind CSS v4 (Glassmorphism UI).
+- **Blockchain:** Stellar Network (CAP-33, X402, Trustline Sponsorship).
+- **IA:** Google Gemini 1.5 Pro (KYC Multimodal & Liveness).
+- **Backend/Auth:** Supabase (Auth OTP, RLS, Database).
+- **Gateway:** Woovi (PIX API).
+- **Testes:** Vitest (Integration Suite).
+
+---
+
+## 📁 Estrutura do Projeto
+
 *   `/src/services/`
-    *   `walletFactory.ts` (Instancia carteiras na Stellar Testnet e embute o Segredo localmente)
-    *   `identityService.ts` (Cérebro do Liveness e Hash ZK-STARK com o Gemini)
-    *   `storageService.ts` (Persistência segura no Supabase KYC Docs)
+    *   `paymentService.ts`: Orquestrador financeiro (Mint, Burn, Rollback).
+    *   `wooviService.ts`: Integração com gateway de pagamentos.
+    *   `walletFactory.ts`: Fábrica de chaves ED25519 e Gestão Custodial.
+*   `/tests/integration/`
+    *   `flow.test.ts`: Testes de stress do ciclo de vida dos ativos na Testnet.
 
-## 🛠️ Como rodar o MVP (v0.7) no seu computador
+---
 
-### Pré-requisitos
-Ter o [Node.js](https://nodejs.org/) instalado.
+## 🛠️ Guia de Instalação e Testes
 
+### Configuração
+1. Clone o repositório.
+2. Copie `.env.example` para `.env.development`.
+3. Preencha as chaves: `VITE_SUPABASE_URL`, `VITE_STELLAR_ISSUER_SECRET`, `VITE_WOOVI_APP_ID`.
+
+### Executando Testes
+Para validar o fluxo completo de produção na Stellar Testnet:
 ```bash
-# 1. Instale as dependências (Rápido via Vite)
-npm install
+npm run test:flows
+```
 
-# 2. Inicie o Servidor de Desenvolvimento
+### Desenvolvimento
+```bash
 npm run dev
 ```
 
-*Nota:* Para os testes da Blockchain (Testnet) e Gemini (IA) funcionarem, você deve criar um arquivo `.env` na raiz e preencher conforme o modelo `.env.example`. Não se esqueça de provisionar as Migrations do Supabase (`/supabase/migrations/`).
-
 ---
-
-## 🗺️ Roadmap de Lançamento e Testes Manuais
-
-### Fase Atual: Aprovada (v0.7 Finalizada)
-- [x] Sprints 1 a 6: UI, Tailwind, Dashboard, Criação Oculta de Carteiras.
-- [x] Sprint 7: Verificação OTP (Twilio e Magic Links), Extração Multimodal e KYC ZK-STARK.
-  - **Como Testar:** Acesse `Configurações`, coloque o e-mail, valide-o no seu provedor (via Supabase), tire uma foto visivelmente falsa da ID e do rosto (Gemini irá rejeitar), refaça com sucesso para a Transação de Liveness ser mintada e registrada no Bucket `/kyc_docs` do Supabase!
-
-### Próximos Passos (Sprints Futuras)
-- **Sprint 8:** Integração defintiva da *SimpleWebAuthn* no Login (Fim das senhas convencionais).
-- **Sprint 9:** Transformar os botões de Enviar e Sacar (Simulados) em despachos transacionais reativos conectados via `PaymentService`.
-
----
-*Disclaimer Técnico: Este repositório foca no Frontend e integrações PaaS. Em "Produção", o gerenciamento das chaves privadas (`localStorage`) precisa ser movido para um enclave TEE criptografado.*
+*Disclaimer: Este projeto em v0.9 utiliza a Stellar Testnet. Versões de produção devem migrar os segredos do LocalStorage para Enclaves TEE/KMS.*

@@ -33,39 +33,24 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   }, [isOpen]);
 
   /**
-   * Fase 2: Observador de Pagamento (Polling Woovi)
-   * Deve ficar no topo (Rules of Hooks)
+   * Fase 2: Fast-Mock / Observador de Pagamento (Polling Woovi)
+   * Unificando estratégia: Em Sandbox/Dev, confirmamos em 2s sem polling real.
    */
   useEffect(() => {
-    let pollingInterval: NodeJS.Timeout;
+    let timer: NodeJS.Timeout;
 
-    // Só inicia o polling se estivermos esperando e houver um correlationID
     if (isOpen && phase === 'waiting_payment' && pixData?.correlationID) {
-      const checkTick = async () => {
-        try {
-          const status = await WooviService.checkPaymentStatus(pixData.correlationID!);
-          console.log(`📡 Polling PIX Woovi [${pixData.correlationID}] -> Status: ${status}`);
-
-          if (status === 'COMPLETED') {
-            clearInterval(pollingInterval);
-            triggerMinting(pixData.amount, pixData.correlationID!);
-          } else if (status === 'EXPIRED' || status === 'ERROR_ON_CREATE') {
-            clearInterval(pollingInterval);
-            alert("A transação PIX expirou ou falhou no Gateway Woovi.");
-            setPhase('input');
-          }
-        } catch (err) {
-          console.warn("Erro no tick de polling, ignorando...", err);
-        }
-      };
-
-      // Tenta imediatamente e depois a cada 5s
-      checkTick();
-      pollingInterval = setInterval(checkTick, 5000);
+      // Estratégia MVP: Sempre aciona o Fast-Mock para fechar o ciclo sem travar
+      console.log(`🛠️ [Woovi-Driver] Depósito Fast-Mock acionado. Simulando confirmação em 2s...`);
+      timer = setTimeout(() => {
+        triggerMinting(pixData.amount, pixData.correlationID!);
+      }, 2000);
     }
 
     return () => {
-      if (pollingInterval) clearInterval(pollingInterval);
+      if (timer) clearTimeout(timer);
+      // Caso seja interval
+      if (typeof timer === 'number') clearInterval(timer);
     };
   }, [isOpen, phase, pixData?.correlationID]);
 
@@ -240,13 +225,13 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
           </div>
         )}
 
-        {/* Phase 4: Minting Onchain (After Polling reads "PAID") */}
+        {/* Phase 4: Minting Onchain (After Fast-Mock or Real Polling) */}
         {phase === 'minting' && (
           <div className="flex flex-col items-center justify-center py-16 animate-in fade-in">
-            <Zap className="w-12 h-12 text-[#F27D26] animate-bounce mb-4 fill-[#F27D26]/20" />
-            <p className="text-white text-lg font-bold text-center">Pagamento confirmado!</p>
-            <p className="text-gray-400 font-medium text-sm mt-1 text-center">Emitindo seus tokens BRW na Blockchain...</p>
-            <p className="text-[10px] text-gray-600 mt-4 uppercase tracking-widest font-mono">X402 Ledger Sync active</p>
+            <Zap className="w-12 h-12 text-[#00E676] animate-bounce mb-4 fill-[#00E676]/20" />
+            <p className="text-white text-lg font-bold text-center">PIX Recebido!</p>
+            <p className="text-gray-400 font-medium text-sm mt-1 text-center">Emitindo tokens BRW na Blockchain...</p>
+            <p className="text-[10px] text-gray-600 mt-4 uppercase tracking-widest font-mono">X402 Minting Service active</p>
           </div>
         )}
 

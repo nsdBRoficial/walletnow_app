@@ -54,6 +54,7 @@ export default function Settings() {
 
   // Estados PRO Mode (Carteira Web3)
   const [brzBalance, setBrzBalance] = useState<string>('0.00');
+  const [brwBalance, setBrwBalance] = useState<string>('0.00');
   const [xlmBalance, setXlmBalance] = useState<string>('0.00');
   const [usdcBalance, setUsdcBalance] = useState<string>('0.00');
   const [btcBalance, setBtcBalance] = useState<string>('0.00');
@@ -76,6 +77,7 @@ export default function Settings() {
       ]);
       if (balances) {
         setBrzBalance(balances.brz);
+        setBrwBalance(balances.brw);
         setXlmBalance(balances.xlm);
         setUsdcBalance(balances.usdc);
         setBtcBalance(balances.btc);
@@ -894,12 +896,29 @@ export default function Settings() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">BRZ Token</p>
-                      <p className="text-[10px] text-gray-500">Brazilian Digital Token</p>
+                      <p className="text-[10px] text-gray-500">Digital Real (Common)</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(brzBalance).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    <p className="text-[10px] text-[#00E676]">Transfero (Issuer)</p>
+                    <p className="text-[10px] text-gray-500">Transfero (Issuer)</p>
+                  </div>
+                </div>
+
+                {/* Stablecoin BRW (WalletNow) */}
+                <div className="flex items-center justify-between bg-black/30 border border-white/5 p-4 rounded-xl border-l-[#00E676]/30 border-l-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full border border-[#00E676]/20 bg-[#00E676]/5 flex items-center justify-center">
+                      <span className="text-xs font-bold text-[#00E676]">BRW</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">WalletNow Real</p>
+                      <p className="text-[10px] text-gray-500">Operational Asset (Native)</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-white">{isLoadingBalance ? '...' : parseFloat(brwBalance).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                    <p className="text-[10px] text-[#00E676]">WalletNow (Issuer)</p>
                   </div>
                 </div>
 

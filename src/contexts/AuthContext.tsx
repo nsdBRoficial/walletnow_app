@@ -125,7 +125,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
             }
 
-            // 3. Atualiza o State global que distribuirá os dados aos componentes
+            // 3. Verificação de Posse da Chave (Auditoria v0.9)
+            const hasSecretKey = !!WalletFactory.getSecretKey(userId);
+            if (data?.stellar_address && !hasSecretKey) {
+                console.error("🚨 [Security-Audit] Usuário possui endereço Stellar no DB mas perdeu a Chave Secreta localmente!");
+                console.warn("Dica: Para testes, limpe o campo 'stellar_address' no Supabase para regenerar a carteira neste navegador.");
+            }
+
+            // 4. Atualiza o State global que distribuirá os dados aos componentes
             setProfile(data as UserProfile);
 
         } catch (err) {

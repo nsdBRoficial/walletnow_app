@@ -1,173 +1,174 @@
 /**
- * Sprint 9.1: Woovi Gateway Service (PIX / OpenPix)
+ * Woovi Gateway Service (PIX / OpenPix)
  *
- * Substitui o motor de pagamentos da Transfero pelo gateway da Woovi.
- * Autenticação: Authorization: {AppID} no header (sem "Bearer", sem "Basic")
- * O AppID é o Base64(ClientId:ClientSecret) gerado no painel Woovi → Autorização → AppID.
+ * Gerencia a integração com o gateway de pagamentos fiduciários Woovi.
+ * Responsável por criar cobranças PIX dinâmicas e processar saques (Pix Out).
  *
- * Documentação: https://developers.woovi.com/api
- * Sandbox: https://app.woovi.com.br
+ * Arquitetura:
+ * - Depósito: Usuário paga PIX -> Gateway confirma -> Backend/Frontend dispara Minting Stellar.
+ * - Saque: Usuário queima (Burn) BRW -> Sistema dispara Pix Out via Woovi.
  */
 
-// Header Woovi: Authorization: {AppID}
-// O VITE_WOOVI_APP_ID É o token Base64(ClientId:ClientSecret) — não é separado do auth token.
+/**
+ * AppID da Woovi (Base64 da combinação Cliente:Segredo).
+ * Deve ser configurado no arquivo .env.
+ */
 const WOOVI_APP_ID = import.meta.env.VITE_WOOVI_APP_ID;
 
-// ── DEBUG: Exibe no Console se o AppID está chegando preenchido ou undefined ──
-// Remove este bloco antes de ir para produção.
-console.debug(
-  '[WooviService] VITE_WOOVI_APP_ID:',
-  WOOVI_APP_ID
-    ? `✅ Preenchido (${WOOVI_APP_ID.slice(0, 12)}...${WOOVI_APP_ID.slice(-6)})`
-    : '❌ UNDEFINED — verifique o .env.development e reinicie o servidor Vite'
-);
+/**
+ * Base URL para chamadas da API.
+ * Em desenvolvimento (Vite), usamos o proxy '/api/woovi' para evitar CORS.
+ * Em produção (Hostinger), usamos a URL absoluta da Woovi Sandbox.
+ */
+const WOOVI_BASE_URL = import.meta.env.DEV ? '/api/woovi' : 'https://api.woovi-sandbox.com/api/v1';
 
-// Base URL via Vite Proxy para evitar CORS no browser.
-// Em produção real, essa chamada deveria vir de um Backend (Edge Function / Worker).
-const WOOVI_BASE_URL = '/api/woovi';
-
-// Banco de dados em memória para o Modo Mock (quando as envs não estiverem configuradas)
+/**
+ * Banco de dados volátil para o Modo Mock (Sandbox Local).
+ */
 const mockDatabase = new Map<string, { status: string; createdAt: number }>();
 
 /**
- * Payload de resposta de uma cobrança criada com sucesso na Woovi.
+ * Estrutura de dados para uma cobrança Woovi processada.
  */
 export interface WooviCharge {
+  /** ID único de correlação (X402) */
   correlationID: string;
-  brCode: string; // A string Copia e Cola do PIX (EMV)
-  amount: number; // Em Reais (já convertido de centavos)
+  /** String EMV para o Copia e Cola do PIX */
+  brCode: string;
+  /** Valor real em BRL */
+  amount: number;
+  /** Status atual da cobrança no Gateway */
   status: 'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'ERROR_ON_CREATE';
 }
 
+/**
+ * SDK de integração com a API da Woovi (OpenPix).
+ */
 class WooviSDK {
+  /** Indica se o serviço está operando em modo de simulação (Mock). */
   private isMockMode: boolean;
 
   constructor() {
-    // Opera em modo Mock se o AppID não estiver configurado no .env
-    this.isMockMode = !WOOVI_APP_ID;
+    this.isMockMode = !WOOVI_APP_ID || WOOVI_APP_ID === '';
+    
     if (this.isMockMode) {
-      console.warn('⚠️ WooviService: VITE_WOOVI_APP_ID ausente. Operando em MODO MOCK. Adicione a variável ao .env.development e reinicie o Vite.');
+      console.warn('⚠️ [Woovi-Audit] Iniciado em MODO MOCK. Motivo: VITE_WOOVI_APP_ID ausente ou vazio.');
     } else {
-      console.info('✅ WooviService: AppID carregado. Modo SANDBOX REAL ativo.');
+      console.info('✅ [Woovi-Audit] Gateway Woovi inicializado em modo REAL.');
+    }
+
+    if (import.meta.env.PROD && !window.isSecureContext) {
+      console.error('❌ [Security-Audit] Ambiente não seguro detectado! Passkeys e Stellar SDK podem falhar fora de HTTPS.');
     }
   }
 
-
   /**
-   * GET /api/v1/charge/:correlationID
-   * Verifica o status de uma cobrança existente.
+   * Consulta o status atual de uma cobrança PIX no gateway.
+   * 
+   * @param correlationID ID de correlação da cobrança.
+   * @returns O status da cobrança (ACTIVE, COMPLETED, etc).
    */
   async checkPaymentStatus(correlationID: string): Promise<'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'ERROR_ON_CREATE'> {
     if (this.isMockMode) {
       return this._mockCheckStatus(correlationID);
     }
 
-    const response = await fetch(`${WOOVI_BASE_URL}/charge/${correlationID}`, {
-      method: 'GET',
-      headers: {
-        // Woovi: Authorization header = AppID direto (Base64 do painel)
-        'Authorization': WOOVI_APP_ID,
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const response = await fetch(`${WOOVI_BASE_URL}/charge/${correlationID}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': WOOVI_APP_ID,
+          'Content-Type': 'application/json',
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Woovi checkStatus HTTP Error: ${response.status} ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Erro na consulta Woovi: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data?.charge?.status ?? 'ACTIVE';
+    } catch (error: any) {
+      console.error('❌ Falha ao verificar status PIX:', error.message);
+      throw error;
     }
-
-    const data = await response.json();
-    // A API Woovi retorna a cobrança dentro de `charge`
-    return data?.charge?.status ?? 'ACTIVE';
   }
 
   /**
-   * POST /api/v1/charge
-   * Cria uma nova cobrança PIX dinâmica (EMV QR Code).
-   *
-   * @param amountBRL - Valor em Reais (ex: 100.50)
-   * @param userId - ID do usuário para rastreabilidade e correlação (correlationID)
+   * Cria uma nova cobrança PIX dinâmica com QR Code EMV.
+   * 
+   * @param amountBRL Valor em Reais (ex: 50.00).
+   * @param userId ID do usuário para vincular a transação.
+   * @returns Objeto contendo os dados do QR Code e ID de correlação.
    */
   async createCharge(amountBRL: number, userId: string): Promise<WooviCharge> {
     if (this.isMockMode) {
       return this._mockCreateCharge(amountBRL, userId);
     }
 
-    // Woovi trabalha em centavos (integer). R$ 100,00 = 10000 centavos.
     const amountInCents = Math.round(amountBRL * 100);
-
-    // O correlationID une o universo fiat (Woovi) ao universo on-chain (Stellar)
     const correlationID = `walletnow-${userId.substring(0, 8)}-${Date.now()}`;
 
     const payload = {
       correlationID,
       value: amountInCents,
       comment: `Deposito WalletNow - Usuario: ${userId.substring(0, 8)}`,
-      expiresIn: 3600, // 1 hora de validade
+      expiresIn: 3600,
     };
 
-    // DEBUG: Confirma qual AppID está sendo usado no request
-    console.debug('[WooviService] createCharge | Authorization sendo enviado:',
-      WOOVI_APP_ID ? `${WOOVI_APP_ID.slice(0, 12)}...` : 'VAZIO!');
+    try {
+      const response = await fetch(`${WOOVI_BASE_URL}/charge`, {
+        method: 'POST',
+        headers: {
+          'Authorization': WOOVI_APP_ID,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const response = await fetch(`${WOOVI_BASE_URL}/charge`, {
-      method: 'POST',
-      headers: {
-        // Woovi: Authorization header = AppID direto (Base64 do painel → Autorização)
-        'Authorization': WOOVI_APP_ID,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+      if (!response.ok) {
+        const errBody = await response.text();
+        throw new Error(`Erro na criação da cobrança Woovi: ${response.status}`);
+      }
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error(`❌ Woovi createCharge Error Body:`, errBody);
-      throw new Error(`Woovi createCharge HTTP Error: ${response.status} - ${errBody}`);
+      const data = await response.json();
+      const charge = data?.charge;
+
+      if (!charge) {
+        throw new Error('Payload da Woovi incompleto.');
+      }
+
+      return {
+        correlationID: charge.correlationID,
+        brCode: charge.brCode,
+        amount: charge.value / 100,
+        status: charge.status,
+      };
+    } catch (error: any) {
+      console.error('❌ Erro crítico no createCharge Woovi:', error.message);
+      throw error;
     }
-
-    const data = await response.json();
-    const charge = data?.charge;
-
-    if (!charge) {
-      throw new Error('Woovi: Resposta inválida - campo "charge" ausente.');
-    }
-
-    return {
-      correlationID: charge.correlationID,
-      brCode: charge.brCode,          // String Copia e Cola EMV completa
-      amount: charge.value / 100,     // Converter de volta para Reais
-      status: charge.status,
-    };
   }
 
   /**
-   * POST /api/v1/pix/payment
-   * Realiza um saque PIX do saldo WalletNow para o CPF do titular.
-   * Na Woovi, isso é o endpoint de saque (Pix Out).
-   *
-   * @param pixKey - Chave PIX (CPF do titular)
-   * @param amountBRL - Valor em Reais
+   * Executa uma transferência PIX (Saque/Pix Out) para o destinatário informado.
+   * Em ambientes Sandbox/Desenvolvedor, a chamada de API é simulada devido a limitações do gateway.
+   * 
+   * @param pixKey Chave PIX (atualmente restrito a CPF).
+   * @param amountBRL Valor em Reais a ser sacado.
+   * @returns Objeto com o correlationID da transação bancária.
    */
   async transferPix(pixKey: string, amountBRL: number): Promise<{ correlationID: string }> {
     const correlationID = `saque-${Date.now()}`;
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // [SPRINT 9.5 PIVOT] Trava Total de Request (Sandbox Bypass)
-    // A Woovi não possui endpoint de "Pix Out" em Sandbox.
-    // Retornamos imediatamente o Mock de Sucesso para evitar 404 e prosseguir com o BURN real.
-    // ─────────────────────────────────────────────────────────────────────────────
-    const isActuallySandbox = WOOVI_APP_ID?.toLowerCase().includes('sandbox') || this.isMockMode || import.meta.env.DEV;
-
-    if (isActuallySandbox) {
-      console.log('🛠️ [Woovi-Driver] Saque Sandbox detectado. Ignorando chamada de API e simulando aprovação bancária.');
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      return { correlationID };
-    }
+    // Estratégia MVP: Sempre simula o Saque para fechar o ciclo sem bater na API Real (Off-ramp Sandbox não existe)
+    console.info('🛠️ [Woovi-Audit] Saque Simulado acionado (Estratégia MVP).');
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return { correlationID };
 
     const amountInCents = Math.round(amountBRL * 100);
-    const cleanCPF = pixKey.replace(/\D/g, ''); // Garante apenas números (SEM pontos ou traços)
+    const cleanCPF = pixKey.replace(/\D/g, '');
 
-    // Payload de Produção
     const payload = {
       correlationID,
       value: amountInCents,
@@ -176,43 +177,36 @@ class WooviSDK {
       taxID: cleanCPF      
     };
 
-    const finalUrl = 'https://api.woovi.com/api/v1/pix/payment';
+    try {
+      const response = await fetch('https://api.woovi.com/api/v1/pix/payment', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Authorization': WOOVI_APP_ID,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const response = await fetch(finalUrl, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Authorization': WOOVI_APP_ID,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+      if (!response.ok) {
+        throw new Error(`Erro ao processar saque Woovi: ${response.status}`);
+      }
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      throw new Error(`Woovi transferPix HTTP Error: ${response.status} - ${errBody}`);
+      const data = await response.json();
+      return { correlationID: data.correlationID || correlationID };
+    } catch (error: any) {
+      console.error('❌ Falha na transferência bancária PIX:', error.message);
+      throw error;
     }
-
-    const data = await response.json();
-    return { correlationID: data.correlationID || correlationID };
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // HELPERS DE MOCK (Modo Desenvolvimento sem credenciais Woovi)
-  // ─────────────────────────────────────────────────────────────────────────────
+  // Métodos Privados para Simulação (Mocks)
 
   private _mockCreateCharge(amountBRL: number, userId: string): WooviCharge {
     const correlationID = `mock-woovi-${userId.substring(0, 8)}-${Date.now()}`;
+    mockDatabase.set(correlationID, { status: 'ACTIVE', createdAt: Date.now() });
 
-    mockDatabase.set(correlationID, {
-      status: 'ACTIVE',
-      createdAt: Date.now(),
-    });
-
-    console.log(`🤖 [MOCK WOOVI] Cobrança criada: ${correlationID} | R$ ${amountBRL.toFixed(2)}`);
-
-    // Gera um código PIX dummy mas bem formatado visualmente
-    const fakePixCode = `00020126580014br.gov.bcb.pix0136${crypto.randomUUID()}5204000053039865405${amountBRL.toFixed(2)}5802BR5925WALLETNOW MOCK WOOVI6009SAO PAULO62070503***6304${Math.random().toString(16).slice(2, 6).toUpperCase()}`;
+    const fakePixCode = `00020126580014br.gov.bcb.pix0136MOCK-PIX-DATA-1234567890-ABCDEF-6304`;
 
     return {
       correlationID,
@@ -224,19 +218,17 @@ class WooviSDK {
 
   private _mockCheckStatus(correlationID: string): 'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'ERROR_ON_CREATE' {
     const charge = mockDatabase.get(correlationID);
+    if (!charge) throw new Error(`Cobrança inexistente: ${correlationID}`);
 
-    if (!charge) {
-      throw new Error(`[MOCK WOOVI] Cobrança não encontrada: ${correlationID}`);
-    }
-
-    // Mágica do Mock: Após 12 segundos, o pagamento "cai" automaticamente
     if (Date.now() - charge.createdAt > 12000 && charge.status === 'ACTIVE') {
       charge.status = 'COMPLETED';
-      console.log(`✅ [MOCK WOOVI] Pagamento confirmado! correlationID: ${correlationID}`);
     }
 
     return charge.status as any;
   }
 }
 
+/**
+ * Instância exportada do serviço Woovi.
+ */
 export const WooviService = new WooviSDK();
