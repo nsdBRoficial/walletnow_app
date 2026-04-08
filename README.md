@@ -1,4 +1,5 @@
 # 💳 WalletNow - The Zero-Knowledge WaaS (v1.0)
+LIVE STELLAR TESTNET ON: https://nsdbr.com/walletnow
 
 *The end of Web3 complexity. Now with a Full Fin-on-Chain Asset Cycle.*
 
