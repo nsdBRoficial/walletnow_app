@@ -131,32 +131,61 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     setErrorMsg(null);
 
     try {
-      // Pega a secret key do usuário do localStorage
+      // ── 1. Obter keypair do usuário ──────────────────────────────────────────
       const secretKey = WalletFactory.getSecretKey(profile.id);
       if (!secretKey) throw new Error('Chave local não encontrada. Refaça o login.');
 
-      // Importa Stellar SDK para assinar o XDR retornado pela Etherfuse
-      // (contém ChangeTrust + ClaimClaimableBalance)
-      const { Keypair, TransactionBuilder: TB, Networks: N } = await import('@stellar/stellar-sdk');
-
+      const { Keypair, TransactionBuilder: TB, Networks: N, Horizon } = await import('@stellar/stellar-sdk');
       const userKeypair = Keypair.fromSecret(secretKey);
 
-      // Deserializa o XDR não assinado da Etherfuse
-      const tx = TB.fromXDR(transaction.stellar_xdr, N.TESTNET);
+      console.log('[Claim] Keypair:', userKeypair.publicKey());
+      console.log('[Claim] XDR length:', transaction.stellar_xdr.length);
+      console.log('[Claim] XDR preview:', transaction.stellar_xdr.substring(0, 60));
 
-      // Assina com a chave do usuário
+      // ── 2. Deserializar XDR da Etherfuse ──────────────────────────────────────
+      // O Etherfuse retorna um TransactionEnvelope (XDR base64) via stellarClaimTransaction
+      // Pode conter ChangeTrust + ClaimClaimableBalance dependendo da conta
+      let tx: ReturnType<typeof TB.fromXDR>;
+      try {
+        tx = TB.fromXDR(transaction.stellar_xdr, N.TESTNET);
+        console.log('[Claim] XDR desserializado OK — tipo:', tx.constructor.name);
+      } catch (xdrErr) {
+        console.error('[Claim] Falha ao desserializar XDR:', xdrErr);
+        throw new Error(
+          `XDR inválido da Etherfuse: ${xdrErr instanceof Error ? xdrErr.message : String(xdrErr)}`
+        );
+      }
+
+      // ── 3. Assinar com keypair do usuário ─────────────────────────────────────
       tx.sign(userKeypair);
+      console.log('[Claim] Transação assinada com:', userKeypair.publicKey());
 
-      // Submete à Stellar Testnet
-      const { Horizon } = await import('@stellar/stellar-sdk');
+      // ── 4. Submeter à Stellar Testnet ─────────────────────────────────────────
       const server = new Horizon.Server('https://horizon-testnet.stellar.org');
-      const submitResult = await server.submitTransaction(tx);
+      console.log('[Claim] Submetendo à Stellar Testnet...');
+
+      let submitResult;
+      try {
+        submitResult = await server.submitTransaction(tx);
+      } catch (submitErr: unknown) {
+        // Extrair resultCodes da Stellar para erro legível
+        const errObj = submitErr as { response?: { data?: { extras?: { result_codes?: unknown } } } };
+        const codes   = errObj?.response?.data?.extras?.result_codes;
+        console.error('[Claim] Erro ao submeter:', codes ?? submitErr);
+        throw new Error(
+          codes
+            ? `Stellar rejeitou: ${JSON.stringify(codes)}`
+            : `Falha ao submeter: ${submitErr instanceof Error ? submitErr.message : String(submitErr)}`
+        );
+      }
 
       const hash = submitResult.hash;
+      console.log('[Claim] ✅ Transação confirmada! Hash:', hash);
       setTxHash(hash);
 
-      // Atualiza banco: status = 'claimed', stellar_tx_hash = hash
+      // ── 5. Persistir no banco ─────────────────────────────────────────────────
       await BackendService.markAsClaimed(transaction.correlation_id, hash);
+      console.log('[Claim] DB atualizado: status=claimed');
 
       setPhase('success');
       if (onSuccess) onSuccess();
@@ -171,6 +200,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       setPhase('claim_ready'); // Volta para tentar novamente
     }
   };
+
 
   const handleClose = () => {
     if (phase === 'creating_order' || phase === 'claiming') return; // Bloquear durante operações
