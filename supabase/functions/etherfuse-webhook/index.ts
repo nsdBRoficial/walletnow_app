@@ -7,6 +7,9 @@
 // Eventos processados:
 //   order_updated { status: "funded"    } → UPDATE fiat_transactions status='processing'
 //   order_updated { status: "completed" } → UPDATE fiat_transactions com XDR + status='completed'
+//
+// CORREÇÃO v2: processa 'completed' de qualquer status anterior (exceto claimed/failed)
+// para evitar race condition entre webhooks funded→completed que chegam rapidamente.
 
 import { corsHeaders, handleCors } from "../_shared/cors.ts";
 import { getServiceClient } from "../_shared/auth.ts";
@@ -36,20 +39,43 @@ async function verifyWebhookSignature(
   signatureHeader: string | null
 ): Promise<boolean> {
   const webhookSecret = Deno.env.get("ETHERFUSE_WEBHOOK_SECRET");
+
+  // Se secret NÃO está configurado, aceitar sem validação (sandbox/dev)
+  // IMPORTANTE: a verificação de secret DEVE vir ANTES da de header
   if (!webhookSecret) {
-    // Se não configurado em dev/sandbox, aceitar (log warning)
-    logger.warn(FN, "ETHERFUSE_WEBHOOK_SECRET não configurado — pulando verificação");
+    logger.warn(FN, "[SECURITY] ETHERFUSE_WEBHOOK_SECRET não configurado — aceitando sem validação HMAC");
     return true;
   }
 
+  // Prefixo especial para desabilitar verificação em sandbox
+  if (webhookSecret.startsWith("DISABLE_")) {
+    logger.warn(FN, "[SECURITY] Verificação HMAC desabilitada via DISABLE_ prefix — APENAS sandbox");
+    return true;
+  }
+
+  // Secret configurado → header é obrigatório
   if (!signatureHeader) {
-    logger.error(FN, "Header X-Signature ausente");
+    logger.error(FN, "[HMAC] Header X-Signature ausente mas ETHERFUSE_WEBHOOK_SECRET está configurado");
     return false;
   }
 
   try {
     const canonicalized = canonicalize(body);
-    const keyBytes = Uint8Array.from(atob(webhookSecret), (c) => c.charCodeAt(0));
+
+    // Log da string canonicalizada para debug de discrepâncias
+    logger.info(FN, "[HMAC] Canonicalized string", {
+      canonicalized: canonicalized.substring(0, 200),
+      length: canonicalized.length,
+    });
+
+    // Decodificar secret de base64 (com tratamento de erro)
+    let keyBytes: Uint8Array;
+    try {
+      keyBytes = Uint8Array.from(atob(webhookSecret), (c) => c.charCodeAt(0));
+    } catch {
+      logger.error(FN, "[HMAC] ETHERFUSE_WEBHOOK_SECRET não é base64 válido");
+      return false;
+    }
 
     const cryptoKey = await crypto.subtle.importKey(
       "raw",
@@ -71,6 +97,13 @@ async function verifyWebhookSignature(
 
     const expected = `sha256=${hexDigest}`;
 
+    // Log comparativo para debug (primeiros 20 chars apenas)
+    logger.info(FN, "[HMAC] Comparando assinaturas", {
+      expectedPrefix:  expected.substring(0, 20) + "...",
+      receivedPrefix:  signatureHeader.substring(0, 20) + "...",
+      lengthsMatch:    expected.length === signatureHeader.length,
+    });
+
     // Constant-time comparison para prevenir timing attacks
     if (expected.length !== signatureHeader.length) return false;
 
@@ -80,9 +113,12 @@ async function verifyWebhookSignature(
     for (let i = 0; i < expectedBytes.length; i++) {
       diff |= expectedBytes[i] ^ headerBytes[i];
     }
-    return diff === 0;
+
+    const valid = diff === 0;
+    logger.info(FN, `[HMAC] Resultado: ${valid ? "VÁLIDA ✅" : "INVÁLIDA ❌"}`);
+    return valid;
   } catch (err) {
-    logger.error(FN, "Erro ao verificar assinatura", { error: String(err) });
+    logger.error(FN, "[HMAC] Erro ao verificar assinatura", { error: String(err) });
     return false;
   }
 }
@@ -112,11 +148,23 @@ Deno.serve(async (req) => {
 
   // ── 2. Validar assinatura HMAC ──────────────────────────────────────────────
   const signatureHeader = req.headers.get("x-signature");
+
+  // DEBUG: logar payload bruto e assinatura para comparação
+  logger.info(FN, "[DEBUG] Payload bruto recebido", {
+    bodyKeys:         Object.keys(body),
+    signatureHeader:  signatureHeader,
+    bodyPreview:      JSON.stringify(body).substring(0, 500),
+  });
+
   const isValid = await verifyWebhookSignature(body, signatureHeader);
 
   if (!isValid) {
-    logger.error(FN, "Assinatura inválida — request rejeitada", {
-      receivedSignature: signatureHeader,
+    // Log detalhado para diagnóstico de falha HMAC
+    const webhookSecret = Deno.env.get("ETHERFUSE_WEBHOOK_SECRET");
+    logger.error(FN, "[HMAC FAIL] Assinatura inválida", {
+      receivedSignature:  signatureHeader,
+      secretConfigured:   !!webhookSecret,
+      bodyLength:         JSON.stringify(body).length,
     });
     return new Response(JSON.stringify({ error: "Invalid signature" }), {
       status: 401,
@@ -131,7 +179,14 @@ Deno.serve(async (req) => {
   const stellarXdr   = body.stellarClaimTransaction         as string | undefined;
   const claimableId  = body.stellarClaimableBalanceId       as string | undefined;
 
-  logger.info(FN, "Webhook recebido", { eventType, orderId, status });
+  logger.info(FN, "Webhook recebido", {
+    eventType,
+    orderId,
+    status,
+    hasXdr:       !!stellarXdr,
+    xdrLength:    stellarXdr?.length ?? 0,
+    hasClaimable: !!claimableId,
+  });
 
   // Responder 200 imediatamente (Etherfuse faz retry se não receber 2xx)
   // Processamento assíncrono abaixo
@@ -185,18 +240,29 @@ Deno.serve(async (req) => {
       return;
     }
 
-    if (status === "completed" && txRecord.status !== "completed") {
+    if (status === "completed" && txRecord.status !== "completed" && txRecord.status !== "claimed") {
+      // FIX v2: aceitar 'completed' mesmo quando status atual é 'pending'
+      // (race condition: funded e completed chegam quase simultaneamente)
+      logger.info(FN, "Processando completed", {
+        orderId,
+        fromStatus: txRecord.status,
+        hasXdr:     !!stellarXdr,
+        xdrLength:  stellarXdr?.length ?? 0,
+      });
+
       if (!stellarXdr) {
-        logger.error(FN, "stellarClaimTransaction ausente no evento 'completed'", {
+        logger.error(FN, "[CRITICAL] stellarClaimTransaction ausente no evento 'completed'", {
           orderId,
-          body,
+          currentStatus: txRecord.status,
+          bodyKeys:      Object.keys(body),
+          bodyFull:      body, // log completo para diagnóstico
         });
-        // Salva como falha para investigação
+        // Salva como failed para investigação
         await db
           .from("fiat_transactions")
           .update({
             status:        "failed",
-            error_message: "stellarClaimTransaction ausente no webhook",
+            error_message: "stellarClaimTransaction ausente no webhook completed",
             provider_data: body,
             updated_at:    new Date().toISOString(),
           })
@@ -204,8 +270,9 @@ Deno.serve(async (req) => {
         return;
       }
 
-      // Atualiza com XDR para o frontend poder assinar
-      const { error } = await db
+      // Atualiza com XDR — usa IN para aceitar 'pending' OU 'processing'
+      // (evita sobrescrever 'claimed' ou 'failed')
+      const { error, count } = await db
         .from("fiat_transactions")
         .update({
           status:                       "completed",
@@ -215,18 +282,19 @@ Deno.serve(async (req) => {
           updated_at:                   new Date().toISOString(),
         })
         .eq("correlation_id", orderId)
-        .eq("status", "processing"); // garante idempotência extra
+        .in("status", ["pending", "processing"]); // aceita ambos
 
       if (error) {
-        logger.error(FN, "Falha ao salvar XDR", {
+        logger.error(FN, "[DB] Falha ao salvar XDR", {
           orderId,
           error: error.message,
         });
       } else {
-        logger.info(FN, "✅ XDR salvo — aguardando claim do usuário", {
+        logger.info(FN, "✅ XDR salvo com sucesso — aguardando claim do usuário", {
           orderId,
           claimableId,
-          xdrLength: stellarXdr.length,
+          xdrLength:     stellarXdr.length,
+          rowsAffected:  count,
         });
       }
       return;

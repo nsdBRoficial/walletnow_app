@@ -1,0 +1,56 @@
+# supabase/config.toml
+# Configuração do projeto Supabase WalletNow
+# Ref: https://supabase.com/docs/guides/cli/config
+
+project_id = "vjvljpjzusgjsxnoihau"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["https://vjvljpjzusgjsxnoihau.supabase.co"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+# ─── Edge Functions ───────────────────────────────────────────────────────────
+
+# webhook da Etherfuse — PÚBLICO (sem JWT)
+# Etherfuse não envia JWT de usuário, usa X-Signature HMAC para autenticar
+[functions.etherfuse-webhook]
+verify_jwt = false
+
+# Demais funções requerem JWT de usuário logado
+[functions.etherfuse-simulate-fiat]
+verify_jwt = true
+
+[functions.etherfuse-create-order]
+verify_jwt = true
