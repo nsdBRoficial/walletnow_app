@@ -55,6 +55,53 @@ Abaixo está o mapeamento atual de estabilidade do protocolo:
 
 ---
 
+## Architecture Flow (Visual Overview)
+
+```text
+┌───────────────────────┐
+│        USER           │
+│ Passkeys / Biometrics │
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│     WalletNow UI      │
+│ React + TailwindCSS   │
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│   PIX Deposit Flow    │
+│   Woovi / OpenPix     │
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│    Woovi Webhook      │
+│ HMAC Validation Layer │
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│ Supabase EdgeFunction │
+│  Deno Runtime Server  │
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│   Stellar SDK Layer   │
+│ Sponsored Transactions│
+└──────────┬────────────┘
+           │
+           ▼
+┌───────────────────────┐
+│  Stablecoin Delivery  │
+│ Self-Custody Wallet   │
+└───────────────────────┘
+
+
+--- 
+
 ### 📸 Screenshots
 
 <details>
@@ -142,6 +189,39 @@ Consulte os ADRs (`QA_ONBOARDING.md`, `ADR_ONBOARDING_STABILITY.md`) para detalh
 - Transformação do App em um PWA (Progressive Web App).
 - Implementação nativa via React Native para App Stores.
 - Cash-out nativo (Stablecoin -> Reais).
+
+---
+
+## Why Stellar?
+
+WalletNow was architected on Stellar because it provides the ideal infrastructure for real-world financial applications focused on accessibility, speed and scalability.
+
+Unlike traditional blockchain environments that require users to manage gas tokens and complex wallet interactions, Stellar enables a seamless onboarding experience optimized for mainstream adoption.
+
+### Why Stellar fits WalletNow perfectly
+
+- **Near-Instant Settlement**  
+  Transactions finalize in approximately 3–5 seconds, enabling real-time Pix-to-stablecoin conversion experiences.
+
+- **Ultra-Low Fees**  
+  Stellar transaction costs are fractions of a cent, making micropayments and mass onboarding economically viable.
+
+- **Sponsored Transactions (Gas Abstraction)**  
+  Using `beginSponsoringFutureReserves`, WalletNow can sponsor account creation and transaction fees, completely removing gas friction from the end user.
+
+- **Native Asset Issuance**  
+  Stellar provides a robust and battle-tested framework for issuing fiat-backed assets and stablecoins securely on-chain.
+
+- **Ideal for Emerging Markets**  
+  The Stellar architecture aligns perfectly with high-frequency, low-cost payment ecosystems such as Brazil’s Pix network.
+
+- **Built for Financial Interoperability**  
+  Stellar was designed specifically for payments, remittances and cross-border financial infrastructure — making it a natural settlement layer for WalletNow.
+
+By combining Stellar’s low-cost infrastructure with Pix instant payments and modern self-custody UX, WalletNow creates an invisible bridge between traditional finance and Web3.
+
+
+
 
 ---
 
