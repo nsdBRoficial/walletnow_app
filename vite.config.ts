@@ -11,8 +11,8 @@ export default defineConfig(({ mode }) => {
   
   // Base Path dinâmico:
   // Na Vercel, roda na raiz ('/')
-  // Local/Hostinger, roda na subpasta ('/walletnow-new/')
-  const basePath = process.env.VERCEL ? '/' : '/walletnow-new/';
+  // Local/Hostinger, roda na subpasta ('/walletnow/')
+  const basePath = process.env.VERCEL ? '/' : '/walletnow/';
 
   return {
     base: basePath,
