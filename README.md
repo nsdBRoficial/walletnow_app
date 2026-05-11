@@ -122,6 +122,24 @@ Abaixo está o mapeamento atual de estabilidade do protocolo:
 <img src="docs/assets/dashboard.png" width="100%" alt="Dashboard WalletNow">
 </details>
 
+<details>
+<summary><b>4. Integração Woovi (Checkout PIX Dinâmico)</b></summary>
+<br>
+<img src="docs/assets/qrcode-woovi.png" width="100%" alt="Checkout Pix WalletNow">
+</details>
+
+<details>
+<summary><b>5. Depósito Concluído (Finalizado com sucesso)</b></summary>
+<br>
+<img src="docs/assets/deposito-concluido.png" width="100%" alt="Depósito Concluído WalletNow">
+</details>
+
+<details>
+<summary><b>6. PRO MODE - Funções Descentralizadas (Carteira Não-Custodial)</b></summary>
+<br>
+<img src="docs/assets/pro-mode.png" width="100%" alt="ProMode DEFI - WalletNow">
+</details>
+
 ---
 
 ## 💻 Local Development
