@@ -1,5 +1,6 @@
 import { Keypair, Horizon, TransactionBuilder, Networks, Asset, Operation } from '@stellar/stellar-sdk';
 import { supabase } from '../lib/supabase';
+import { isValidPublicKey, isValidSecretKey } from '../utils/stellarValidation';
 
 /**
  * WalletFactory
@@ -42,7 +43,7 @@ export const WalletFactory = {
             const issuerKeypair = Keypair.fromSecret(ISSUER_SECRET);
             const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
 
-            console.log(`🛡️ [Stellar-Audit] Ativando conta via Sponsor: ${publicKey.slice(0, 8)}...`);
+            console.log(`[WalletNow][WalletFactory] 🛡️ [Stellar-Audit] Ativando conta via Sponsor: ${publicKey.slice(0, 8)}...`);
 
             const transaction = new TransactionBuilder(issuerAccount, {
                 fee: '100000',
@@ -57,10 +58,10 @@ export const WalletFactory = {
 
             transaction.sign(issuerKeypair);
             await server.submitTransaction(transaction);
-            console.log("✅ [Stellar-Audit] Conta ativada com sucesso via Sponsor.");
+            console.log("[WalletNow][WalletFactory] ✅ [Stellar-Audit] Conta ativada com sucesso via Sponsor.");
             return true;
         } catch (error: any) {
-            console.error('❌ [Stellar-Audit] Falha na ativação via Sponsor:', error?.response?.data || error.message);
+            console.error('[WalletNow][WalletFactory] ❌ [Stellar-Audit] Falha na ativação via Sponsor:', error?.response?.data || error.message);
             return false;
         }
     },
@@ -70,9 +71,16 @@ export const WalletFactory = {
      */
     async provisionWalletForUser(userId: string): Promise<string | null> {
         try {
+            console.log("[WalletNow][WalletFactory] Iniciando provisionamento de carteira para o usuário:", userId);
             const keypair = Keypair.random();
             const publicKey = keypair.publicKey();
             const secretKey = keypair.secret();
+
+            // Validação de segurança (Hard Validation) ANTES de persistir qualquer coisa
+            if (!isValidPublicKey(publicKey) || !isValidSecretKey(secretKey)) {
+                console.error("[WalletNow][WalletFactory] 🚨 Chaves geradas corrompidas ou inválidas. Abortando provisionamento.");
+                throw new Error("Chaves Stellar corrompidas.");
+            }
 
             // Salva apenas a Chave Pública no Banco (Referência)
             const { error: dbError } = await supabase
@@ -80,17 +88,27 @@ export const WalletFactory = {
                 .update({ stellar_address: publicKey })
                 .eq('id', userId);
 
-            if (dbError) throw new Error(`DB Sync Fail: ${dbError.message}`);
+            if (dbError) {
+                console.error("[WalletNow][WalletFactory] ❌ Falha de rede ao persistir Public Key no banco:", dbError);
+                throw new Error(`DB Sync Fail: ${dbError.message}`);
+            }
 
             // Salva a Chave Secreta localmente (Posse do Usuário)
-            localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, secretKey);
+            try {
+                localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, secretKey);
+                console.log("[WalletNow][WalletFactory] Secret Key armazenada com segurança localmente.");
+            } catch (storageError) {
+                console.error("[WalletNow][WalletFactory] ❌ Falha catastrófica no LocalStorage (Quota/Permissão). Abortando!");
+                // Rollback manual do Supabase pode não ser confiável, deixamos a aplicação fail-safe no AuthContext
+                throw storageError;
+            }
 
             // Tenta ativar via Friendbot primariamente
             try {
                 await fetch(`https://horizon-testnet.stellar.org/friendbot?addr=${encodeURIComponent(publicKey)}`);
-                console.log("✅ [Stellar-Audit] Conta ativada via Friendbot.");
+                console.log("[WalletNow][WalletFactory] ✅ [Stellar-Audit] Conta ativada via Friendbot.");
             } catch (e) {
-                console.warn("⚠️ Friendbot indisponível. Tentando ativação via Sponsor...");
+                console.warn("[WalletNow][WalletFactory] ⚠️ Friendbot indisponível. Tentando ativação via Sponsor...");
                 await this.activateAccount(publicKey);
             }
 
@@ -119,14 +137,16 @@ export const WalletFactory = {
                     
                     transaction.sign(issuerKeypair, userKeypair);
                     await server.submitTransaction(transaction);
+                    console.log("[WalletNow][WalletFactory] ✅ Trustline base estabelecida.");
                 } catch (setupError) {
-                    console.warn("⚠️ Erro no setup inicial da Trustline. O Mint cuidará disso.", setupError);
+                    console.warn("[WalletNow][WalletFactory] ⚠️ Erro no setup inicial da Trustline. O Mint cuidará disso.", setupError);
                 }
             }
 
+            console.log("[WalletNow][WalletFactory] Provisionamento 100% concluído com sucesso.");
             return publicKey;
         } catch (error) {
-            console.error('❌ Erro no provisionamento da carteira:', error);
+            console.error('[WalletNow][WalletFactory] ❌ Erro fatal no provisionamento da carteira:', error);
             return null;
         }
     },

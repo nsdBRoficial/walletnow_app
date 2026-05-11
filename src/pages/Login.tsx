@@ -13,7 +13,7 @@ import { supabase } from '../lib/supabase';
  */
 export default function Login() {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, authError } = useAuth();
 
   // Estados de Interface para ajudar a debugar!
   const [isLoading, setIsLoading] = useState(false);
@@ -171,12 +171,12 @@ export default function Login() {
       <div className="w-full bg-[#161616] rounded-[32px] p-8 border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both">
 
         {/* Caixa de Exibição de Erros Customizada */}
-        {errorMsg && (
+        {(errorMsg || authError) && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 animate-in fade-in zoom-in duration-300">
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-red-500">Erro de Acesso</p>
-              <p className="text-xs text-red-400/80 mt-1">{errorMsg}</p>
+              <p className="text-xs text-red-400/80 mt-1">{errorMsg || authError}</p>
             </div>
           </div>
         )}
