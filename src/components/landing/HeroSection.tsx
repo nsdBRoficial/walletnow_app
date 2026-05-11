@@ -98,18 +98,13 @@ export default function HeroSection({ t }: { t: LandingT }) {
             {/* Main Center Node (Stellar) */}
             <div className="absolute z-30 w-32 h-32 rounded-3xl glass-card-solid flex items-center justify-center animate-float-orb shadow-[0_20px_60px_-10px_rgba(0,0,0,0.2)]">
                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--color-wn-green)] to-transparent opacity-10" />
-               {/* Stellar simple icon representation */}
-               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-               </svg>
+               <img src={`${import.meta.env.BASE_URL}stellar-logo.svg`} alt="Stellar" style={{ width: 42, height: 42, position: 'relative', zIndex: 10 }} />
             </div>
 
             {/* Orbiting Element 1 (Pix) */}
             <div className="absolute z-20 left-[10%] top-[25%] animate-float">
               <div className="w-24 h-24 rounded-2xl glass-card flex flex-col items-center justify-center gap-2">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-cyan-500" strokeWidth="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
+                <img src={`${import.meta.env.BASE_URL}pix-icon.svg`} alt="Pix" style={{ width: 42, height: 42 }} />
                 <span className="text-[10px] font-bold text-[var(--text-primary)]">PIX IN</span>
               </div>
             </div>
@@ -117,9 +112,7 @@ export default function HeroSection({ t }: { t: LandingT }) {
             {/* Orbiting Element 2 (USDC) */}
             <div className="absolute z-20 right-[10%] bottom-[25%] animate-float-delayed">
               <div className="w-24 h-24 rounded-2xl glass-card flex flex-col items-center justify-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/40">
-                  <span className="text-xs font-bold text-blue-500">$</span>
-                </div>
+                <img src={`${import.meta.env.BASE_URL}usdc-icon.svg`} alt="USDC" style={{ width: 42, height: 42 }} />
                 <span className="text-[10px] font-bold text-[var(--text-primary)]">USDC OUT</span>
               </div>
             </div>

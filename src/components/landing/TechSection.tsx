@@ -50,7 +50,10 @@ export default function TechSection({ t }: { t: LandingT }) {
               <div key={label} className="group glass-card rounded-[24px] p-6 flex flex-col gap-4 premium-transition hover:bg-[var(--bg-surface-solid)] hover:-translate-y-2 hover:shadow-[var(--shadow-premium)]">
                 <div className="flex items-center justify-between">
                   <div className="w-10 h-10 rounded-2xl bg-[var(--border-subtle)] flex items-center justify-center group-hover:bg-[var(--glow-primary)] premium-transition">
-                    <Icon className="w-5 h-5 text-[var(--text-primary)] group-hover:text-[var(--color-wn-green-hover)] premium-transition" />
+                    {idx === 0 ? <img src={`${import.meta.env.BASE_URL}stellar-logo.svg`} alt="Stellar" className="w-5 h-5" /> : 
+                     idx === 6 ? <img src={`${import.meta.env.BASE_URL}pix-icon.svg`} alt="Pix" className="w-5 h-5" /> :
+                     idx === 7 ? <img src={`${import.meta.env.BASE_URL}usdc-icon.svg`} alt="USDC" className="w-5 h-5" /> :
+                     <Icon className="w-5 h-5 text-[var(--text-primary)] group-hover:text-[var(--color-wn-green-hover)] premium-transition" />}
                   </div>
                   <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider bg-[var(--border-light)] text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] premium-transition">
                     {tag}
