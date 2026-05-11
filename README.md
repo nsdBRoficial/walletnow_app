@@ -162,7 +162,7 @@ Consulte os ADRs (`QA_ONBOARDING.md`, `ADR_ONBOARDING_STABILITY.md`) para detalh
 
 ## 🌍 Links Oficiais
 
-- **Deploy Produção**: [nsdbr.com/walletnow-new/](https://nsdbr.com/walletnow-new/)
+- **Deploy Produção**: [nsdbr.com/walletnow/](https://nsdbr.com/walletnow/)
 - **Documentação de Deploy**: [Docs: Hostinger](./docs/DEPLOY_HOSTINGER.md)
 - **Tecnologias**: [Stellar](https://stellar.org/) | [Supabase](https://supabase.com/)
 
