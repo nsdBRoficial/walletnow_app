@@ -1,69 +1,177 @@
-# 💳 WalletNow - The Zero-Knowledge WaaS (v1.0)
-LIVE STELLAR TESTNET ON: https://nsdbr.com/walletnow
+<div align="center">
+  <img src="public/logo-walletnow.svg" alt="WalletNow Logo" width="80" height="80">
+  <br/>
+  <h1>WalletNow</h1>
+  <p><b>The invisible bridge between Pix and Web3.</b></p>
+  <p>Uma infraestrutura não-custodial que remove a fricção da Web3, unindo o onboarding sem senhas (Passkeys), depósitos via Pix instantâneos e liquidação em stablecoins na rede Stellar — tudo sem expor o usuário à complexidade da blockchain.</p>
+</div>
 
-*The end of Web3 complexity. Now with a Full Fin-on-Chain Asset Cycle.*
+<br/>
 
-## 📖 Project Description (Pitch-Focus)
+## 🌐 Visão Geral do Produto
 
-**WalletNow** is a "Wallet-as-a-Service" (WaaS) platform focused on financial interoperability with the **Stellar Network**. We abstract 100% of crypto technical complexities (seeds, keys, gas) for new users, delivering the agility and natural experience of a fiat bank via Instant PIX without compromising the Blockchain DNA.
+O **WalletNow** é projetado para atuar como uma *fiat-to-stablecoin on-ramp* integrada. Focado em UX de próxima geração e escalabilidade, ele consolida os fluxos de criação de carteiras, custódia e câmbio em uma única jornada de produto fluida.
 
-**Key Highlights:**
-- **Maximum Sovereignty & Passkeys:** All transaction signatures and identity keys occur locally on the client through bio-cryptographic authentication based on **Passkeys (WebAuthn)**. No private key is ever transmitted to central servers (Non-Custodial architecture based on the user's secure enclave).
-- **Fast On/Off Ramp via PIX:** Fluid fiat-to-crypto gateways powered by `WooviService`.
-- **Mint/Burn & ZK-STARKs Integration:** Financial flows operate at a 1:1 peg, instantly Minting On-chain Tokens (**BRW**) and Burning them upon withdrawals. This entire flow validates **Zero-Knowledge** premises, allowing end-to-end Liveness Verification of onboarded users without exposing privacy hashes or PII data on the Mainnet, using ZK-STARKs principles to prove identity sovereignty.
+Nós resolvemos o maior problema da adoção em Web3: **fricção na entrada**.
+Não há seed phrases, não há compras de gas tokens obrigatórias, e não há espera prolongada. 
 
-## 🛠️ Setup Instructions
+---
 
-To run the platform completely offline/locally via **Sandbox**:
+## ✨ Features (Core Value Proposition)
 
-1. Clone the repository to your local machine:
-   ```bash
-   git clone https://github.com/nsdBRoficial/walletnow_app.git
-   cd walletnow_app
-   ```
-2. Copy the environment example file containing the integration placeholders:
-   ```bash
-   cp .env.example .env.development
-   ```
-3. Fill in the required keys in the `.env.development` file:
-   - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (Your Auth instance).
-   - `VITE_STELLAR_ISSUER_SECRET` (The master key for Testnet Gasless sponsorship).
-   - `VITE_GEMINI_API_KEY` (Google Key for Chat/KYC Intelligence).
-   - `VITE_WOOVI_APP_ID` (AppID/Key for the banking gateway).
+- **Passkeys Onboarding**: Autenticação biométrica local via FIDO2 (FaceID, TouchID). Gerenciamento não-custodial sem senhas legadas.
+- **Gasless Transactions**: Patrocínio completo de "fee bumps" e patrocínio de reservas via `beginSponsoringFutureReserves` na rede Stellar.
+- **Pix Integration**: Conciliação em tempo real com o sistema brasileiro Pix utilizando a API da Woovi/OpenPix.
+- **Self-Custody Abstraction**: A chave secreta é gerada no lado do cliente e nunca sai do dispositivo sem permissão explícita.
+- **Realtime Infrastructure**: Webhooks e Supabase Edge Functions sincronizados via WebSocket para atualizar a UI em menos de 3 segundos após o pagamento Pix.
+- **Stablecoin Ready**: Construído para transacionar BRZ/BRW e USDC sob o ecossistema rápido e barato da Stellar Network.
 
-4. Install the dependencies using Node:
-   ```bash
-   npm install
-   ```
-5. Start in developer mode:
-   ```bash
-   npm run dev
-   ```
+---
 
-## 📸 Screenshots Table
+## 🏗️ Architecture
 
-Below are the visual indicators proving the successfully executed WalletNow flows.
+A arquitetura do WalletNow é dividida em serviços altamente desacoplados e *serverless*:
 
-| Application Step | Proven State Description | Image Location / Path |
+1. **Frontend (React 19 + Vite 6)**: Interface moderna com TailwindCSS v4, Zustand para estado global local e um framework de internacionalização.
+2. **Backend / BaaS (Supabase)**: Autenticação, banco de dados PostgreSQL e WebSockets nativos para sincronização de estado (`realtime`).
+3. **Web3 Layer (Stellar SDK v14)**: Camada de blockchain responsável pela abstração de contas e submissão de transações XDR (via chamadas RPC ou Horizon).
+4. **Fiat Gateway (Woovi/OpenPix)**: Orquestração de cobranças Pix via QR Code dinâmico e liquidação.
+5. **Edge Functions (Deno)**: Código serverless no Supabase que recebe os webhooks da Woovi, valida a assinatura HMAC-SHA256, assina as transações patrocinadoras da Stellar e coordena as mudanças de status da wallet.
+
+---
+
+## 🚀 Current MVP Status
+
+Abaixo está o mapeamento atual de estabilidade do protocolo:
+
+| Funcionalidade / Componente | Status | Notas |
 | :--- | :--- | :--- |
-| **Wallet Connected** | Passive connection state via Supabase with locally generated Wallet. | `/docs/screenshots/wallet_connected.png` |
-| **Balance Displayed** | Active on-chain asset reading (BRW, BRZ, XLM) on the Testnet. | `/docs/screenshots/balance_dashboard.png` |
-| **Successful Testnet Tx** | Blockchain operation history via dashboard or attached explorer. | `/docs/screenshots/testnet_tx.png` |
-| **Tx Result Modal** | Clear StellarExpert audit link after Minting/Burning inside operation modals. | `/docs/screenshots/success_modal_explorer.png` |
+| **Landing Page** | 🟢 **VALIDATED** | Redesign institucional, dark mode, i18n, performance auditada. |
+| **Passkey Generation** | 🟢 **VALIDATED** | Keypairs gerados e salvos localmente. Storage do Supabase configurado. |
+| **Supabase Sync** | 🟢 **VALIDATED** | Perfis criados corretamente após o signup biométrico. |
+| **Pix Webhook (Woovi)** | 🟢 **VALIDATED** | Edge function validando assinaturas e alterando tabelas. |
+| **Realtime Dashboard** | 🟢 **VALIDATED** | UI reage a pagamentos pagos simulando recarga instantânea. |
+| **Stellar Sponsor TXs** | 🟡 **EXPERIMENTAL** | Lógica de `feeBump` escrita, aguardando fine-tuning em Testnet. |
 
 ---
 
-## 🏗️ Technical Core & X402 Standard
+## 🖼️ Screenshots
 
-### Traceability Standard (X402)
-Every fiat transaction is strongly cryptographically tied to a Blockchain transaction through verifiable Memos (`X402:correlationID`), enabling total end-to-end auditing.
+*(Substitua os links abaixo por capturas de tela reais do produto para o Hackathon)*
 
-### Sponsored Reserves (CAP-33)
-Our account abstraction architecture is powered by Stellar's **Sponsored Reserves (CAP-33)**. The protocol eliminates the need for the user to buy XLM just to "open a wallet". This action is magically subsidized by a Master Issuer that manages Trustlines automatically, making the UX as clean as a Web2 application.
+<details>
+<summary>1. Landing Page (Premium Redesign)</summary>
+<br>
+<i>Adicione o placeholder aqui: <code>![Landing](docs/assets/landing.png)</code></i>
+</details>
 
-*   `/src/services/paymentService.ts`: Financial orchestrator (*Mint, Burn, Sponsorship*).
-*   `/src/services/wooviService.ts`: PIX gateway integration.
-*   `/src/services/walletFactory.ts`: Sovereign Zero-Knowledge management on the client.
+<details>
+<summary>2. Fluxo de Onboarding (Passkeys)</summary>
+<br>
+<i>Adicione o placeholder aqui: <code>![Onboarding](docs/assets/onboarding.png)</code></i>
+</details>
+
+<details>
+<summary>3. Dashboard & Deposit Flow (Pix)</summary>
+<br>
+<i>Adicione o placeholder aqui: <code>![Dashboard](docs/assets/dashboard.png)</code></i>
+</details>
 
 ---
-*Disclaimer: This project submitted for the Hackathon runs entirely on the Stellar Testnet.*
+
+## 💻 Local Development
+
+Pré-requisitos: `Node.js >= 20`, `npm` ou `yarn`.
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/nsdBRoficial/walletnow_app.git
+cd walletnow_app
+
+# 2. Instale as dependências
+npm install
+
+# 3. Configure as variáveis de ambiente (Crie o .env baseado no .env.example)
+cp .env.example .env
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+---
+
+## 🔐 Environment Variables
+
+Crie um arquivo `.env` na raiz do projeto contendo as seguintes variáveis:
+
+| Variável | Descrição | Ambiente |
+| :--- | :--- | :--- |
+| `VITE_WOOVI_APP_ID` | API Key da Woovi/OpenPix | Client-side Proxy |
+| `VITE_SUPABASE_URL` | URL Pública do projeto Supabase | Client-side |
+| `VITE_SUPABASE_ANON_KEY` | Chave Anônima Pública do Supabase | Client-side |
+| `VITE_BASE_PATH` | Caminho de subpasta para Hostinger (ex: `/walletnow/`) | Client-side (Build) |
+| `SUPABASE_SERVICE_ROLE_KEY` | (Apenas Edge Functions) Chave secreta de Admin | Edge / Server |
+| `WOOVI_WEBHOOK_SECRET` | (Apenas Edge Functions) Chave HMAC do Webhook | Edge / Server |
+| `STELLAR_SPONSOR_SECRET` | (Apenas Edge Functions) Secret do patrocinador Gas | Edge / Server |
+
+---
+
+## 🛡️ Security Model
+
+A WalletNow trata segurança como ativo inegociável:
+- **Wallet Isolation**: A Chave Privada Stellar (Secret Key) do usuário é gerada no navegador e criptografada (se suportado). **Ela nunca é salva no Supabase**. Apenas a Public Key é persistida.
+- **Fail-Safe Onboarding**: Em caso de falha de rede durante o *signup*, a UI intercepta a falta de salvamento local e paralisa o processo, evitando geração de carteiras órfãs e perda de fundos.
+- **Data Integrity**: Os Webhooks da Woovi são verificados com hashes HMAC. Chamadas forjadas são descartadas imediatamente na Deno Edge Function.
+
+Consulte os ADRs (`QA_ONBOARDING.md`, `ADR_ONBOARDING_STABILITY.md`) para detalhes das tomadas de decisão arquitetural.
+
+---
+
+## 🗺️ Roadmap & Hackathon Scope
+
+### Escopo Atual (Hackathon)
+- [x] UX Landing premium (Antigravity/Stripe aesthetics).
+- [x] Setup do Supabase & Edge Functions Deno.
+- [x] Fluxo de Onboarding via Biometria (mock/UI).
+- [x] Conexão Realtime com PIX (Sandbox).
+
+### Próxima Sprint (Commit 2)
+- [ ] Implementação Real das Trustlines da Stellar.
+- [ ] Emissão (Mint) automatizada via Edge Functions ao confirmar o Pix.
+- [ ] Exportação de Secret Key local (Backup).
+
+### Future Vision
+- Transformação do App em um PWA (Progressive Web App).
+- Implementação nativa via React Native para App Stores.
+- Cash-out nativo (Stablecoin -> Reais).
+
+---
+
+## 🛠️ Tech Stack
+
+| Tecnologia | Função no Sistema |
+| :--- | :--- |
+| **React 19** | Componentização e Interface de Usuário |
+| **Vite 6** | Bundler ultra-rápido para desenvolvimento e build |
+| **TailwindCSS 4** | Estilização utilitária e CSS Variables para Theming |
+| **Supabase** | DB, Auth, Edge Functions (Deno) e WebSockets |
+| **Stellar SDK** | Comunicação on-chain com o Horizon RPC |
+| **Woovi** | Integração Institucional do PIX Sandbox |
+
+---
+
+## 🌍 Links Oficiais
+
+- **Deploy Produção**: [nsdbr.com/walletnow-new/](https://nsdbr.com/walletnow-new/)
+- **Documentação de Deploy**: [Docs: Hostinger](./docs/DEPLOY_HOSTINGER.md)
+- **Tecnologias**: [Stellar](https://stellar.org/) | [Supabase](https://supabase.com/)
+
+---
+
+## 👤 Author
+Desenvolvido com 💚 por **Douglas Alexandre Gomes da Silva (nsdBR)**.
+<br/>
+<br/>
+<div align="center">
+  <sub>WalletNow — 2026</sub>
+</div>

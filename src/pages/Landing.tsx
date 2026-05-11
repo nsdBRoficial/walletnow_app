@@ -81,13 +81,13 @@ export default function Landing() {
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <div style={{
-            width: 28, height: 28, borderRadius: 8,
-            background: 'linear-gradient(135deg, #00D084, #00C46A)',
+            height: 28, width: 28, borderRadius: 8,
+            background: '#FFFFFF',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 4,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
           }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-            </svg>
+            <img src={`${import.meta.env.BASE_URL}logo-walletnow.svg`} alt="Logo" style={{ height: '100%', width: 'auto', display: 'block' }} />
           </div>
           <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>WalletNow</span>
           <span style={{

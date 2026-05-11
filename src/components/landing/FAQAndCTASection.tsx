@@ -74,9 +74,15 @@ export default function FAQAndCTASection({ t }: { t: LandingT }) {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6 border-t border-[var(--border-light)] text-center bg-[var(--bg-main)] relative z-10">
-        <p className="text-xs font-medium tracking-wide text-[var(--text-secondary)]">
-          © 2026 WalletNow · Built on Stellar · {t.footer} · <span className="text-[var(--color-wn-green)] font-bold">Testnet</span>
+      <footer className="py-10 px-6 border-t border-[var(--border-light)] flex flex-col items-center justify-center gap-4 bg-[var(--bg-main)] relative z-10">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center justify-center bg-white rounded-md p-1 shadow-sm" style={{ width: 26, height: 26 }}>
+            <img src={`${import.meta.env.BASE_URL}logo-walletnow.svg`} alt="Logo" style={{ height: '100%', width: 'auto', display: 'block' }} />
+          </div>
+          <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>WalletNow</span>
+        </div>
+        <p className="text-xs font-medium tracking-wide text-[var(--text-secondary)] flex items-center justify-center flex-wrap gap-1.5">
+          © 2026 WalletNow · Built on <img src={`${import.meta.env.BASE_URL}stellar-logo.svg`} alt="Stellar" className="w-3.5 h-3.5 inline-block -mt-0.5" /> Stellar · {t.footer} · <span className="text-[var(--color-wn-green)] font-bold">Testnet</span>
         </p>
       </footer>
     </>

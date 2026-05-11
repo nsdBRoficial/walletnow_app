@@ -8,9 +8,12 @@ export default defineConfig(({ mode }) => {
   
   // Woovi / OpenPix AppID
   const wooviAppId = (env.VITE_WOOVI_APP_ID || '').trim();
+  
+  // Base Path dinâmico para build em subpastas na Hostinger ou Root
+  const basePath = env.VITE_BASE_PATH || '/walletnow/';
 
   return {
-    base: '/walletnow/',
+    base: basePath,
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
