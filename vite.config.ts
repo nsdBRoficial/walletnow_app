@@ -9,8 +9,10 @@ export default defineConfig(({ mode }) => {
   // Woovi / OpenPix AppID
   const wooviAppId = (env.VITE_WOOVI_APP_ID || '').trim();
   
-  // Base Path dinâmico para build em subpastas na Hostinger ou Root
-  const basePath = env.VITE_BASE_PATH || '/walletnow/';
+  // Base Path dinâmico:
+  // Na Vercel, roda na raiz ('/')
+  // Local/Hostinger, roda na subpasta ('/walletnow-new/')
+  const basePath = process.env.VERCEL ? '/' : '/walletnow-new/';
 
   return {
     base: basePath,
