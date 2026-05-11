@@ -55,26 +55,24 @@ Abaixo está o mapeamento atual de estabilidade do protocolo:
 
 ---
 
-## 🖼️ Screenshots
-
-*(Substitua os links abaixo por capturas de tela reais do produto para o Hackathon)*
+### 📸 Screenshots
 
 <details>
-<summary>1. Landing Page (Premium Redesign)</summary>
+<summary><b>1. Landing Page (Premium Redesign)</b></summary>
 <br>
-<i>Adicione o placeholder aqui: <code>![Landing](docs/assets/landing.png)</code></i>
+<img src="docs/assets/landing.png" width="100%" alt="Landing Page WalletNow">
 </details>
 
 <details>
-<summary>2. Fluxo de Onboarding (Passkeys)</summary>
+<summary><b>2. Fluxo de Onboarding (Passkeys)</b></summary>
 <br>
-<i>Adicione o placeholder aqui: <code>![Onboarding](docs/assets/onboarding.png)</code></i>
+<img src="docs/assets/onboarding.png" width="100%" alt="Onboarding WalletNow">
 </details>
 
 <details>
-<summary>3. Dashboard & Deposit Flow (Pix)</summary>
+<summary><b>3. Dashboard & Deposit Flow (Pix)</b></summary>
 <br>
-<i>Adicione o placeholder aqui: <code>![Dashboard](docs/assets/dashboard.png)</code></i>
+<img src="docs/assets/dashboard.png" width="100%" alt="Dashboard WalletNow">
 </details>
 
 ---
