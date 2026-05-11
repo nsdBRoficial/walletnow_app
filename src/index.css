@@ -1,1 +1,107 @@
 @import "tailwindcss";
+
+@theme {
+  --color-wn-green: #00FF99;
+  --color-wn-green-hover: #00D084;
+}
+
+@layer base {
+  :root {
+    --bg-main: #F7F8FA;
+    --bg-surface: rgba(255, 255, 255, 0.7);
+    --bg-surface-solid: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --border-subtle: rgba(15, 23, 42, 0.08);
+    --border-light: rgba(15, 23, 42, 0.04);
+    --shadow-premium: 0 12px 40px -8px rgba(15, 23, 42, 0.04);
+    --glow-primary: rgba(0, 255, 153, 0.3);
+  }
+
+  .dark {
+    --bg-main: #050505;
+    --bg-surface: rgba(255, 255, 255, 0.02);
+    --bg-surface-solid: #0A0A0A;
+    --text-primary: #F5F5F5;
+    --text-secondary: #8B8B8B;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(255, 255, 255, 0.03);
+    --shadow-premium: 0 12px 40px -8px rgba(0, 0, 0, 0.5);
+    --glow-primary: rgba(0, 255, 153, 0.15);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+
+  body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background-color: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-premium);
+  }
+
+  .glass-card-solid {
+    background-color: var(--bg-surface-solid);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-premium);
+  }
+
+  .premium-transition {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; filter: blur(40px); }
+  50% { opacity: 0.8; filter: blur(60px); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite 1s;
+}
+
+.animate-float-orb {
+  animation: float-orb 10s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

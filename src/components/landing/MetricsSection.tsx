@@ -31,28 +31,30 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 export default function MetricsSection({ t }: { t: LandingT }) {
   const m = t.metrics;
   return (
-    <section className="py-20 px-6 relative" style={{ background: 'rgba(0,0,0,0.5)' }}>
-      <div className="absolute inset-0 border-y" style={{ borderColor: 'rgba(255,255,255,0.04)' }} />
-      <div className="max-w-5xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full border mb-4 inline-block"
-            style={{ color: '#00FF99', borderColor: 'rgba(0,255,153,0.2)', background: 'rgba(0,255,153,0.05)' }}>
+    <section className="py-24 px-6 relative z-10 bg-transparent">
+      <div className="max-w-6xl mx-auto relative z-10">
+        
+        <div className="text-center mb-16 animate-fade-in-up">
+          <span className="text-xs font-semibold tracking-[0.2em] uppercase px-5 py-2 rounded-full glass-card text-[var(--text-secondary)]">
             {m.badge}
           </span>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight mt-4" style={{ color: '#F5F5F5' }}>{m.headline}</h2>
-          <p className="text-sm mt-2" style={{ color: '#8B8B8B' }}>{m.sub}</p>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-6 text-[var(--text-primary)]">{m.headline}</h2>
+          <p className="text-base mt-4 max-w-xl mx-auto text-[var(--text-secondary)]">{m.sub}</p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
           {m.items.map((item, idx) => (
-            <div key={item.label} className="rounded-2xl p-6 border text-center"
-              style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.06)' }}>
-              <div className="text-3xl md:text-4xl font-black mb-2" style={{ color: idx % 2 === 0 ? '#00FF99' : '#00D084' }}>
+            <div key={item.label} className="group rounded-[32px] p-8 glass-card text-center premium-transition hover:bg-[var(--bg-surface-solid)] hover:-translate-y-2 hover:shadow-[var(--shadow-premium)]">
+              <div className="text-4xl md:text-5xl font-black mb-3 premium-transition" style={{ color: idx % 2 === 0 ? 'var(--color-wn-green)' : 'var(--text-primary)' }}>
                 <CountUp target={metricValues[idx]} suffix={metricSuffixes[idx]} />
               </div>
-              <div className="text-xs font-medium" style={{ color: '#8B8B8B' }}>{item.label}</div>
+              <div className="text-sm font-semibold tracking-wider uppercase text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] premium-transition">
+                {item.label}
+              </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { landingTranslations, type LangKey } from '../i18n/landingTranslations';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
+import { useTranslations } from '../hooks/useTranslations';
+import type { LangKey } from '../i18n/landingTranslations';
 import HeroSection from '../components/landing/HeroSection';
 import ProblemSolutionSection from '../components/landing/ProblemSolutionSection';
 import FlowSection from '../components/landing/FlowSection';
@@ -10,16 +13,6 @@ import SecuritySection from '../components/landing/SecuritySection';
 import RoadmapSection from '../components/landing/RoadmapSection';
 import FAQAndCTASection from '../components/landing/FAQAndCTASection';
 
-const LANG_KEY = '@walletnow:lang';
-
-function getInitialLang(): LangKey {
-  try {
-    const saved = localStorage.getItem(LANG_KEY) as LangKey | null;
-    if (saved && ['en', 'pt', 'es'].includes(saved)) return saved;
-  } catch { /* noop */ }
-  return 'en';
-}
-
 const navLinks = [
   { href: '#architecture', key: 'architecture' as const },
   { href: '#security',     key: 'security'     as const },
@@ -28,14 +21,9 @@ const navLinks = [
 ];
 
 export default function Landing() {
-  const [lang, setLang] = useState<LangKey>(getInitialLang);
+  const { theme, toggleTheme } = useTheme();
+  const { lang, setLang, t } = useTranslations();
   const navigate = useNavigate();
-  const t = landingTranslations[lang];
-
-  // Persist language
-  useEffect(() => {
-    try { localStorage.setItem(LANG_KEY, lang); } catch { /* noop */ }
-  }, [lang]);
 
   const handleLangChange = (l: LangKey) => setLang(l);
 
@@ -46,7 +34,7 @@ export default function Landing() {
   };
 
   return (
-    <div style={{ background: '#050505', color: '#F5F5F5', fontFamily: 'Inter, system-ui, sans-serif', overflowX: 'hidden' }}>
+    <div className="min-h-screen transition-colors duration-500 overflow-x-hidden font-sans bg-[var(--bg-main)] text-[var(--text-primary)]">
 
       <style>{`
         @keyframes fadeSlideUp {
@@ -64,41 +52,48 @@ export default function Landing() {
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         .nav-link {
-          font-size: 13px; font-weight: 500; color: #8B8B8B;
+          font-size: 13px; font-weight: 500; color: var(--text-secondary);
           text-decoration: none; padding: 6px 12px; border-radius: 8px;
           transition: color 0.2s, background 0.2s;
           white-space: nowrap;
         }
-        .nav-link:hover { color: #F5F5F5; background: rgba(255,255,255,0.05); }
+        .nav-link:hover { color: var(--text-primary); background: var(--border-light); }
         .lang-btn { border: none; background: transparent; cursor: pointer; transition: all 0.2s; }
-        .lang-btn:hover { color: #F5F5F5 !important; }
+        .lang-btn:hover { color: var(--text-primary) !important; }
+        .theme-btn {
+          display: flex; align-items: center; justify-content: center;
+          width: 32px; height: 32px; border-radius: 50%;
+          color: var(--text-secondary); background: transparent;
+          transition: all 0.2s; border: none; cursor: pointer;
+        }
+        .theme-btn:hover { color: var(--text-primary); background: var(--border-light); }
       `}</style>
 
-      {/* ── Sticky Navbar ── */}
+      {/* ── Sticky Floating Navbar ── */}
       <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        padding: '0 24px', height: 60,
+        position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 100,
+        padding: '0 20px', height: 56, width: 'calc(100% - 32px)', maxWidth: 1024, borderRadius: 999,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
-        background: 'rgba(5,5,5,0.88)', backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        background: 'var(--bg-surface)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+        border: '1px solid var(--border-subtle)', boxShadow: '0 4px 24px -4px rgba(0,0,0,0.05)',
       }}>
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <div style={{
-            width: 30, height: 30, borderRadius: 8,
-            background: 'linear-gradient(135deg, #00FF99, #00D084)',
+            width: 28, height: 28, borderRadius: 8,
+            background: 'linear-gradient(135deg, #00D084, #00C46A)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
             </svg>
           </div>
-          <span style={{ fontWeight: 900, fontSize: 15, letterSpacing: '-0.03em', color: '#F5F5F5' }}>WalletNow</span>
+          <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>WalletNow</span>
           <span style={{
             fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 999,
-            background: 'rgba(0,255,153,0.1)', color: '#00FF99',
-            border: '1px solid rgba(0,255,153,0.2)', letterSpacing: '0.06em',
+            background: 'rgba(0,196,106,0.1)', color: '#00C46A',
+            border: '1px solid rgba(0,196,106,0.2)', letterSpacing: '0.06em',
           }}>TESTNET</span>
         </div>
 
@@ -121,22 +116,26 @@ export default function Landing() {
               style={{
                 padding: '4px 9px', borderRadius: 999, fontSize: 10, fontWeight: 700,
                 textTransform: 'uppercase', letterSpacing: '0.08em',
-                background: lang === l ? 'rgba(0,255,153,0.1)' : 'transparent',
-                border: lang === l ? '1px solid rgba(0,255,153,0.3)' : '1px solid transparent',
-                color: lang === l ? '#00FF99' : '#8B8B8B',
+                background: lang === l ? 'rgba(0,196,106,0.1)' : 'transparent',
+                border: lang === l ? '1px solid rgba(0,196,106,0.2)' : '1px solid transparent',
+                color: lang === l ? 'var(--color-wn-green)' : 'var(--text-secondary)',
               }}>
               {l === 'pt' ? 'PT' : l.toUpperCase()}
             </button>
           ))}
+          <div style={{ width: 1, height: 24, background: 'var(--border-subtle)', margin: '0 4px' }} />
+          <button onClick={toggleTheme} className="theme-btn" aria-label="Toggle Theme">
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           <button onClick={() => navigate('/login')}
             style={{
-              marginLeft: 8, padding: '7px 16px', borderRadius: 10, fontSize: 12,
-              fontWeight: 700, cursor: 'pointer', border: 'none',
-              background: '#00FF99', color: '#000',
-              boxShadow: '0 0 16px rgba(0,255,153,0.3)', transition: 'all 0.2s',
+              marginLeft: 4, padding: '7px 16px', borderRadius: 999, fontSize: 12,
+              fontWeight: 600, cursor: 'pointer', border: 'none',
+              background: 'var(--text-primary)', color: 'var(--bg-main)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)', transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 28px rgba(0,255,153,0.5)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 16px rgba(0,255,153,0.3)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}>
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}>
             {t.nav.launch}
           </button>
         </div>

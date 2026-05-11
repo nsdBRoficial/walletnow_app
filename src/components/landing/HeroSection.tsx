@@ -16,100 +16,123 @@ export default function HeroSection({ t }: { t: LandingT }) {
   const h = t.hero;
 
   return (
-    <section className="relative flex flex-col items-center justify-center px-6 overflow-hidden"
-      style={{ minHeight: 'calc(100vh - 60px)', paddingTop: 80, paddingBottom: 80 }}>
+    <section className="relative flex flex-col justify-center px-6 overflow-hidden min-h-[calc(100vh-60px)] pt-20 pb-20">
 
-      {/* Background grid */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(rgba(0,255,153,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,153,0.06) 1px, transparent 1px)',
-        backgroundSize: '80px 80px',
+      {/* Global Glow Backgrounds */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20" style={{
+        background: 'radial-gradient(circle at 50% -20%, var(--glow-primary) 0%, transparent 60%)',
       }} />
 
-      {/* Orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,153,0.12) 0%, transparent 70%)', filter: 'blur(80px)', animation: 'pulse 4s ease-in-out infinite' }} />
-
-      <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
-
-        {/* Badges */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12" style={{ animation: 'fadeSlideUp 0.6s ease both' }}>
-          {[h.badge1, h.badge2, h.badge3].map((b) => (
-            <span key={b} className="px-4 py-1.5 rounded-full text-xs font-semibold"
-              style={{ background: 'rgba(0,255,153,0.06)', border: '1px solid rgba(0,255,153,0.2)', color: '#00FF99', letterSpacing: '0.05em' }}>
-              {b}
-            </span>
-          ))}
-        </div>
-
-        {/* Headline */}
-        <h1 className="font-black tracking-tighter mb-8 leading-none"
-          style={{ fontSize: 'clamp(2.4rem, 7vw, 5rem)', animation: 'fadeSlideUp 0.7s 0.1s ease both' }}>
-          <span style={{ color: '#F5F5F5' }}>{h.headline1}</span><br />
-          <span style={{ background: 'linear-gradient(135deg, #00FF99, #00D084)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            {h.headline2}
-          </span>
-        </h1>
-
-        {/* Sub */}
-        <p className="max-w-2xl mb-10 leading-relaxed"
-          style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', color: '#8B8B8B', animation: 'fadeSlideUp 0.7s 0.2s ease both' }}>
-          {h.sub}
-        </p>
-
-        {/* Flow */}
-        <div className="flex items-center gap-3 flex-wrap justify-center mb-12 text-sm font-semibold"
-          style={{ animation: 'fadeSlideUp 0.7s 0.3s ease both' }}>
-          {['PIX', 'WalletNow', 'Stellar', 'Stablecoin'].map((step, i, arr) => (
-            <span key={step} className="flex items-center gap-3">
-              <span className="px-4 py-2 rounded-xl"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: i === 1 ? '#00FF99' : '#F5F5F5' }}>
-                {step}
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+        
+        {/* Left Column: Copy & CTAs */}
+        <div className="flex-1 flex flex-col items-start text-left">
+          
+          {/* Badges */}
+          <div className="flex flex-wrap gap-3 mb-8 animate-fade-in-up">
+            {[h.badge1, h.badge2, h.badge3].map((b) => (
+              <span key={b} className="px-4 py-1.5 rounded-full text-xs font-semibold glass-card text-[var(--text-secondary)] tracking-wider">
+                {b}
               </span>
-              {i < arr.length - 1 && <ArrowRight className="w-4 h-4" style={{ color: '#00FF99' }} />}
-            </span>
-          ))}
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-16" style={{ animation: 'fadeSlideUp 0.7s 0.4s ease both' }}>
-          <button onClick={() => navigate('/login')}
-            className="flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-bold text-lg text-black"
-            style={{ background: '#00FF99', boxShadow: '0 0 40px rgba(0,255,153,0.4)', transition: 'all 0.3s' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 60px rgba(0,255,153,0.6)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(0,255,153,0.4)'; (e.currentTarget as HTMLElement).style.transform = 'none'; }}>
-            {h.ctaPrimary} <ArrowRight className="w-5 h-5" />
-          </button>
-          <a href="#architecture"
-            onClick={e => { e.preventDefault(); document.getElementById('architecture')?.scrollIntoView({ behavior: 'smooth' }); }}
-            className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-base cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#F5F5F5', textDecoration: 'none', transition: 'background 0.2s' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; }}>
-            {h.ctaSecondary}
-          </a>
-        </div>
-
-        {/* Live Status Widget */}
-        <div className="w-full max-w-3xl rounded-2xl p-4 border" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.06)', animation: 'fadeSlideUp 0.7s 0.5s ease both' }}>
-          <div className="flex items-center gap-2 mb-3 px-1">
-            <Wifi className="w-3.5 h-3.5" style={{ color: '#00FF99' }} />
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#8B8B8B' }}>{h.statusTitle}</span>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {statusItems.map((item) => (
-              <div key={item.labelKey} className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <div className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
-                <span className="text-xs" style={{ color: '#8B8B8B' }}>{item.labelKey}:</span>
-                <span className="text-xs font-semibold truncate" style={{ color: '#F5F5F5' }}>{item.value}</span>
-              </div>
             ))}
           </div>
+
+          {/* Headline */}
+          <h1 className="font-black tracking-tighter mb-6 leading-[1.05] text-[clamp(2.5rem,6vw,5.5rem)] animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <span className="text-[var(--text-primary)]">{h.headline1}</span><br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-br from-[var(--color-wn-green)] to-[var(--color-wn-green-hover)]">
+              {h.headline2}
+            </span>
+          </h1>
+
+          {/* Sub */}
+          <p className="max-w-2xl mb-10 leading-relaxed font-medium text-[clamp(1.1rem,2vw,1.25rem)] text-[var(--text-secondary)] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            {h.sub}
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-14 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+            <button onClick={() => navigate('/login')}
+              className="flex items-center justify-center gap-3 px-10 py-4 rounded-full font-bold text-lg bg-[var(--text-primary)] text-[var(--bg-main)] hover:translate-y-[-2px] transition-all duration-300 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.3)]">
+              {h.ctaPrimary} <ArrowRight className="w-5 h-5" />
+            </button>
+            <a href="#architecture"
+              onClick={e => { e.preventDefault(); document.getElementById('architecture')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base glass-card text-[var(--text-primary)] hover:bg-[var(--bg-surface-solid)] premium-transition">
+              {h.ctaSecondary}
+            </a>
+          </div>
+
+          {/* Live Status Widget - Now on the left */}
+          <div className="w-full max-w-xl rounded-3xl p-6 glass-card animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+            <div className="flex items-center gap-2 mb-5">
+              <div className="relative flex items-center justify-center">
+                <Wifi className="w-4 h-4 text-[var(--color-wn-green)] relative z-10" />
+                <div className="absolute inset-0 bg-[var(--color-wn-green)] blur-md opacity-40 animate-glow-pulse" />
+              </div>
+              <span className="text-xs font-bold tracking-[0.15em] uppercase text-[var(--text-secondary)]">{h.statusTitle}</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {statusItems.map((item) => (
+                <div key={item.labelKey} className="flex flex-col gap-1.5 px-3 py-3 rounded-2xl glass-card-solid">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-1.5 h-1.5 rounded-full ${item.dot} shadow-[0_0_8px_rgba(74,222,128,0.5)]`} />
+                    <span className="text-[10px] font-semibold tracking-wider text-[var(--text-secondary)] uppercase">{item.labelKey}</span>
+                  </div>
+                  <span className="text-sm font-bold text-[var(--text-primary)] truncate pl-3.5">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="mt-16 flex flex-col items-center gap-2 opacity-40" style={{ animation: 'bounce 2.5s infinite' }}>
-          <div className="w-px h-8" style={{ background: 'linear-gradient(to bottom, transparent, #00FF99)' }} />
-          <Zap className="w-3 h-3" style={{ color: '#00FF99' }} />
+        {/* Right Column: 3D Visual Elements */}
+        <div className="flex-1 w-full relative hidden lg:flex justify-center items-center h-[600px] animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          
+          {/* Central Glow Orb */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[var(--glow-primary)] blur-[100px] animate-glow-pulse pointer-events-none" />
+
+          {/* 3D Orbiting System */}
+          <div className="relative w-full h-full flex justify-center items-center">
+            
+            {/* Main Center Node (Stellar) */}
+            <div className="absolute z-30 w-32 h-32 rounded-3xl glass-card-solid flex items-center justify-center animate-float-orb shadow-[0_20px_60px_-10px_rgba(0,0,0,0.2)]">
+               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--color-wn-green)] to-transparent opacity-10" />
+               {/* Stellar simple icon representation */}
+               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+               </svg>
+            </div>
+
+            {/* Orbiting Element 1 (Pix) */}
+            <div className="absolute z-20 left-[10%] top-[25%] animate-float">
+              <div className="w-24 h-24 rounded-2xl glass-card flex flex-col items-center justify-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-cyan-500" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span className="text-[10px] font-bold text-[var(--text-primary)]">PIX IN</span>
+              </div>
+            </div>
+
+            {/* Orbiting Element 2 (USDC) */}
+            <div className="absolute z-20 right-[10%] bottom-[25%] animate-float-delayed">
+              <div className="w-24 h-24 rounded-2xl glass-card flex flex-col items-center justify-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/40">
+                  <span className="text-xs font-bold text-blue-500">$</span>
+                </div>
+                <span className="text-[10px] font-bold text-[var(--text-primary)]">USDC OUT</span>
+              </div>
+            </div>
+
+            {/* Decorative Connecting Lines (SVG) */}
+            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" style={{ filter: 'drop-shadow(0 0 8px var(--glow-primary))' }}>
+              <path d="M 150 200 Q 250 300 350 300" fill="none" stroke="var(--border-subtle)" strokeWidth="2" strokeDasharray="6 6" className="animate-pulse" />
+              <path d="M 450 300 Q 550 300 600 400" fill="none" stroke="var(--border-subtle)" strokeWidth="2" strokeDasharray="6 6" className="animate-pulse" style={{ animationDelay: '1s' }} />
+            </svg>
+
+          </div>
         </div>
+
       </div>
     </section>
   );
