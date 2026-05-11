@@ -98,7 +98,7 @@ Abaixo está o mapeamento atual de estabilidade do protocolo:
 │  Stablecoin Delivery  │
 │ Self-Custody Wallet   │
 └───────────────────────┘
-
+```
 
 --- 
 
