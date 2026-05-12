@@ -42,7 +42,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
 
     if (isOpen && phase === 'waiting_payment' && pixData?.correlationID) {
       // Estratégia MVP: Sempre aciona o Fast-Mock para fechar o ciclo sem travar
-      console.log(`🛠️ [Woovi-Driver] Depósito Fast-Mock acionado. Simulando confirmação em 2s...`);
+      console.info(`[WalletNow][UI] 🛠️ Depósito Fast-Mock acionado para o ID: ${pixData.correlationID}. Aguardando 2s...`);
       timer = setTimeout(() => {
         triggerMinting(pixData.amount, pixData.correlationID!);
       }, 2000);
@@ -76,7 +76,10 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         correlationID
       );
 
-      if (hash) setTxHash(hash);
+      if (hash) {
+          setTxHash(hash);
+          console.info(`[WalletNow][UI] ✅ Depósito Liquidado via PIX com sucesso! Hash: ${hash}`);
+      }
       setPhase('success');
       if (onSuccess) onSuccess();
 
@@ -85,6 +88,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         onClose();
       }, 3000);
     } catch (e: any) {
+      console.error(`[WalletNow][UI] ❌ Falha crítica ao realizar Mint Onchain: ${e.message}`);
       alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar BRW Onchain: " + e.message);
       setPhase('input');
     }
@@ -98,7 +102,8 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     try {
       // 1. Chama o Gateway Woovi para gerar a cobrança Pix (QR Code EMV)
       const result = await WooviService.createCharge(Number(amount), profile.id);
-
+      
+      console.info(`[WalletNow][UI] ⏳ Cobrança PIX gerada: ${result.correlationID}. Exibindo QR Code...`);
       setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
       setPhase('waiting_payment');
 

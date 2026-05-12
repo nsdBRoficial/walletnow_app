@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import QADebugPanel from './components/QADebugPanel';
 
 /**
  * Componente Principal da Aplicação (App)
@@ -50,6 +51,7 @@ export default function App() {
 
           </Route>
         </Routes>
+        <QADebugPanel />
       </BrowserRouter>
     </AuthProvider>
   );

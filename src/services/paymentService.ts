@@ -20,6 +20,9 @@ import { WooviService } from "./wooviService";
 const ISSUER_SECRET = import.meta.env.VITE_STELLAR_ISSUER_SECRET;
 const BASE_FEE = '100000'; // 0.01 XLM (Alta para prioridade em Testnet)
 
+/** Trava de concorrência em memória para evitar Duplo Mint/Burn no mesmo ciclo */
+const processingLock = new Set<string>();
+
 export const PaymentService = {
     /**
      * [PT-BR] Realiza a emissão (Minting) de tokens BRW (On-Ramp).
@@ -36,6 +39,12 @@ export const PaymentService = {
      */
     async mintBRW(targetPublicKey: string, amount: string, userSecretKey?: string, correlationID?: string): Promise<string | null> {
         try {
+            if (correlationID && processingLock.has(`mint_${correlationID}`)) {
+                console.warn(`[WalletNow][Mint] ⚠️ Tentativa de Mint duplicada ignorada para ID: ${correlationID}`);
+                return null;
+            }
+            if (correlationID) processingLock.add(`mint_${correlationID}`);
+
             // Verificação Crítica de Ambiente (Auditoria Hostinger)
             if (!ISSUER_SECRET) {
                 console.error("❌ [PaymentService] Erro Fatal: VITE_STELLAR_ISSUER_SECRET não encontrada no ambiente.");
@@ -121,11 +130,13 @@ export const PaymentService = {
             }
 
             const response = await server.submitTransaction(builtTx);
-            console.log("✨ [Stellar-Audit] Mintagem concluída com sucesso! Hash:", response.hash);
+            console.info(`[WalletNow][Mint] ✨ Mintagem de ${amount} BRW concluída com sucesso! Hash: ${response.hash}`);
             return response.hash;
         } catch (error: any) {
             this._handleStellarError('OnRamp BRW', error);
             return null;
+        } finally {
+            if (correlationID) processingLock.delete(`mint_${correlationID}`);
         }
     },
 
@@ -145,6 +156,12 @@ export const PaymentService = {
      */
     async executeOffRamp(userSecretKey: string, amount: string, correlationID: string): Promise<string | null> {
         try {
+            if (processingLock.has(`burn_${correlationID}`)) {
+                console.warn(`[WalletNow][Burn] ⚠️ Tentativa de Burn duplicada ignorada para ID: ${correlationID}`);
+                return null;
+            }
+            processingLock.add(`burn_${correlationID}`);
+
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const userKeypair = Keypair.fromSecret(userSecretKey);
             const userPublicKey = userKeypair.publicKey();
@@ -156,9 +173,17 @@ export const PaymentService = {
                 (b: any) => b.asset_code === 'BRW' && b.asset_issuer === issuerKeypair.publicKey()
             );
 
-            if (!brwBalance || parseFloat(brwBalance.balance) < parseFloat(amount)) {
-                throw new Error(`Saldo insuficiente: Você possui R$ ${brwBalance?.balance || '0.00'}`);
+            // Impedir burn negativo ou de saldo insuficiente.
+            const requestedAmount = parseFloat(amount);
+            if (requestedAmount <= 0) {
+                throw new Error(`[WalletNow][Burn] Valor de queima inválido (negativo ou zero): ${amount}`);
             }
+
+            if (!brwBalance || parseFloat(brwBalance.balance) < requestedAmount) {
+                throw new Error(`[WalletNow][Burn] Saldo insuficiente: Você possui R$ ${brwBalance?.balance || '0.00'}, tentando sacar ${requestedAmount}`);
+            }
+
+            console.info(`[WalletNow][Burn] 🔥 Executando queima de ${amount} BRW na Blockchain para o ID: ${correlationID}`);
 
             // Memo X402 formatado para Saque
             const x402Memo = Memo.text(`saque-pix:${correlationID.slice(0, 18)}`);
@@ -181,10 +206,13 @@ export const PaymentService = {
 
             transaction.sign(userKeypair, issuerKeypair);
             const response = await server.submitTransaction(transaction);
+            console.info(`[WalletNow][Burn] ✨ Queima na Blockchain finalizada com sucesso. Hash: ${response.hash}`);
             return response.hash;
         } catch (error: any) {
             this._handleStellarError('Off-Ramp Blockchain', error);
             return null;
+        } finally {
+            processingLock.delete(`burn_${correlationID}`);
         }
     },
 

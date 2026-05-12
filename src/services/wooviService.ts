@@ -18,15 +18,16 @@ const WOOVI_APP_ID = import.meta.env.VITE_WOOVI_APP_ID;
 
 /**
  * Base URL para chamadas da API.
- * Em desenvolvimento (Vite), usamos o proxy '/api/woovi' para evitar CORS.
- * Em produção (Hostinger), usamos a URL absoluta da Woovi Sandbox.
+ * Em desenvolvimento web (Vite), usamos o proxy '/api/woovi' para evitar CORS.
+ * Em Node (testes) ou produção, usamos a URL absoluta da Woovi Sandbox.
  */
-const WOOVI_BASE_URL = import.meta.env.DEV ? '/api/woovi' : 'https://api.woovi-sandbox.com/api/v1';
+const isBrowser = typeof window !== 'undefined';
+const WOOVI_BASE_URL = (import.meta.env.DEV && isBrowser) ? '/api/woovi' : 'https://api.woovi-sandbox.com/api/v1';
 
 /**
  * Banco de dados volátil para o Modo Mock (Sandbox Local).
  */
-const mockDatabase = new Map<string, { status: string; createdAt: number }>();
+const mockDatabase = new Map<string, { status: 'ACTIVE' | 'COMPLETED' | 'EXPIRED' | 'ERROR_ON_CREATE'; createdAt: number }>();
 
 /**
  * Estrutura de dados para uma cobrança Woovi processada.
@@ -139,6 +140,8 @@ class WooviSDK {
         throw new Error('Payload da Woovi incompleto.');
       }
 
+      console.info(`[WalletNow][Payment] 💳 Cobrança REAL criada via Gateway. Valor: R$ ${amountBRL} | ID: ${charge.correlationID}`);
+
       return {
         correlationID: charge.correlationID,
         brCode: charge.brCode,
@@ -161,9 +164,10 @@ class WooviSDK {
    */
   async transferPix(pixKey: string, amountBRL: number): Promise<{ correlationID: string }> {
     const correlationID = `saque-${Date.now()}`;
+    console.info(`[WalletNow][Payment] 💸 Transferência de Saque solicitada. Destino: ${pixKey} | Valor: R$ ${amountBRL}`);
 
     // Estratégia MVP: Sempre simula o Saque para fechar o ciclo sem bater na API Real (Off-ramp Sandbox não existe)
-    console.info('🛠️ [Woovi-Audit] Saque Simulado acionado (Estratégia MVP).');
+    console.info(`[WalletNow][Payment] 🛠️ Saque Simulado acionado (Estratégia MVP) para correlação: ${correlationID}.`);
     await new Promise(resolve => setTimeout(resolve, 2000));
     return { correlationID };
 
@@ -208,6 +212,7 @@ class WooviSDK {
     mockDatabase.set(correlationID, { status: 'ACTIVE', createdAt: Date.now() });
 
     const fakePixCode = `00020126580014br.gov.bcb.pix0136MOCK-PIX-DATA-1234567890-ABCDEF-6304`;
+    console.info(`[WalletNow][Payment] 💳 Cobrança MOCKADA criada. Valor: R$ ${amountBRL} | ID: ${correlationID}`);
 
     return {
       correlationID,
@@ -221,11 +226,16 @@ class WooviSDK {
     const charge = mockDatabase.get(correlationID);
     if (!charge) throw new Error(`Cobrança inexistente: ${correlationID}`);
 
+    // Máquina de estados: só permite transição de ACTIVE para COMPLETED.
     if (Date.now() - charge.createdAt > 12000 && charge.status === 'ACTIVE') {
+      console.info(`[WalletNow][Webhook] 🔄 Webhook MOCK processado. Status: ACTIVE -> COMPLETED para ID: ${correlationID}`);
       charge.status = 'COMPLETED';
+    } else if (charge.status === 'COMPLETED') {
+      // Impede reversão de estado indesejada (double run prevention view)
+      return 'COMPLETED';
     }
 
-    return charge.status as any;
+    return charge.status;
   }
 }
 

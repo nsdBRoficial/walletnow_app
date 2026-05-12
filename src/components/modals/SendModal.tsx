@@ -57,7 +57,8 @@ export default function SendModal({ isOpen, onClose, onSuccess }: SendModalProps
       if (!secretKey) throw new Error("Chave Passkey local não encontrada. Impossível assinar a saída.");
 
       // 3. Dispara a Transação de Resgate na Blockchain Stellar
-      await PaymentService.burnBRZToPix(secretKey, amount, finalPixKey);
+      const correlationID = `send-${Date.now()}`;
+      await PaymentService.executeOffRampWithRollback(secretKey, amount, correlationID, finalPixKey);
 
       // 4. Sucesso!
       setStatus('success');

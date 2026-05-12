@@ -40,6 +40,7 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
 
   const handleWithdraw = async () => {
     if (!amount || !pixKey || !profile?.id) return;
+    if (status !== 'idle') return; // Prevenir submissão dupla enquanto carrega
 
     const numAmount = parseFloat(amount);
     const availableBRW = parseFloat(brwBalance.replace(/\./g, '').replace(',', '.'));
@@ -52,6 +53,7 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
 
     try {
       // 1. Biometria (Passkey Mock)
+      console.info(`[WalletNow][UI] 🔐 Validando Biometria Passkey Local para o Saque...`);
       setStatus('authenticating');
       await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -59,6 +61,7 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
       if (!secretKey) throw new Error("Chave Passkey local não encontrada.");
 
       // Orquestração Atômica (Blockchain + Woovi + Rollback automático se falhar)
+      console.info(`[WalletNow][UI] 🔥 Iniciando Orquestração Atômica de Burn para o Pix: ${pixKey}`);
       setStatus('burning_blockchain');
       const correlationID = `saque-${Date.now()}`;
       
@@ -72,11 +75,12 @@ export default function SacarModal({ isOpen, onClose, onSuccess, brwBalance }: S
       setTxHash(hash);
 
       // Sucesso!
+      console.info(`[WalletNow][UI] ✅ Saque finalizado com sucesso! Burn Hash: ${hash}`);
       setStatus('success');
       if (onSuccess) onSuccess();
 
     } catch (e: any) {
-      console.error("Erro no Saque:", e);
+      console.error(`[WalletNow][UI] ❌ Erro durante o fluxo de Saque Atômico: ${e.message}`);
       // Se tiver txHash, significa que a queima ocorreu mas a Woovi falhou (mesmo com rollback se o rollback falhar)
       // Ou a mensagem de erro já contém o hash se veio do executeOffRampWithRollback
       alert("Falha no Saque: " + e.message);
