@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { WalletFactory } from '../../services/walletFactory';
 import { PaymentService } from '../../services/paymentService';
 import { OracleService } from '../../services/oracleService';
+import { logger } from '../../utils/logger';
 
 interface SwapModalProps {
     isOpen: boolean;
@@ -28,9 +29,19 @@ export default function SwapModal({ isOpen, onClose, onSuccess }: SwapModalProps
 
     // Carrega preços reais assim que o usuário abre o modal
     useEffect(() => {
+        let isMounted = true;
         if (isOpen) {
-            OracleService.getPrices().then(setPrices);
+            logger.info('[WalletNow][UI]', 'Loading Oracle Prices for Swap');
+            OracleService.getPrices()
+                .then(p => {
+                    if (isMounted) setPrices(p);
+                })
+                .catch(err => {
+                    logger.error('[WalletNow][System]', 'Failed to load Oracle prices', err);
+                    if (isMounted) setPrices({ xlm: 0, usdc: 0, btc: 0 }); // Fallback graceful
+                });
         }
+        return () => { isMounted = false; };
     }, [isOpen]);
 
     if (!isOpen) return null;
@@ -65,6 +76,7 @@ export default function SwapModal({ isOpen, onClose, onSuccess }: SwapModalProps
         setStatus('swapping');
 
         try {
+            logger.info('[WalletNow][Payment]', `Iniciando swap de ${payAmount} ${payAsset.code} para ${receiveAsset.code}`);
             const secretKey = WalletFactory.getSecretKey(profile.id);
             if (!secretKey) throw new Error("Credencial secreta indisponível. Cadastre Passkey.");
 
@@ -76,6 +88,7 @@ export default function SwapModal({ isOpen, onClose, onSuccess }: SwapModalProps
                 estimatedReceive // Valor real com Spread calculado
             );
 
+            logger.info('[WalletNow][Payment]', 'Swap success');
             setStatus('success');
             if (onSuccess) onSuccess();
 
@@ -85,7 +98,7 @@ export default function SwapModal({ isOpen, onClose, onSuccess }: SwapModalProps
                 onClose();
             }, 3000);
         } catch (error: any) {
-            console.error("Erro Swap:", error);
+            logger.error('[WalletNow][Payment]', 'Erro Swap', error);
             alert("Falha no Câmbio Web3: " + error.message);
             setStatus('idle');
         }

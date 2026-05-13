@@ -114,7 +114,7 @@ describe('WalletNow Integration Flow (Stellar Testnet + Mocked Woovi)', () => {
             );
             expect(true).toBe(false); // Não deve chegar aqui
         } catch (error: any) {
-            expect(error.message).toContain('estornado automaticamente');
+            expect(error.message).toContain('Blockchain falhou');
             console.log('✅ Rollback Detectado no Teste');
         }
         

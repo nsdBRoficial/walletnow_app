@@ -6,6 +6,8 @@ import SendModal from '../components/modals/SendModal';
 import SacarModal from '../components/modals/SacarModal';
 import { useAuth } from '../contexts/AuthContext';
 import { WalletFactory } from '../services/walletFactory';
+import { logger } from '../utils/logger';
+import { DemoConfig } from '../config/demoMode';
 
 /**
  * Tela do Dashboard Principal (The Money Layer)
@@ -38,17 +40,25 @@ export default function Dashboard() {
   const [isActivating, setIsActivating] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  // Função isolada do Efeito para que possamos repassa-la como 'refresh'
   const fetchOnChainBalance = async () => {
     if (!profile?.stellar_address) return;
     setIsLoadingBalance(true);
 
     try {
-      // Busca Blockchain (Saldo BRZ & Histórico)
-      const [balances, history] = await Promise.all([
-        WalletFactory.getBalances(profile.stellar_address),
-        WalletFactory.getHistory(profile.stellar_address)
-      ]);
+      logger.info('[WalletNow][UI]', 'Fetching On-Chain balance and history', { address: profile.stellar_address });
+      
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('TIMEOUT')), DemoConfig.hardTimeoutMs)
+      );
+
+      // Busca Blockchain (Saldo BRZ & Histórico) com Hard Timeout
+      const [balances, history] = await Promise.race([
+        Promise.all([
+          WalletFactory.getBalances(profile.stellar_address),
+          WalletFactory.getHistory(profile.stellar_address)
+        ]),
+        timeoutPromise
+      ]) as any;
 
       if (balances) {
         setIsAccountActive(true);
@@ -65,7 +75,12 @@ export default function Dashboard() {
         setTransactions(history);
       }
     } catch (e: any) {
-      console.error(e);
+      if (e.message === 'TIMEOUT') {
+        logger.error('[WalletNow][System]', 'Dashboard timeout on fetch balance');
+      } else {
+        logger.error('[WalletNow][UI]', 'Error fetching balance', e);
+      }
+      
       if (e.message?.includes('404')) {
         setIsAccountActive(false);
       }
@@ -82,14 +97,16 @@ export default function Dashboard() {
     
     setIsActivating(true);
     try {
+      logger.info('[WalletNow][Blockchain]', 'Iniciando ativação automática (emergency)');
       const success = await WalletFactory.activateAccount(profile.stellar_address);
       if (success) {
+        logger.info('[WalletNow][Blockchain]', 'Ativação automática concluída');
         setIsAccountActive(true);
         // Pequeno delay para o Horizon indexar antes de atualizar saldos
         setTimeout(fetchOnChainBalance, 2000);
       }
-    } catch (err) {
-      console.error("Erro na ativação automática:", err);
+    } catch (err: any) {
+      logger.error('[WalletNow][Blockchain]', 'Erro na ativação automática', err);
     } finally {
       setIsActivating(false);
     }

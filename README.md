@@ -271,3 +271,88 @@ Desenvolvido com 💚 por **Douglas Alexandre Gomes da Silva (nsdBR)**.
 <div align="center">
   <sub>WalletNow — 2026</sub>
 </div>
+
+---
+<br/>
+
+<div align="center">
+  <img src="public/logo-walletnow.svg" alt="WalletNow Logo" width="80" height="80">
+  <br/>
+  <h1>WalletNow (English Version)</h1>
+  <p><b>The invisible bridge between Pix and Web3.</b></p>
+  <p>A non-custodial infrastructure that removes Web3 friction, uniting passwordless onboarding (Passkeys), instant Pix deposits, and stablecoin settlement on the Stellar network — all without exposing the user to blockchain complexity.</p>
+</div>
+
+<br/>
+
+## 🌐 Product Overview
+
+**WalletNow** is designed to act as an integrated *fiat-to-stablecoin on-ramp*. Focused on next-generation UX and scalability, it consolidates wallet creation, custody, and exchange flows into a single, seamless product journey.
+
+We solve the biggest problem of Web3 adoption: **onboarding friction**.
+There are no seed phrases, no mandatory gas token purchases, and no extended waiting times.
+
+---
+
+## ✨ Features (Core Value Proposition)
+
+- **Passkeys Onboarding**: Local biometric authentication via FIDO2 (FaceID, TouchID). Legacy password-free non-custodial management.
+- **Gasless Transactions**: Full sponsorship of "fee bumps" and reserve sponsorship via `beginSponsoringFutureReserves` on the Stellar network.
+- **Pix Integration**: Real-time reconciliation with the Brazilian Pix system using the Woovi/OpenPix API.
+- **Self-Custody Abstraction**: The secret key is generated client-side and never leaves the device without explicit permission.
+- **Realtime Infrastructure**: Webhooks and Supabase Edge Functions synchronized via WebSocket to update the UI in less than 3 seconds after a Pix payment.
+- **Stablecoin Ready**: Built to transact BRZ/BRW and USDC under the fast and cheap ecosystem of the Stellar Network.
+
+---
+
+## 🏗️ Architecture
+
+WalletNow's architecture is divided into highly decoupled and *serverless* services:
+
+1. **Frontend (React 19 + Vite 6)**: Modern interface with TailwindCSS v4, Zustand for local global state, and an internationalization framework.
+2. **Backend / BaaS (Supabase)**: Authentication, PostgreSQL database, and native WebSockets for state synchronization (`realtime`).
+3. **Web3 Layer (Stellar SDK v14)**: Blockchain layer responsible for account abstraction and XDR transaction submission (via RPC or Horizon calls).
+4. **Fiat Gateway (Woovi/OpenPix)**: Orchestration of Pix charges via dynamic QR Code and settlement.
+5. **Edge Functions (Deno)**: Serverless code in Supabase that receives Woovi webhooks, validates the HMAC-SHA256 signature, signs Stellar sponsoring transactions, and coordinates wallet status changes.
+
+---
+
+## 🚀 Current MVP Status
+
+Below is the current stability mapping of the protocol:
+
+| Feature / Component | Status | Notes |
+| :--- | :--- | :--- |
+| **Landing Page** | 🟢 **VALIDATED** | Institutional redesign, dark mode, i18n, performance audited. |
+| **Passkey Generation** | 🟢 **VALIDATED** | Keypairs generated and saved locally. Supabase storage configured. |
+| **Supabase Sync** | 🟢 **VALIDATED** | Profiles created correctly after biometric signup. |
+| **Pix Webhook (Woovi)** | 🟢 **VALIDATED** | Edge function validating signatures and altering tables. |
+| **Realtime Dashboard** | 🟢 **VALIDATED** | UI reacts to paid payments simulating instant top-up. |
+| **Stellar Sponsor TXs** | 🟢 **VALIDATED** | Stable Sponsored TX logic and Trustlines. |
+
+---
+
+## 🛡️ Security Model
+
+WalletNow treats security as a non-negotiable asset:
+- **Wallet Isolation**: The user's Stellar Private Key (Secret Key) is generated in the browser and encrypted. **It is never saved in Supabase**. Only the Public Key is persisted.
+- **Fail-Safe Onboarding**: In case of a network failure during *signup*, the UI intercepts the lack of local saving and halts the process, avoiding the generation of orphan wallets and loss of funds.
+- **Data Integrity**: Woovi Webhooks are verified with HMAC hashes. Forged calls are immediately discarded in the Deno Edge Function.
+
+---
+
+## 🌍 Official Links
+
+- **Production Deploy**: [nsdbr.com/walletnow/](https://nsdbr.com/walletnow/)
+- **Deploy Documentation**: [Docs: Hostinger](./docs/DEPLOY_HOSTINGER.md)
+- **Technologies**: [Stellar](https://stellar.org/) | [Supabase](https://supabase.com/)
+
+---
+
+## 👤 Author
+Developed with 💚 by **Douglas Alexandre Gomes da Silva (nsdBR)**.
+<br/>
+<br/>
+<div align="center">
+  <sub>WalletNow — 2026</sub>
+</div>

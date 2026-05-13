@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { PaymentService } from '../../services/paymentService';
 import { WalletFactory } from '../../services/walletFactory';
 import { WooviService } from '../../services/wooviService';
+import { logger } from '../../utils/logger';
+import { DemoConfig } from '../../config/demoMode';
 
 // Define quais propriedades (props) este componente espera receber.
 interface DepositModalProps {
@@ -42,10 +44,10 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
 
     if (isOpen && phase === 'waiting_payment' && pixData?.correlationID) {
       // Estratégia MVP: Sempre aciona o Fast-Mock para fechar o ciclo sem travar
-      console.info(`[WalletNow][UI] 🛠️ Depósito Fast-Mock acionado para o ID: ${pixData.correlationID}. Aguardando 2s...`);
+      logger.info('[WalletNow][Payment]', `🛠️ Depósito Fast-Mock acionado para ID: ${pixData.correlationID}`);
       timer = setTimeout(() => {
         triggerMinting(pixData.amount, pixData.correlationID!);
-      }, 2000);
+      }, DemoConfig.mockPaymentDelay);
     }
 
     return () => {
@@ -78,7 +80,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
 
       if (hash) {
           setTxHash(hash);
-          console.info(`[WalletNow][UI] ✅ Depósito Liquidado via PIX com sucesso! Hash: ${hash}`);
+          logger.info('[WalletNow][Blockchain]', `✅ Depósito Liquidado via PIX com sucesso! Hash: ${hash}`);
       }
       setPhase('success');
       if (onSuccess) onSuccess();
@@ -88,7 +90,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         onClose();
       }, 3000);
     } catch (e: any) {
-      console.error(`[WalletNow][UI] ❌ Falha crítica ao realizar Mint Onchain: ${e.message}`);
+      logger.error('[WalletNow][System]', `❌ Falha crítica ao realizar Mint Onchain`, e);
       alert("⚠️ PIX Recebido, mas Falha Crítica ao Mintar BRW Onchain: " + e.message);
       setPhase('input');
     }
@@ -103,7 +105,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       // 1. Chama o Gateway Woovi para gerar a cobrança Pix (QR Code EMV)
       const result = await WooviService.createCharge(Number(amount), profile.id);
       
-      console.info(`[WalletNow][UI] ⏳ Cobrança PIX gerada: ${result.correlationID}. Exibindo QR Code...`);
+      logger.info('[WalletNow][Payment]', `⏳ Cobrança PIX gerada: ${result.correlationID}. Exibindo QR Code...`);
       setPixData({ brCode: result.brCode, correlationID: result.correlationID, amount: result.amount });
       setPhase('waiting_payment');
 

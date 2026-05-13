@@ -12,6 +12,7 @@ import Settings from './pages/Settings';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import QADebugPanel from './components/QADebugPanel';
+import { AppErrorBoundary } from './components/system/AppErrorBoundary';
 
 /**
  * Componente Principal da Aplicação (App)
@@ -22,8 +23,9 @@ import QADebugPanel from './components/QADebugPanel';
  */
 export default function App() {
   return (
-    // Envolve a aplicação com o estado global de Autenticação (Supabase)
-    <AuthProvider>
+    <AppErrorBoundary>
+      {/* Envolve a aplicação com o estado global de Autenticação (Supabase) */}
+      <AuthProvider>
       {/* BrowserRouter: Habilita o roteamento baseado na URL com Base Dinâmica (Vite/Vercel/Hostinger) */}
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         {/* Routes: Container que agrupa todas as rotas possíveis da aplicação */}
@@ -54,5 +56,6 @@ export default function App() {
         <QADebugPanel />
       </BrowserRouter>
     </AuthProvider>
+    </AppErrorBoundary>
   );
 }
