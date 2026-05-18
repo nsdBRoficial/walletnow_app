@@ -1,47 +1,52 @@
-# Walkthrough — KYC Programático (Etherfuse)
+# Walkthrough — KYC Programático & Conta Bancária (Etherfuse)
 
-A fase final do Sprint de Infraestrutura Institucional focado na aprovação automática do KYC via **Sandbox da Etherfuse** foi concluída com sucesso.
+Este documento resume a fase final do Sprint de Infraestrutura Institucional focado na aprovação automática do KYC via **Sandbox da Etherfuse** e a investigação sobre o vínculo de contas bancárias (Proxy Accounts).
 
-Aqui está um resumo abrangente de todas as mudanças efetuadas:
-
-## Arquitetura & Observabilidade
+## 1. Arquitetura & Observabilidade
 
 1. **Proxy Supabase (`etherfuse-proxy`)**
-   - O proxy foi aprimorado para monitorar ativamente o tráfego do endpoint `POST /ramp/customer/:id/kyc`.
-   - Adicionamos logs estruturados que mascaram parcialmente o `taxId` para simular as proteções necessárias em produção (LGPD), assegurando que estamos enviando os dados estruturais completos sem vazamentos.
-   - Logs na categoria `[WalletNow][EtherfuseProxy]`.
+   - Monitoramento ativo de tráfego dos endpoints de KYC, Quotes e Orders.
+   - Logs estruturados que protegem dados sensíveis como `taxId` enquanto evidenciam a comunicação com a API da Etherfuse.
 
 2. **Categorização de Logs**
-   - O `logger.ts` ganhou o nível hierárquico isolado `[WalletNow][KYC]`. Isso separa as interações demográficas e de compliance dos fluxos de trading `[Treasury]` e transações blockchain em si.
+   - Melhorias no `logger.ts` para separar as interações de compliance `[WalletNow][KYC]` e as operações financeiras `[WalletNow][Treasury]`.
 
-## Serviços (`etherfuseKycService.ts`)
+## 2. KYC Programático (`etherfuseKycService.ts`)
 
-- Substituímos completamente o uso estático do site hospedado da Etherfuse e as dependências obscuras por um serviço REST limpo via fetch.
-- Criamos interfaces claras e tipadas como `KycPayload` e `KycAddress` ditando exatamente as chaves `firstName`, `lastName`, `dateOfBirth`, `taxId`, `occupation`, `phoneNumber`, e `address`.
-- Agora o `submitKyc` bate de frente com nosso proxy, garantindo a mesma blindagem de API KEYS usada na geração de Quotes.
+- Substituímos o fluxo web de redirecionamento para um serviço REST (`POST /ramp/customer/{id}/kyc`) que envia a identidade formatada diretamente.
+- O payload requer envelopamento obrigatório no objeto `"identity"`, garantindo a leitura pela Etherfuse.
+- O polling no frontend foi ajustado para aguardar e lidar corretamente com o status `approved`.
 
-## Interface Gráfica — KYC Programático
+## 3. Comportamento do Sandbox e Aprendizados Técnicos
 
-> [!TIP]
-> **Modelo Híbrido**
-> Implementamos um design condicional (utilizando `isSandbox`). O auto-fill de dados preenche um mock perfeito (com CPF válido) apenas em ambiente local/testnet.
+### 3.1. Diferença de Ambientes (UI vs Programático)
+Descobrimos uma grande divergência de comportamento no Sandbox:
+- **Fluxo Web (Hosted):** Ao abrir a URL web, o usuário cadastra identidade *e também sua conta bancária*.
+- **Fluxo Programático (API):** Apenas aprova a identidade. A busca por contas via `getFiatAccounts()` retornará um array vazio `[]` mesmo com o KYC concluído.
 
-- **`etherfuse_kyc_form`**: Nova UI no `DepositModal.tsx` acionada imediatamente caso o status KYC capturado retorne `not_started`.
-- Formulário institucional e com *badge* de "Sandbox Autofill" no ambiente de desenvolvimento, agilizando drasticamente os testes de On-Ramp.
-- **Botão de Ação Bloqueante**: Impede cliques múltiplos protegendo contra o envio concorrente com um feedback visual `Enviando e Aprovando...` (spinner).
+### 3.2. A Hipótese da Conta "Proxy" (BankAccountId Inicial)
+A API exige um `bankAccountId` previamente cadastrado para aprovar ordens no endpoint `POST /ramp/order`. A tentativa de forçar um novo `bankAccountId` falha com `400 Proxy account not found`. 
+Ao investigar como registrar uma conta (`POST /ramp/bank-account`), recebemos o erro `untagged enum AccountRegistration` para todas as tentativas PIX locais, evidenciando uma tipagem estrita não documentada.
 
-## Auto-Continuação e Polling
+Para resolver o impasse na ausência de documentação do enum, implementamos uma hipótese arquitetural: 
+**Aproveitar o UUID de banco enviado na primeiríssima requisição do `onboarding-url`.** Esse UUID foi persistido no componente `DepositModal` sob o estado `efInitialBankAccountId`.
 
-Ao clicar no Enviar KYC, o payload é despachado via Proxy. Após receber uma resposta "OK", o `DepositModal` migra de volta para a fase `etherfuse_kyc` original. Nessa fase, nosso _polling interval_ (existente e robusto) já pega a mudança para `approved` e dispara as verificações automáticas sequenciais:
-1. Pega `bankAccountId`
-2. Cria Quote
-3. Cria `createOrder()`
+### 3.3. Comportamento de Clientes Previamente Registrados
+Se a Wallet (Stellar Address) do usuário já existe na base da Etherfuse (erro 409), não podemos gerar e reaproveitar um novo UUID de banco, pois esse UUID local nunca chegará à plataforma. Portanto, a testabilidade dessa hipótese requer uma carteira (Wallet) **completamente nova** (ou não registrada).
 
-> [!SUCCESS]
-> **QA Results**
-> - Rodamos `npm run type-check` (tsc --noEmit)
-> - Rodamos `npm run lint`
-> - Nenhum erro reportado.
-> - Nenhum conflito impeditivo com os fluxos do Woovi.
+---
 
-O fluxo PIX real via Sandbox agora é integral, rodando de BRL à liquidação do ativo de Tesouro na Stellar, com o cliente e a conta bancária completamente reais dentro das permissões do ambiente *testnet*.
+## 4. NEXT STEPS (Próximas Sessões)
+
+Para dar continuidade e estabilizar a fundação na Etherfuse, os próximos passos do projeto deverão focar em:
+
+1. **Testar fluxo com Freighter Connect**
+   - Ao conectar wallets limpas via Freighter nativamente, teremos o ambiente livre da poluição de customers em estado de conflito (`409`).
+2. **Testar wallet totalmente nova (Gerada Localmente)**
+   - Deslogar, gerar novo auth Supabase e realizar um teste do fluxo E2E utilizando a estratégia do `efInitialBankAccountId`.
+3. **Investigar Bootstrap de Proxy Account**
+   - Se o fallback inicial não for aceito e as ordens continuarem devolvendo `Proxy account not found`, será imperativo contatar o suporte da Etherfuse para obter o schema JSON exato do objeto PIX de `AccountRegistration`.
+4. **Avaliar Fluxo Anchor/BRZ/Stellar como Fallback Estratégico**
+   - Caso a integração On-Ramp da Etherfuse se prove excessivamente rígida para MVP, a arquitetura deve ser capaz de ativar um fallback via Anchor BRL/BRZ nativa na rede Stellar + Swap na rede descentralizada.
+5. **Avaliar Stellar Wallet Authentication**
+   - Preparar a integração institucional baseando a identidade diretamente na chave pública e sessão criptográfica, diminuindo o ruído de emails.
