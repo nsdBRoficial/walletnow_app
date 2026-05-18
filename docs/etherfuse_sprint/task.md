@@ -1,0 +1,23 @@
+- [x] Fase 1 — Auditoria e Documentação
+  - [x] Criar `docs/ETHERFUSE_KYC_API_FLOW.md` detalhando o fluxo programático, endpoints e payload.
+- [x] Fase 2 — Expansão da Edge Function (`etherfuse-proxy`)
+  - [x] Adicionar whitelist para `POST /ramp/customer/:id/kyc`.
+  - [x] Garantir que logs contenham payload, status e tratem erros de forma transparente sem `catch` vazio.
+- [x] Fase 3 — Criação do Serviço de KYC (`etherfuseKycService.ts`)
+  - [x] Criar `src/services/providers/etherfuse/etherfuseKycService.ts`.
+  - [x] Implementar `submitKyc(customerId, payload)` com os campos obrigatórios.
+  - [x] Adicionar logging avançado `[WalletNow][KYC]`.
+- [x] Fase 4 — UI KYC no Deposit Modal
+  - [x] Criar estado `phase === 'etherfuse_kyc_form'`.
+  - [x] Desenvolver `EtherfuseKycForm` component/view com badge "Sandbox Autofill".
+  - [x] Preencher auto-fill se `process.env.NODE_ENV !== 'production'`.
+  - [x] Acionar `submitKyc()` no submit e transicionar status.
+- [x] Fase 5 — Auto-Continuação
+  - [x] Polling/espera do KYC resultando em `approved`.
+  - [x] Continuar fluxo de obtenção do `bankAccountId` e posterior `createOrder()`.
+- [x] Fase 6 — Observabilidade
+  - [x] Revisar logs em toda a stack (`DepositModal`, `EtherfuseKycService`, `EtherfuseOnRampService`, `etherfuse-proxy`).
+- [x] Fase 7 — QA Obrigatório
+  - [x] Executar `npm run type-check`.
+  - [x] Executar `npm run lint`.
+  - [x] Testar regressões.

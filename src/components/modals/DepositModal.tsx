@@ -10,6 +10,7 @@ import { DemoConfig } from '../../config/demoMode';
 import { EtherfuseTrustlineService, TrustlineResult } from '../../services/providers/etherfuse/etherfuseTrustlineService';
 import { EtherfuseAssetConfig } from '../../services/providers/etherfuse/etherfuseAssetConfig';
 import { EtherfuseOnRampService, EtherfuseQuoteResult, EtherfuseOrderResult } from '../../services/providers/etherfuse/etherfuseOnRampService';
+import { EtherfuseKycService, KycPayload } from '../../services/providers/etherfuse/etherfuseKycService';
 
 // Define quais propriedades (props) este componente espera receber.
 interface DepositModalProps {
@@ -21,7 +22,7 @@ interface DepositModalProps {
 export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModalProps) {
   const { profile } = useAuth();
 
-  const [phase, setPhase] = useState<'provider_selection' | 'etherfuse_preview' | 'etherfuse_amount' | 'etherfuse_settling' | 'etherfuse_done' | 'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('provider_selection');
+  const [phase, setPhase] = useState<'provider_selection' | 'etherfuse_preview' | 'etherfuse_amount' | 'etherfuse_kyc' | 'etherfuse_kyc_form' | 'etherfuse_settling' | 'etherfuse_done' | 'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('provider_selection');
   const [isSimulating, setIsSimulating] = useState(false);
   const [trustlineResult, setTrustlineResult] = useState<TrustlineResult | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<IDepositProvider | null>(null);
@@ -32,6 +33,34 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   const [efOrder, setEfOrder] = useState<EtherfuseOrderResult | null>(null);
   const [efCustomerId, setEfCustomerId] = useState('');
   const [efBankAccountId, setEfBankAccountId] = useState('');
+  const [efInitialBankAccountId, setEfInitialBankAccountId] = useState('');
+  const [efKycUrl, setEfKycUrl] = useState('');
+  
+  // KYC Form States
+  const isSandbox = import.meta.env.DEV; // Para autofill
+  const [kycForm, setKycForm] = useState<KycPayload>(isSandbox ? {
+    firstName: 'João',
+    lastName: 'Silva',
+    dateOfBirth: '1990-01-01',
+    taxId: '12345678909',
+    occupation: 'Software Engineer',
+    phoneNumber: '+5511999999999',
+    address: {
+      street: 'Rua Ficticia, 123',
+      city: 'São Paulo',
+      state: 'SP',
+      postalCode: '01000-000',
+      country: 'BR'
+    }
+  } : {
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+    taxId: '',
+    occupation: '',
+    phoneNumber: '',
+    address: { street: '', city: '', state: '', postalCode: '', country: 'BR' }
+  });
 
   // Dados Inputados e Retornados
   const [amount, setAmount] = useState('');
@@ -52,7 +81,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
     }
   }, [isOpen]);
 
-  // Handler principal de compra TESOURO (trustline → customer → quote → order → simulate → poll)
+  // Handler principal de compra TESOURO (trustline → customer → kyc_check → bankAccount → quote → order → simulate → poll)
   const handleBuyTesouro = async () => {
     if (!profile?.stellar_address || !profile?.id) return;
     setIsSimulating(true);
@@ -68,30 +97,70 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       // 2. Customer
       setEfStatusLabel('Registrando na Etherfuse...');
       let custId = efCustomerId;
-      let bankId = efBankAccountId;
-      if (!custId) {
+      let kycUrl = efKycUrl;
+      if (!custId || !kycUrl) {
         const cust = await EtherfuseOnRampService.registerCustomer(profile.stellar_address);
         custId = cust.customerId;
-        bankId = cust.bankAccountId;
+        kycUrl = cust.kycUrl;
         setEfCustomerId(custId);
-        setEfBankAccountId(bankId);
+        setEfKycUrl(kycUrl);
+        setEfInitialBankAccountId(cust.bankAccountId || '');
       }
 
-      // 3. Quote
+      // 3. Verificar KYC (CRÍTICO: sandbox requer KYC antes de createOrder)
+      setEfStatusLabel('Verificando status KYC...');
+      const kycStatus = await EtherfuseOnRampService.getKycStatus(custId, profile.stellar_address);
+      logger.info('[WalletNow][Treasury]', `KYC status: ${kycStatus.status}`, kycStatus);
+      if (kycStatus.status === 'not_started') {
+        setEfStatusLabel('KYC não iniciado — complete o formulário');
+        setPhase('etherfuse_kyc_form');
+        setIsSimulating(false);
+        return;
+      } else if (kycStatus.status === 'proposed') {
+        setEfStatusLabel('KYC pendente de aprovação');
+        setPhase('etherfuse_kyc');
+        setIsSimulating(false);
+        return;
+      }
+
+      // 4. Buscar bankAccountId REAL (CORREÇÃO CRÍTICA: UUID sintético causa HTTP 400)
+      setEfStatusLabel('Buscando conta bancária...');
+      let realBankAccountId = efBankAccountId;
+      if (!realBankAccountId) {
+        const accounts = await EtherfuseOnRampService.getFiatAccounts(custId);
+        if (accounts.length > 0) {
+          realBankAccountId = accounts[0].bankAccountId;
+          setEfBankAccountId(realBankAccountId);
+          logger.info('[WalletNow][Treasury]', `✅ bankAccountId REAL encontrado: ${realBankAccountId}`, {});
+        } else {
+          logger.warn('[WalletNow][Treasury]', 'Nenhum bank account encontrado. Tentando usar o bankAccountId inicial da sessão.', {});
+          realBankAccountId = efInitialBankAccountId;
+          setEfBankAccountId(realBankAccountId);
+        }
+      }
+
+
+      // 5. Quote (expiram em ~2 min — deve ser imediatamente antes do createOrder)
       setEfStatusLabel('Obtendo cotação BRL → TESOURO...');
       const quote = await EtherfuseOnRampService.getQuote(custId, profile.stellar_address, efAmount);
       setEfQuote(quote);
 
-      // 4. Order
+      // 6. Order — usa bankAccountId REAL da Etherfuse
       setEfStatusLabel('Criando ordem de compra...');
-      const order = await EtherfuseOnRampService.createOrder(custId, bankId, quote.quoteId, profile.stellar_address);
+      logger.info('[WalletNow][Treasury]', 'Iniciando createOrder com dados:', {
+        custId: custId.substring(0, 8) + '...',
+        realBankAccountId: realBankAccountId.substring(0, 8) + '...',
+        quoteId: quote.quoteId.substring(0, 8) + '...',
+        publicKey: profile.stellar_address.substring(0, 8) + '...',
+      });
+      const order = await EtherfuseOnRampService.createOrder(custId, realBankAccountId, quote.quoteId, profile.stellar_address);
       setEfOrder(order);
 
-      // 5. Sandbox: simular PIX recebido
+      // 7. Sandbox: simular PIX recebido
       setEfStatusLabel('⚡ Sandbox: Simulando pagamento PIX...');
       await EtherfuseOnRampService.simulateFiatReceived(order.orderId);
 
-      // 6. Poll até completed
+      // 8. Poll até completed
       setPhase('etherfuse_settling');
       const final = await EtherfuseOnRampService.pollUntilCompleted(
         order.orderId,
@@ -102,8 +171,25 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       setPhase('etherfuse_done');
       if (onSuccess) setTimeout(onSuccess, 1500);
     } catch (err: any) {
-      logger.error('[WalletNow][Treasury]', 'Erro no fluxo de compra TESOURO', err);
-      setEfStatusLabel(`Erro: ${err.message || 'falha desconhecida'}`);
+      // NUNCA engolir o erro — expor mensagem completa
+      const fullError = err?.message || JSON.stringify(err) || 'falha desconhecida';
+      logger.error('[WalletNow][Treasury]', 'Erro no fluxo de compra TESOURO', { error: fullError });
+      setEfStatusLabel(`❌ ${fullError}`);
+    } finally {
+      setIsSimulating(false);
+    }
+  };
+  const handleSubmitKyc = async () => {
+    setIsSimulating(true);
+    setEfStatusLabel('Enviando dados de KYC...');
+    try {
+      await EtherfuseKycService.submitKyc(efCustomerId, kycForm);
+      setEfStatusLabel('KYC enviado com sucesso. Aguardando aprovação...');
+      setPhase('etherfuse_kyc'); // Muda para a fase de polling
+    } catch (e: any) {
+      const fullError = e?.message || JSON.stringify(e) || 'Erro ao submeter KYC';
+      logger.error('[WalletNow][Treasury]', 'Erro no submit KYC', { error: fullError });
+      setEfStatusLabel(`❌ ${fullError}`);
     } finally {
       setIsSimulating(false);
     }
@@ -130,6 +216,37 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       if (typeof timer === 'number') clearInterval(timer);
     };
   }, [isOpen, phase, pixData?.correlationID]);
+
+  // Polling automático KYC
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isOpen && phase === 'etherfuse_kyc' && efCustomerId && profile?.stellar_address) {
+      timer = setInterval(async () => {
+        try {
+          const statusResult = await EtherfuseOnRampService.getKycStatus(efCustomerId, profile.stellar_address);
+          logger.info('[WalletNow][Treasury]', `[Polling] KYC status: ${statusResult.status}`, statusResult);
+          
+          if (statusResult.status === 'approved' || statusResult.status === 'approved_chain_deploying') {
+            clearInterval(timer);
+            setEfStatusLabel('KYC Aprovado! Retomando compra...');
+            // Retoma automaticamente o fluxo de compra
+            handleBuyTesouro();
+          } else if (statusResult.status === 'rejected') {
+            clearInterval(timer);
+            setEfStatusLabel('❌ KYC Rejeitado');
+          } else {
+             setEfStatusLabel(statusResult.status === 'not_started' ? 'Aguardando início do KYC...' : 'Aguardando aprovação...');
+          }
+        } catch(e) {
+          logger.error('[WalletNow][Treasury]', 'Erro polling KYC', e);
+        }
+      }, 5000);
+    }
+
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, phase, efCustomerId, profile?.stellar_address]);
 
   // Se o modal não estiver aberto (isOpen === false), não renderiza nada na tela.
   // MAS os hooks devem ficar acima disto.
@@ -272,6 +389,124 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
                 </button>
               );
             })}
+          </div>
+        )}
+        {/* ── ETHERFUSE: KYC Formulario Programático ──────────────────────────── */}
+        {phase === 'etherfuse_kyc_form' && (
+          <div className="flex flex-col space-y-4 animate-in fade-in duration-300 overflow-y-auto max-h-[80vh] px-1">
+            <div className="flex flex-col items-center justify-center pt-2 pb-4 border-b border-white/5">
+               <div className="w-12 h-12 bg-blue-900/30 rounded-full flex items-center justify-center border border-blue-500/30 mb-3">
+                  <ShieldCheck className="w-6 h-6 text-blue-400" />
+               </div>
+               <h3 className="text-lg font-bold text-white">Verificação de Identidade</h3>
+               <p className="text-xs text-slate-400 mt-1 text-center px-4">
+                 Preencha seus dados para habilitar investimentos no TESOURO via Etherfuse.
+               </p>
+               {isSandbox && (
+                 <div className="mt-3 px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 rounded-full">
+                   <span className="text-[10px] text-yellow-400 font-mono font-bold tracking-widest uppercase">Sandbox Autofill</span>
+                 </div>
+               )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Nome</label>
+                <input type="text" value={kycForm.firstName} onChange={e => setKycForm({...kycForm, firstName: e.target.value})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Sobrenome</label>
+                <input type="text" value={kycForm.lastName} onChange={e => setKycForm({...kycForm, lastName: e.target.value})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">CPF</label>
+                <input type="text" value={kycForm.taxId} onChange={e => setKycForm({...kycForm, taxId: e.target.value})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors font-mono" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Nascimento</label>
+                <input type="date" value={kycForm.dateOfBirth} onChange={e => setKycForm({...kycForm, dateOfBirth: e.target.value})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Celular</label>
+                <input type="tel" value={kycForm.phoneNumber} onChange={e => setKycForm({...kycForm, phoneNumber: e.target.value})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Rua</label>
+                <input type="text" value={kycForm.address.street} onChange={e => setKycForm({...kycForm, address: {...kycForm.address, street: e.target.value}})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Cidade</label>
+                <input type="text" value={kycForm.address.city} onChange={e => setKycForm({...kycForm, address: {...kycForm.address, city: e.target.value}})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">Estado</label>
+                <input type="text" value={kycForm.address.state} onChange={e => setKycForm({...kycForm, address: {...kycForm.address, state: e.target.value}})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">CEP</label>
+                <input type="text" value={kycForm.address.postalCode} onChange={e => setKycForm({...kycForm, address: {...kycForm.address, postalCode: e.target.value}})} className="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-blue-500 transition-colors" />
+              </div>
+              <div className="col-span-1">
+                <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1 block">País</label>
+                <input type="text" value={kycForm.address.country} disabled className="w-full bg-slate-900/30 border border-slate-700/50 rounded-xl px-3 py-2 text-slate-400 text-sm outline-none cursor-not-allowed" />
+              </div>
+            </div>
+
+            {isSimulating && efStatusLabel && (
+              <div className="bg-blue-950/30 border border-blue-800/30 rounded-xl p-3 flex items-center gap-2 mt-4">
+                <Loader2 className="w-4 h-4 text-blue-400 animate-spin flex-shrink-0" />
+                <p className="text-xs text-blue-300 font-mono">{efStatusLabel}</p>
+              </div>
+            )}
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setPhase('etherfuse_preview')}
+                disabled={isSimulating}
+                className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-4 rounded-2xl font-bold transition-all disabled:opacity-50"
+              >
+                Voltar
+              </button>
+              <button
+                onClick={handleSubmitKyc}
+                disabled={isSimulating}
+                className="flex-[2] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-4 px-6 rounded-2xl font-bold transition-all shadow-[0_0_24px_rgba(37,99,235,0.25)] disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {isSimulating ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Enviar e Aprovar'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── ETHERFUSE: KYC Pendente ──────────────────────────── */}
+        {phase === 'etherfuse_kyc' && (
+          <div className="flex flex-col items-center justify-center py-8 gap-5 animate-in fade-in">
+             <div className="w-16 h-16 bg-blue-900/30 rounded-full flex items-center justify-center border border-blue-500/30">
+                <Globe className="w-8 h-8 text-blue-400" />
+             </div>
+             <div className="text-center">
+                <h3 className="text-lg font-bold text-white">Cadastro Obrigatório</h3>
+                <p className="text-sm text-slate-400 mt-2 px-4 leading-relaxed">
+                  Para investir em ativos do Tesouro na plataforma, é necessário completar seu cadastro e KYC na Etherfuse.
+                </p>
+             </div>
+             <a
+               href={efKycUrl}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="w-full mt-4 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white py-4 px-6 rounded-2xl font-bold transition-all shadow-[0_0_24px_rgba(37,99,235,0.25)]"
+             >
+               Finalizar KYC Etherfuse <ExternalLink className="w-4 h-4" />
+             </a>
+             <p className="text-xs text-slate-500 font-mono mt-2 animate-pulse">
+                {efStatusLabel || 'Aguardando aprovação...'}
+             </p>
+             <button
+               onClick={() => { setPhase('etherfuse_preview'); setEfStatusLabel(''); }}
+               className="mt-2 w-full text-xs text-gray-600 hover:text-white transition-colors"
+             >
+               Voltar
+             </button>
           </div>
         )}
 
