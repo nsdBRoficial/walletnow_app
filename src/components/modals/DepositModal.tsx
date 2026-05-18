@@ -1,9 +1,10 @@
-import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink } from 'lucide-react';
+import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink, CreditCard, Globe, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PaymentService } from '../../services/paymentService';
 import { WalletFactory } from '../../services/walletFactory';
 import { WooviService } from '../../services/wooviService';
+import { availableProviders, IDepositProvider } from '../../services/providers';
 import { logger } from '../../utils/logger';
 import { DemoConfig } from '../../config/demoMode';
 
@@ -18,7 +19,8 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   const { profile } = useAuth();
 
   // Estados do Fluxo de Depósito Polling (Sandbox Transfero)
-  const [phase, setPhase] = useState<'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('input');
+  const [phase, setPhase] = useState<'provider_selection' | 'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('provider_selection');
+  const [selectedProvider, setSelectedProvider] = useState<IDepositProvider | null>(null);
 
   // Dados Inputados e Retornados
   const [amount, setAmount] = useState('');
@@ -29,7 +31,8 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   // Zera o modal sempre que ele abrir/fechar
   useEffect(() => {
     if (isOpen) {
-      setPhase('input');
+      setPhase('provider_selection');
+      setSelectedProvider(null);
       setAmount('');
       setPixData(null);
     }
@@ -130,7 +133,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-white">
-            {phase === 'input' ? 'Depositar PIX' : 'Pagamento Gerado'}
+            {phase === 'provider_selection' ? 'Select Provider' : (phase === 'input' ? 'Depositar PIX' : 'Pagamento Gerado')}
           </h2>
           <button
             onClick={onClose}
@@ -139,6 +142,63 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Phase 0: Provider Selection */}
+        {phase === 'provider_selection' && (
+          <div className="flex flex-col space-y-4">
+            {availableProviders.map((provider) => {
+              const isActive = provider.status === 'active';
+              
+              // Helper to map icon names
+              const IconComponent = () => {
+                switch(provider.iconName) {
+                  case 'QrCode': return <QrCode className="w-5 h-5" />;
+                  case 'Globe': return <Globe className="w-5 h-5" />;
+                  case 'CreditCard': return <CreditCard className="w-5 h-5" />;
+                  default: return <Zap className="w-5 h-5" />;
+                }
+              };
+
+              return (
+                <button
+                  key={provider.id}
+                  disabled={!isActive}
+                  onClick={() => {
+                    if (isActive) {
+                      logger.info('[WalletNow][Provider]', `Selected provider: ${provider.id}`);
+                      setSelectedProvider(provider);
+                      setPhase('input');
+                    }
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-2xl border text-left transition-all duration-300 group
+                    ${isActive 
+                      ? 'bg-black/40 border-[#00E676]/30 hover:border-[#00E676]/80 hover:bg-black/60 shadow-[0_0_15px_rgba(0,230,118,0.05)] hover:shadow-[0_0_20px_rgba(0,230,118,0.15)] cursor-pointer' 
+                      : 'bg-black/20 border-white/5 opacity-60 cursor-not-allowed'
+                    }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-full ${isActive ? 'bg-[#00E676]/10 text-[#00E676]' : 'bg-white/5 text-gray-500'}`}>
+                      <IconComponent />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-base ${isActive ? 'text-white' : 'text-gray-400'}`}>{provider.name}</h3>
+                      <p className="text-xs text-gray-500 mt-1">{provider.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    {!isActive ? (
+                      <span className="text-[10px] uppercase tracking-wider font-mono bg-white/5 text-gray-400 px-2 py-1 rounded border border-white/10">
+                        {provider.buttonLabel}
+                      </span>
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-[#00E676] transition-colors" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Phase 1: Input de Valor */}
         {phase === 'input' && (

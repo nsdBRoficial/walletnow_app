@@ -5,7 +5,7 @@
 
 import { DemoConfig } from '../config/demoMode';
 
-type LogCategory = '[WalletNow][UI]' | '[WalletNow][Realtime]' | '[WalletNow][Auth]' | '[WalletNow][Payment]' | '[WalletNow][Blockchain]' | '[WalletNow][System]';
+type LogCategory = '[WalletNow][UI]' | '[WalletNow][Realtime]' | '[WalletNow][Auth]' | '[WalletNow][Payment]' | '[WalletNow][Blockchain]' | '[WalletNow][System]' | '[WalletNow][Provider]' | '[WalletNow][Woovi]' | '[WalletNow][Stripe]' | '[WalletNow][Etherfuse]';
 
 /**
  * Função utilitária para higienizar logs e prevenir vazamento de secrets.
