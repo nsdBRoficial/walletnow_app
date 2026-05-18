@@ -60,8 +60,14 @@ serve(async (req) => {
       );
     }
 
-    // Bloquear endpoints não autorizados (whitelist)
-    const allowedPrefixes = ['/ramp/assets', '/ramp/onboarding-url', '/ramp/customer', '/ramp/quote', '/ramp/order'];
+    // Whitelist de endpoints permitidos (proteção contra SSRF)
+    const allowedPrefixes = [
+      '/ramp/assets',
+      '/ramp/onboarding-url',
+      '/ramp/customer',
+      '/ramp/quote',
+      '/ramp/order',
+    ];
     const isAllowed = allowedPrefixes.some(prefix => endpoint.startsWith(prefix));
     if (!isAllowed) {
       return new Response(
