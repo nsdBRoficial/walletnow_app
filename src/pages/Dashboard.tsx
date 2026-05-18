@@ -1,4 +1,4 @@
-import { ArrowDownLeft, ArrowUpRight, History, Settings as SettingsIcon, Wallet, ShieldCheck, Award, Loader2 } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, History, Settings as SettingsIcon, Wallet, ShieldCheck, Award, Loader2, Globe } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DepositModal from '../components/modals/DepositModal';
@@ -34,7 +34,7 @@ export default function Dashboard() {
 
   // Estados de Saldo (Extraídos do Blockchain via Stellar Horizon)
   const [totalBalance, setTotalBalance] = useState<string>('0.00');
-  const [assetDetails, setAssetDetails] = useState<{brz: string, brw: string}>({brz: '0.00', brw: '0.00'});
+  const [assetDetails, setAssetDetails] = useState<{brz: string, brw: string, tesouro: string}>({brz: '0.00', brw: '0.00', tesouro: '0.00'});
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [isAccountActive, setIsAccountActive] = useState<boolean | null>(null); // null = checking, false = 404
   const [isActivating, setIsActivating] = useState(false);
@@ -62,7 +62,7 @@ export default function Dashboard() {
 
       if (balances) {
         setIsAccountActive(true);
-        setAssetDetails({ brz: balances.brz, brw: balances.brw });
+        setAssetDetails({ brz: balances.brz, brw: balances.brw, tesouro: balances.tesouro });
         // Soma dos saldos em Real (BRZ + BRW — ambos 1:1)
         const total = parseFloat(balances.brz) + parseFloat(balances.brw);
         setTotalBalance(total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
@@ -202,6 +202,45 @@ export default function Dashboard() {
               <ArrowUpRight className="w-5 h-5" />
               Sacar para PIX
             </button>
+          </div>
+        </div>
+      </div>
+      {/* Seção Treasury Assets (Etherfuse RWA) */}
+      <div className="px-6 py-2">
+        <div className="bg-gradient-to-br from-[#0F172A] to-[#020617] rounded-3xl p-6 border border-slate-800 shadow-[0_10px_40px_-15px_rgba(15,23,42,0.8)] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-500/10 transition-all duration-700"></div>
+          
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center border border-slate-700 shadow-inner">
+                <Globe className="w-5 h-5 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-xs text-blue-400 font-mono tracking-widest uppercase">Tokenized Treasury</p>
+                <h3 className="text-white font-bold tracking-tight">Brazilian Real Treasury</h3>
+              </div>
+            </div>
+            <span className="text-[10px] text-slate-500 font-mono bg-slate-900 px-2 py-1 rounded border border-slate-800">BRT</span>
+          </div>
+
+          <div className="mt-6 flex items-end justify-between">
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-1">Treasury Balance</p>
+              {isLoadingBalance ? (
+                <div className="h-8 flex items-center">
+                  <Loader2 className="w-5 h-5 text-slate-600 animate-spin" />
+                </div>
+              ) : (
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-lg text-slate-500 font-semibold">R$</span>
+                  <span className="text-3xl font-bold text-white tracking-tight">{parseFloat(assetDetails.tesouro).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
+            </div>
+            <div className="text-right">
+               <p className="text-[10px] text-blue-400 uppercase tracking-wider font-semibold mb-1">Est. APY</p>
+               <span className="text-sm font-bold text-blue-300">~ 10.4%</span>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink, CreditCard, Globe, ChevronRight } from 'lucide-react';
+import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink, CreditCard, Globe, ChevronRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { PaymentService } from '../../services/paymentService';
@@ -7,6 +7,8 @@ import { WooviService } from '../../services/wooviService';
 import { availableProviders, IDepositProvider } from '../../services/providers';
 import { logger } from '../../utils/logger';
 import { DemoConfig } from '../../config/demoMode';
+import { EtherfuseTrustlineService, TrustlineResult } from '../../services/providers/etherfuse/etherfuseTrustlineService';
+import { EtherfuseAssetConfig } from '../../services/providers/etherfuse/etherfuseAssetConfig';
 
 // Define quais propriedades (props) este componente espera receber.
 interface DepositModalProps {
@@ -19,7 +21,9 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
   const { profile } = useAuth();
 
   // Estados do Fluxo de Depósito Polling (Sandbox Transfero)
-  const [phase, setPhase] = useState<'provider_selection' | 'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('provider_selection');
+  const [phase, setPhase] = useState<'provider_selection' | 'etherfuse_preview' | 'input' | 'generating' | 'waiting_payment' | 'minting' | 'success'>('provider_selection');
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [trustlineResult, setTrustlineResult] = useState<TrustlineResult | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<IDepositProvider | null>(null);
 
   // Dados Inputados e Retornados
@@ -35,6 +39,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
       setSelectedProvider(null);
       setAmount('');
       setPixData(null);
+      setTrustlineResult(null);
     }
   }, [isOpen]);
 
@@ -133,7 +138,7 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
         {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-white">
-            {phase === 'provider_selection' ? 'Select Provider' : (phase === 'input' ? 'Depositar PIX' : 'Pagamento Gerado')}
+            {phase === 'provider_selection' ? 'Select Provider' : (phase === 'input' ? 'Depositar PIX' : (phase === 'etherfuse_preview' ? 'Treasury Asset' : 'Pagamento Gerado'))}
           </h2>
           <button
             onClick={onClose}
@@ -167,7 +172,11 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
                     if (isActive) {
                       logger.info('[WalletNow][Provider]', `Selected provider: ${provider.id}`);
                       setSelectedProvider(provider);
-                      setPhase('input');
+                      if (provider.id === 'etherfuse') {
+                        setPhase('etherfuse_preview');
+                      } else {
+                        setPhase('input');
+                      }
                     }
                   }}
                   className={`w-full flex items-center justify-between p-4 rounded-2xl border text-left transition-all duration-300 group
@@ -197,6 +206,127 @@ export default function DepositModal({ isOpen, onClose, onSuccess }: DepositModa
                 </button>
               );
             })}
+          </div>
+        )}
+
+        {/* Phase: Etherfuse — Trustline REAL */}
+        {phase === 'etherfuse_preview' && (
+          <div className="flex flex-col space-y-5 animate-in fade-in duration-300">
+
+            {/* Header informativo do ativo */}
+            <div className="bg-gradient-to-br from-[#0F172A] to-black rounded-2xl p-5 border border-slate-800 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center border border-slate-700 shadow-inner">
+                  <Globe className="w-6 h-6 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white tracking-tight">{EtherfuseAssetConfig.displayName}</h3>
+                  <p className="text-xs text-blue-400 font-mono tracking-widest uppercase">Asset: {EtherfuseAssetConfig.assetCode} · Stellar Testnet</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Para receber <strong className="text-blue-300">TESOURO</strong> na sua carteira Stellar, é necessário estabelecer uma <strong className="text-white">Trustline</strong> com o emissor da Etherfuse. Esta operação é real e será confirmada on-chain.
+              </p>
+              <div className="mt-3 p-2 bg-blue-950/40 border border-blue-900/40 rounded-lg">
+                <p className="text-[10px] text-blue-300/70 font-mono text-center">
+                  Issuer: {EtherfuseAssetConfig.issuer.substring(0, 14)}...{EtherfuseAssetConfig.issuer.substring(-6)}
+                </p>
+              </div>
+            </div>
+
+            {/* Resultado da trustline se disponível */}
+            {trustlineResult && trustlineResult.success && (
+              <div className="bg-green-950/30 border border-green-800/40 rounded-2xl p-4 animate-in zoom-in duration-300">
+                <div className="flex items-center gap-3 mb-2">
+                  <ShieldCheck className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <p className="text-sm font-semibold text-green-300">
+                    {trustlineResult.alreadyExists ? 'Trustline já existente!' : 'Trustline criada com sucesso!'}
+                  </p>
+                </div>
+                {trustlineResult.transactionHash && (
+                  <a
+                    href={trustlineResult.explorerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-[10px] text-green-400 font-mono hover:text-green-300 transition-colors mt-1"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Ver transação on-chain: {trustlineResult.transactionHash.substring(0, 16)}...
+                  </a>
+                )}
+              </div>
+            )}
+
+            {/* Erro de trustline */}
+            {trustlineResult && !trustlineResult.success && (
+              <div className="bg-red-950/30 border border-red-800/40 rounded-2xl p-4">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-red-300">Falha ao criar trustline</p>
+                    <p className="text-xs text-red-400/70 mt-0.5 font-mono">{trustlineResult.error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Botão principal de trustline */}
+            {!trustlineResult?.success && (
+              <button
+                onClick={async () => {
+                  if (!profile?.stellar_address || !profile?.id) return;
+                  setIsSimulating(true);
+                  setTrustlineResult(null);
+
+                  try {
+                    const secretKey = WalletFactory.getSecretKey(profile.id);
+                    if (!secretKey) {
+                      setTrustlineResult({ success: false, error: 'Secret key não encontrada no dispositivo. Reconecte sua carteira.' });
+                      return;
+                    }
+
+                    logger.info('[WalletNow][Treasury]', 'Iniciando criação de trustline TESOURO real...');
+                    const result = await EtherfuseTrustlineService.createTrustline(
+                      profile.stellar_address,
+                      secretKey
+                    );
+                    setTrustlineResult(result);
+
+                    if (result.success && onSuccess) {
+                      setTimeout(() => onSuccess(), 2000);
+                    }
+                  } catch (err: any) {
+                    logger.error('[WalletNow][Treasury]', 'Erro inesperado na criação de trustline', err);
+                    setTrustlineResult({ success: false, error: err.message || 'Erro desconhecido' });
+                  } finally {
+                    setIsSimulating(false);
+                  }
+                }}
+                disabled={isSimulating}
+                className="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 text-white py-4 px-6 rounded-2xl transition-all duration-300 font-bold disabled:opacity-60 shadow-[0_0_20px_rgba(37,99,235,0.2)]"
+              >
+                {isSimulating ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                {isSimulating ? 'Criando Trustline on-chain...' : 'Create Treasury Trustline'}
+              </button>
+            )}
+
+            {trustlineResult?.success && (
+              <button
+                onClick={onClose}
+                className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-600 text-white py-4 px-6 rounded-2xl font-bold transition-all"
+              >
+                <CheckCircle2 className="w-5 h-5" />
+                Concluído — Fechar
+              </button>
+            )}
+
+            <button
+              onClick={() => { setPhase('provider_selection'); setTrustlineResult(null); }}
+              className="w-full text-xs text-gray-500 hover:text-white transition-colors"
+            >
+              Voltar aos Provedores
+            </button>
           </div>
         )}
 

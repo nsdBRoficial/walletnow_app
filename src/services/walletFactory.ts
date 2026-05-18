@@ -220,13 +220,14 @@ export const WalletFactory = {
 
     /**
      * Consulta os saldos reais de múltiplos ativos na conta Stellar.
+     * Inclui TESOURO (Etherfuse Brazil RWA) junto aos ativos estáveis.
      */
-    async getBalances(publicKey: string): Promise<{ brz: string, brw: string, xlm: string, usdc: string, btc: string } | null> {
+    async getBalances(publicKey: string): Promise<{ brz: string, brw: string, xlm: string, usdc: string, btc: string, tesouro: string } | null> {
         try {
             const server = new Horizon.Server('https://horizon-testnet.stellar.org');
             const account = await server.loadAccount(publicKey);
 
-            let balances = { brz: '0.00', brw: '0.00', xlm: '0.00', usdc: '0.00', btc: '0.00' };
+            let balances = { brz: '0.00', brw: '0.00', xlm: '0.00', usdc: '0.00', btc: '0.00', tesouro: '0.00' };
 
             account.balances.forEach((balance: any) => {
                 const code = balance.asset_code;
@@ -235,6 +236,7 @@ export const WalletFactory = {
                 else if (code === 'BRW') balances.brw = balance.balance;
                 else if (code === 'USDC') balances.usdc = balance.balance;
                 else if (code === 'BTC') balances.btc = balance.balance;
+                else if (code === 'TESOURO') balances.tesouro = balance.balance; // Etherfuse RWA
             });
 
             return balances;
