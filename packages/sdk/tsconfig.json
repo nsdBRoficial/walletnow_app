@@ -1,6 +1,27 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "outDir": "./dist", "rootDir": "./src", "jsx": "react-jsx", "esModuleInterop": true, "strict": false, "noImplicitAny": false, "exactOptionalPropertyTypes": false },
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "../..",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "exactOptionalPropertyTypes": false,
+    "paths": {
+      "@walletnow/contracts": ["../contracts/src/index.ts"],
+      "@walletnow/crypto": ["../crypto/src/index.ts"],
+      "@walletnow/storage": ["../storage/src/index.ts"],
+      "@walletnow/identity": ["../identity/src/index.ts"],
+      "@walletnow/wallet": ["../wallet/src/index.ts"],
+      "@walletnow/onboarding": ["../onboarding/src/index.ts"],
+      "@walletnow/testing": ["../testing/src/index.ts"],
+      "@walletnow/domain": ["../domain/src/index.ts"],
+      "@walletnow/providers": ["../providers/src/index.ts"],
+      "@walletnow/nft": ["../nft/src/index.ts"],
+      "@walletnow/core": ["../core/src/public/index.ts"]
+    }
+  },
   "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }

@@ -54,8 +54,19 @@ export type {
   NetworkErrorCode,
 } from '@walletnow/contracts';
 
+// ─── RPC Client & Resiliência (Issue 4) ──────────────────────────────────────
+export { StellarRpcClient } from './rpc/index.js';
+export type {
+  StellarRpcClientConfig,
+  RetryOptions,
+  JsonRpcRequest,
+  JsonRpcResponse,
+  JsonRpcError,
+} from './rpc/index.js';
+
 // ─── Kernel (para integração avançada — uso interno do SDK) ──────────────────
 // NOTA: O builder NÃO deve importar WalletNowOS diretamente.
 // Este export existe para testes e para provedores de plataforma.
 // @internal
 export { WalletNowOS } from '@walletnow/providers';
+

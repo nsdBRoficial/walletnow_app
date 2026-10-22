@@ -17,10 +17,13 @@ const sponsorKeypair = Keypair.random();
 let sponsorFunded = false;
 
 import { NftOrchestrator } from '@walletnow/nft';
+import { StellarRpcClient, type StellarRpcClientConfig } from './rpc/index.js';
 
 export interface WalletNowClientConfig {
   apiKey?: string;
   network?: 'mainnet' | 'testnet';
+  rpcUrl?: string;
+  rpc?: StellarRpcClient | StellarRpcClientConfig;
   engines?: Partial<OnboardingContext>;
 }
 
@@ -29,6 +32,7 @@ export class WalletNowClient {
     private readonly os: WalletNowOS,
     public readonly onboarding: OnboardingOrchestrator,
     public readonly nft: NftOrchestrator,
+    public readonly rpc: StellarRpcClient,
   ) {}
 
   /**
@@ -128,7 +132,16 @@ export class WalletNowClient {
       gasStation: onboardingCtx.gasStation,
     });
 
-    return new WalletNowClient(os, onboarding, nft);
+    // 5. Instancia o Cliente RPC Resiliente (com retry automático)
+    const rpc = config.rpc instanceof StellarRpcClient
+      ? config.rpc
+      : new StellarRpcClient({
+          network,
+          rpcUrl: config.rpcUrl ?? (typeof config.rpc === 'object' ? config.rpc.rpcUrl : undefined),
+          ...(typeof config.rpc === 'object' ? config.rpc : {}),
+        });
+
+    return new WalletNowClient(os, onboarding, nft, rpc);
   }
 
   /**
