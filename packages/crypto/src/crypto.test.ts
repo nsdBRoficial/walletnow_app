@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { StellarKeypairDeriver } from './StellarKeypairDeriver';
 import { WebCryptoEncryptor } from './WebCryptoEncryptor';
+import { isValidPublicKey } from './validation';
 
 describe('@walletnow/crypto SDK Module (Phase 2)', () => {
   describe('StellarKeypairDeriver', () => {
@@ -38,6 +39,20 @@ describe('@walletnow/crypto SDK Module (Phase 2)', () => {
 
       const decrypted = await encryptor.decrypt(encrypted, passphrase);
       expect(decrypted).toEqual(data);
+    });
+  });
+
+  describe('Stellar Key Validation Utilities', () => {
+    it('should validate canonical Ed25519 public keys', () => {
+      const validKey = 'GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7';
+      expect(isValidPublicKey(validKey)).toBe(true);
+    });
+
+    it('should reject invalid public keys (wrong prefix, invalid length, bad checksum)', () => {
+      expect(isValidPublicKey('SA2X64X6JOMQ5OQW35C2B4B2P5M7E6Y2T46O6B2X23C6M3O7P6U4X4')).toBe(false);
+      expect(isValidPublicKey('GAAZ')).toBe(false);
+      expect(isValidPublicKey('G' + 'A'.repeat(55))).toBe(false);
+      expect(isValidPublicKey(null)).toBe(false);
     });
   });
 });

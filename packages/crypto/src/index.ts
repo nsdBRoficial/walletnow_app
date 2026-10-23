@@ -17,6 +17,7 @@
 export { StellarKeypairDeriver } from './StellarKeypairDeriver.js';
 export { InMemoryStellarSigner } from './InMemoryStellarSigner.js';
 export { WebCryptoEncryptor } from './WebCryptoEncryptor.js';
+export { isValidPublicKey, isValidSecretKey, STELLAR_ED25519_KEY_LENGTH } from './validation.js';
 
 // ─── Re-exports de contratos (conveniência) ───────────────────────────────────
 export type {
