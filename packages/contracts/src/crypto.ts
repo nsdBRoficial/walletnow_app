@@ -73,6 +73,16 @@ export interface IStellarSigner {
    */
   signPayload(payload: Uint8Array): Promise<Uint8Array>;
 
+  /**
+   * Verifica se a assinatura corresponde ao payload fornecido e à chave do signer.
+   */
+  verify?(payload: Uint8Array, signature: Uint8Array): Promise<boolean>;
+
+  /**
+   * Valida a assinatura do payload ou dispara CryptoError(VERIFICATION_FAILED).
+   */
+  verifyOrThrow?(payload: Uint8Array, signature: Uint8Array): Promise<void>;
+
   /** Verifica se o signer está pronto para assinar */
   isReady(): boolean;
 
