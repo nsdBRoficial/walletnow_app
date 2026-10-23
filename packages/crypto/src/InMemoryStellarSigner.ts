@@ -1,4 +1,4 @@
-import type { IStellarSigner } from '@walletnow/contracts';
+import { type IStellarSigner, CryptoError } from '@walletnow/contracts';
 import { Keypair, TransactionBuilder } from '@stellar/stellar-sdk';
 
 export class InMemoryStellarSigner implements IStellarSigner {
@@ -26,6 +26,26 @@ export class InMemoryStellarSigner implements IStellarSigner {
   async signPayload(payload: Uint8Array): Promise<Uint8Array> {
     this._ensureInitialized();
     return this.keypair!.sign(Buffer.from(payload));
+  }
+
+  async verify(payload: Uint8Array, signature: Uint8Array): Promise<boolean> {
+    this._ensureInitialized();
+    try {
+      return this.keypair!.verify(Buffer.from(payload), Buffer.from(signature));
+    } catch {
+      return false;
+    }
+  }
+
+  async verifyOrThrow(payload: Uint8Array, signature: Uint8Array): Promise<void> {
+    const isValid = await this.verify(payload, signature);
+    if (!isValid) {
+      throw new CryptoError(
+        'VERIFICATION_FAILED',
+        'Assinatura criptográfica inválida para o payload fornecido.',
+        { publicKey: this.publicKey }
+      );
+    }
   }
 
   isReady(): boolean {
