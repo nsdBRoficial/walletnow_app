@@ -43,6 +43,7 @@ import {
   VAULT_ADDRESS
 } from './playgroundFakes';
 import { Keypair, TransactionBuilder, Asset, Operation, LiquidityPoolAsset, Transaction, Networks } from '@stellar/stellar-sdk';
+import { prepareTrustlineAndSwap, runTrustlineAndSwap, TrustlineSwapStatus } from './trustlineSwapFlow';
 
 // Configurações do Faucet e Emissores
 const NETWORKS = {
@@ -148,6 +149,7 @@ export default function TestnetKit() {
     2: { amountA: '1000', amountB: '1000', withdrawShares: '100' }
   });
   const [poolsLoading, setPoolsLoading] = useState<Record<number, boolean>>({});
+  const [swapStatus, setSwapStatus] = useState<Record<number, TrustlineSwapStatus>>({});
 
   // Estado do Health Check
   const [healthStatus, setHealthStatus] = useState<any>({
@@ -984,39 +986,56 @@ export default function TestnetKit() {
       const expectedOut = (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
       const destMin = (expectedOut * 0.99).toFixed(7); // 1% slippage max
 
-      let txBuilder = new TransactionBuilder(account, {
+      const assetLabel = (a: Asset) => (a.isNative() ? 'XLM' : a.getCode());
+
+      // Se o asset de saída não for nativo, verificar trustline
+      const needsTrustline = !assetOut.isNative() && !account.balances.some((b: any) =>
+        b.asset_code === assetOut.getCode() && b.asset_issuer === assetOut.getIssuer()
+      );
+
+      const prepared = prepareTrustlineAndSwap({
+        sendAsset: assetLabel(assetIn),
+        sendAmount: amountIn,
+        destAsset: assetLabel(assetOut),
+        destMin,
+        needsTrustline
+      });
+
+      const newTxBuilder = async () => new TransactionBuilder(await server.loadAccount(userAddress), {
         fee: '100',
         networkPassphrase: NETWORKS.TESTNET
       });
 
-      // Se o asset de saída não for nativo, verificar trustline
-      if (!assetOut.isNative()) {
-        const outCode = assetOut.getCode();
-        const hasOutTrust = account.balances.some((b: any) => 
-          b.asset_code === outCode && b.asset_issuer === assetOut.getIssuer()
-        );
-        if (!hasOutTrust) {
-          addLog(`Adding ChangeTrust operation for ${outCode}...`, 'info');
-          txBuilder = txBuilder.addOperation(Operation.changeTrust({ asset: assetOut, limit: '1000000000' }));
+      // A trustline é submetida antes e, se a rede rejeitar, o swap não é disparado
+      const res = await runTrustlineAndSwap(prepared, {
+        onStatusChange: (status) => setSwapStatus(prev => ({ ...prev, [poolIndex]: status })),
+        submitTrustline: async (op) => {
+          addLog(`Submitting ChangeTrust for ${op.asset}...`, 'info');
+          const tx = (await newTxBuilder())
+            .addOperation(Operation.changeTrust({ asset: assetOut, limit: op.limit }))
+            .setTimeout(30)
+            .build();
+          tx.sign(userKeypair);
+          return server.submitTransaction(tx);
+        },
+        executeSwap: async (op) => {
+          addLog(`Submitting PathPaymentStrictSend (Send ${op.sendAmount} ${op.sendAsset} -> receive min ${op.destMin} ${op.destAsset})...`, 'info');
+          const tx = (await newTxBuilder())
+            .addOperation(Operation.pathPaymentStrictSend({
+              sendAsset: assetIn,
+              sendAmount: op.sendAmount,
+              destAsset: assetOut,
+              destMin: op.destMin,
+              path: [],
+              destination: userAddress
+            }))
+            .setTimeout(30)
+            .build();
+          tx.sign(userKeypair);
+          return server.submitTransaction(tx);
         }
-      }
-
-      addLog(`Adding PathPaymentStrictSend (Send ${amountIn} ${assetIn.isNative() ? 'XLM' : assetIn.getCode()} -> receive min ${destMin} ${assetOut.isNative() ? 'XLM' : assetOut.getCode()})...`, 'info');
-      txBuilder = txBuilder.addOperation(Operation.pathPaymentStrictSend({
-        sendAsset: assetIn,
-        sendAmount: amountIn,
-        destAsset: assetOut,
-        destMin: destMin,
-        path: [],
-        destination: userAddress
-      }));
-
-      const tx = txBuilder.setTimeout(30).build();
-      tx.sign(userKeypair);
-
-      addLog(`Submitting transaction to Stellar Horizon...`, 'info');
-      const res = await server.submitTransaction(tx);
-      addLog(`Successfully swapped! Tx Hash: ${res.hash.slice(0, 12)}...`, 'success');
+      });
+      addLog(`Successfully swapped! Tx Hash: ${res.swapHash.slice(0, 12)}...`, 'success');
       
       // Atualiza dados
       await fetchPoolsData();
@@ -1749,6 +1768,15 @@ export default function TestnetKit() {
                         >
                           {isLoading ? <span className="tk-spinner" /> : 'Executar Swap'}
                         </button>
+                        {swapStatus[index] && (
+                          <div
+                            role="status"
+                            data-testid={`swap-status-${index}`}
+                            className={`tk-status-badge mt-2 ${swapStatus[index] === 'Falhou' ? 'yellow' : 'green'}`}
+                          >
+                            Status: {swapStatus[index]}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

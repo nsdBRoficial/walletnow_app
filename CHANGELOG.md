@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **TestnetKit — Fluxo Trustline + Swap** (`packages/sdk/src/trustlineSwapFlow.ts`): a trustline é submetida antes do swap; se a rede rejeitar, o swap não é disparado e o status global da operação vai para "Falhou" (exibido no painel de pools).
+- **Teste de integração (Suíte 3.1)**: `packages/sdk/src/__tests__/trustlineSwapFlow.integration.test.ts` simula a rejeição da trustline pela rede e garante que o swap não é chamado.
+
 ## [0.4.5-candidate] - 2026-09-29
 
 ### Added
