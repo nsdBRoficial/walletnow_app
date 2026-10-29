@@ -18,7 +18,20 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@walletnow/contracts": ["./packages/contracts/src/index.ts"],
+      "@walletnow/crypto": ["./packages/crypto/src/index.ts"],
+      "@walletnow/storage": ["./packages/storage/src/index.ts"],
+      "@walletnow/identity": ["./packages/identity/src/index.ts"],
+      "@walletnow/wallet": ["./packages/wallet/src/index.ts"],
+      "@walletnow/onboarding": ["./packages/onboarding/src/index.ts"],
+      "@walletnow/testing": ["./packages/testing/src/index.ts"],
+      "@walletnow/domain": ["./packages/domain/src/index.ts"],
+      "@walletnow/providers": ["./packages/providers/src/index.ts"],
+      "@walletnow/nft": ["./packages/nft/src/index.ts"],
+      "@walletnow/core": ["./packages/core/src/public/index.ts"],
+      "@walletnow/sdk": ["./packages/sdk/src/index.ts"],
+      "@walletnow/sdk/*": ["./packages/sdk/src/*"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true

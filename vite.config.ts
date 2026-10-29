@@ -46,6 +46,9 @@ export default defineConfig(({ mode }) => {
         '@walletnow/testing':    path.resolve(__dirname, 'packages/testing/src/index.ts'),
         '@walletnow/domain':     path.resolve(__dirname, 'packages/domain/src/index.ts'),
         '@walletnow/providers':  path.resolve(__dirname, 'packages/providers/src/index.ts'),
+        '@walletnow/nft':        path.resolve(__dirname, 'packages/nft/src/index.ts'),
+        '@walletnow/core':       path.resolve(__dirname, 'packages/core/src/public/index.ts'),
+        '@walletnow/sdk':        path.resolve(__dirname, 'packages/sdk/src/index.ts'),
       },
     },
     build: {
