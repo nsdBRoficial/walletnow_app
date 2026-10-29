@@ -1070,7 +1070,7 @@ export default function TestnetKit() {
   }, [runHealthCheck]);
 
   return (
-    <div className="tk-container">
+    <div className="tk-container" data-testid="testnetkit-root">
       {activeTab === 'hub' ? (
         <div className="tk-header-area">
           <h1>{tk.title || 'Testnet Infrastructure Kit'}</h1>
@@ -1262,14 +1262,20 @@ export default function TestnetKit() {
               </p>
 
               <div className="tk-action-panel">
-                <button className={`tk-primary-btn ${envLoading ? 'loading' : ''}`} onClick={handleCreateEnvironment} disabled={envLoading}>
+                <button
+                  className={`tk-primary-btn ${envLoading ? 'loading' : ''}`}
+                  onClick={handleCreateEnvironment}
+                  disabled={envLoading}
+                  aria-busy={envLoading}
+                  aria-label={envLoading ? 'Criando ambiente de testes, aguarde…' : 'Create Complete Test Environment'}
+                >
                   {envLoading ? (
                     <>
-                      <span className="tk-spinner" /> Criando ambiente...
+                      <span className="tk-spinner" aria-hidden="true" /> Criando ambiente…
                     </>
                   ) : (
                     <>
-                      <Zap size={16} fill="currentColor" /> Create Complete Test Environment
+                      <Zap size={16} fill="currentColor" aria-hidden="true" /> Create Complete Test Environment
                     </>
                   )}
                 </button>
@@ -1282,8 +1288,13 @@ export default function TestnetKit() {
                     <span className="tk-result-lbl">Public Key (Address)</span>
                     <div className="tk-copyable-value">
                       <code className="tk-mono-text">{envResult.publicKey}</code>
-                      <button className="tk-icon-btn" onClick={() => copyToClipboard(envResult.publicKey, 'Public Key')} title="Copy Public Key">
-                        {copiedText === 'Public Key' ? <Check size={14} color="#00ff99" /> : <Copy size={14} />}
+                      <button
+                        className="tk-icon-btn"
+                        onClick={() => copyToClipboard(envResult.publicKey, 'Public Key')}
+                        aria-label={copiedText === 'Public Key' ? 'Chave pública copiada' : 'Copiar chave pública'}
+                        title="Copy Public Key"
+                      >
+                        {copiedText === 'Public Key' ? <Check size={14} color="#00ff99" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
                       </button>
                     </div>
                   </div>
@@ -1293,11 +1304,21 @@ export default function TestnetKit() {
                     <div className="tk-copyable-value">
                       <code className="tk-mono-text">{showSecret ? envResult.secretKey : 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢'}</code>
                       <div className="tk-btn-group">
-                        <button className="tk-icon-btn" onClick={() => setShowSecret(!showSecret)} title="Toggle Visibility">
-                          {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+                        <button
+                          className="tk-icon-btn"
+                          onClick={() => setShowSecret(!showSecret)}
+                          aria-label={showSecret ? 'Ocultar chave secreta' : 'Exibir chave secreta'}
+                          title="Toggle Visibility"
+                        >
+                          {showSecret ? <EyeOff size={14} aria-hidden="true" /> : <Eye size={14} aria-hidden="true" />}
                         </button>
-                        <button className="tk-icon-btn" onClick={() => copyToClipboard(envResult.secretKey, 'Secret Key')} title="Copy Secret Key">
-                          {copiedText === 'Secret Key' ? <Check size={14} color="#00ff99" /> : <Copy size={14} />}
+                        <button
+                          className="tk-icon-btn"
+                          onClick={() => copyToClipboard(envResult.secretKey, 'Secret Key')}
+                          aria-label={copiedText === 'Secret Key' ? 'Chave secreta copiada' : 'Copiar chave secreta'}
+                          title="Copy Secret Key"
+                        >
+                          {copiedText === 'Secret Key' ? <Check size={14} color="#00ff99" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
                         </button>
                       </div>
                     </div>
@@ -1308,8 +1329,13 @@ export default function TestnetKit() {
                       <span className="tk-result-lbl">Asset ID BRW (Issuer)</span>
                       <div className="tk-copyable-value">
                         <code className="tk-mono-text">{BRW_ISSUER.slice(0, 15)}...</code>
-                        <button className="tk-icon-btn" onClick={() => copyToClipboard(BRW_ISSUER, 'BRW Issuer')} title="Copy BRW Contract/Issuer">
-                          {copiedText === 'BRW Issuer' ? <Check size={14} color="#00ff99" /> : <Copy size={14} />}
+                        <button
+                          className="tk-icon-btn"
+                          onClick={() => copyToClipboard(BRW_ISSUER, 'BRW Issuer')}
+                          aria-label={copiedText === 'BRW Issuer' ? 'BRW Issuer copiado' : 'Copiar BRW Contract/Issuer'}
+                          title="Copy BRW Contract/Issuer"
+                        >
+                          {copiedText === 'BRW Issuer' ? <Check size={14} color="#00ff99" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
                         </button>
                       </div>
                     </div>
@@ -1317,8 +1343,13 @@ export default function TestnetKit() {
                       <span className="tk-result-lbl">Asset ID USDW (Issuer)</span>
                       <div className="tk-copyable-value">
                         <code className="tk-mono-text">{USDW_ISSUER.slice(0, 15)}...</code>
-                        <button className="tk-icon-btn" onClick={() => copyToClipboard(USDW_ISSUER, 'USDW Issuer')} title="Copy USDW Contract/Issuer">
-                          {copiedText === 'USDW Issuer' ? <Check size={14} color="#00ff99" /> : <Copy size={14} />}
+                        <button
+                          className="tk-icon-btn"
+                          onClick={() => copyToClipboard(USDW_ISSUER, 'USDW Issuer')}
+                          aria-label={copiedText === 'USDW Issuer' ? 'USDW Issuer copiado' : 'Copiar USDW Contract/Issuer'}
+                          title="Copy USDW Contract/Issuer"
+                        >
+                          {copiedText === 'USDW Issuer' ? <Check size={14} color="#00ff99" aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
                         </button>
                       </div>
                     </div>
@@ -1437,16 +1468,18 @@ export default function TestnetKit() {
                 Adicione fundos a qualquer endereço de carteira ativo na Stellar Testnet. Distribua XLM, BRW ou USDW em um clique de forma imediata.
               </p>
 
-              <form onSubmit={handleFaucetRequest} className="tk-form">
+              <form onSubmit={handleFaucetRequest} className="tk-form" aria-label="Faucet - Solicitar fundos de teste">
                 <div className="tk-form-group">
-                  <label className="tk-lbl">Destiny Address (Stellar Public Key)</label>
+                  <label className="tk-lbl" htmlFor="tk-faucet-address">Destiny Address (Stellar Public Key)</label>
                   <input
+                    id="tk-faucet-address"
                     type="text"
                     className="tk-input-text"
                     placeholder="ex: G..."
                     value={faucetAddress}
                     onChange={e => setFaucetAddress(e.target.value)}
                     disabled={faucetLoading}
+                    aria-required="true"
                   />
                 </div>
 
@@ -1467,8 +1500,14 @@ export default function TestnetKit() {
                   </div>
                 </div>
 
-                <button type="submit" className={`tk-primary-btn ${faucetLoading ? 'loading' : ''}`} disabled={faucetLoading}>
-                  {faucetLoading ? <span className="tk-spinner" /> : <Droplets size={14} />} Request Airdrop (10,000 {faucetAsset})
+                <button
+                  type="submit"
+                  className={`tk-primary-btn ${faucetLoading ? 'loading' : ''}`}
+                  disabled={faucetLoading}
+                  aria-busy={faucetLoading}
+                  aria-label={faucetLoading ? 'Solicitando airdrop, aguarde…' : `Request Airdrop 10,000 ${faucetAsset}`}
+                >
+                  {faucetLoading ? <span className="tk-spinner" aria-hidden="true" /> : <Droplets size={14} aria-hidden="true" />} Request Airdrop (10,000 {faucetAsset})
                 </button>
               </form>
 
@@ -1587,7 +1626,12 @@ export default function TestnetKit() {
                       <span className="tk-result-lbl text-xs">Liquidity Pool ID (Hex)</span>
                       <div className="tk-copyable-value sm">
                         <code className="tk-mono-text text-xs break-all">{pool.id || 'Carregando ID determinístico...'}</code>
-                        <button className="tk-icon-btn" onClick={() => copyToClipboard(pool.id, `${pool.name} Pool ID`)} title="Copy Pool ID">
+                        <button
+                          className="tk-icon-btn"
+                          onClick={() => copyToClipboard(pool.id, `${pool.name} Pool ID`)}
+                          title="Copy Pool ID"
+                          aria-label={copiedText === `${pool.name} Pool ID` ? `Pool ID de ${pool.name} copiado` : `Copiar Pool ID de ${pool.name}`}
+                        >
                           {copiedText === `${pool.name} Pool ID` ? <Check size={12} color="#00ff99" /> : <Copy size={12} />}
                         </button>
                       </div>
