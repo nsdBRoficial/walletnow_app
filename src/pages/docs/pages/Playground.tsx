@@ -129,7 +129,7 @@ export default function Playground() {
   const progressPct = Math.round((doneSteps / steps.length) * 100);
 
   return (
-    <div className="pg-root">
+    <div className="pg-root" data-testid="playground-root">
       <h1>{pg.title}</h1>
       <p className="doc-subtitle">{pg.subtitle}</p>
 
@@ -148,19 +148,23 @@ export default function Playground() {
             <h3 className="pg-card-title">{pg.configTitle}</h3>
 
             <div className="pg-field">
-              <label className="pg-label">{pg.externalIdLabel}</label>
+              <label className="pg-label" htmlFor="pg-external-id">{pg.externalIdLabel}</label>
               <input
+                id="pg-external-id"
                 className="pg-input"
                 value={params.externalId}
                 onChange={(e) => setParams((p) => ({ ...p, externalId: e.target.value }))}
                 disabled={running}
                 placeholder="alice@yourapp.com"
+                aria-describedby="pg-external-id-hint"
               />
+              <span id="pg-external-id-hint" className="pg-field-hint" style={{ display: 'none' }}>User external identifier, e.g. email</span>
             </div>
 
             <div className="pg-field">
-              <label className="pg-label">{pg.displayNameLabel}</label>
+              <label className="pg-label" htmlFor="pg-display-name">{pg.displayNameLabel}</label>
               <input
+                id="pg-display-name"
                 className="pg-input"
                 value={params.displayName ?? ''}
                 onChange={(e) => setParams((p) => ({ ...p, displayName: e.target.value }))}
@@ -170,19 +174,22 @@ export default function Playground() {
             </div>
 
             <div className="pg-field">
-              <label className="pg-label">{pg.trustlinesLabel}</label>
+              <label className="pg-label" htmlFor="pg-trustlines">{pg.trustlinesLabel}</label>
               <input
+                id="pg-trustlines"
                 className="pg-input"
                 value={trustlineInput}
                 onChange={(e) => setTrustlineInput(e.target.value)}
                 disabled={running}
                 placeholder="USDW, BRW"
+                aria-label={pg.trustlinesLabel}
               />
             </div>
 
             <div className="pg-field pg-field--row">
-              <label className="pg-label pg-label--inline">
+              <label className="pg-label pg-label--inline" htmlFor="pg-sponsored">
                 <input
+                  id="pg-sponsored"
                   type="checkbox"
                   className="pg-checkbox"
                   checked={params.sponsored}
@@ -196,24 +203,33 @@ export default function Playground() {
             {/* Run button */}
             <div className="pg-actions">
               <button
+                id="pg-run-btn"
                 className={`pg-run-btn${running ? ' pg-run-btn--running' : ''}`}
                 onClick={handleRun}
                 disabled={running}
+                aria-busy={running}
+                aria-label={running ? 'Running createUser, please wait…' : pg.runBtn}
               >
                 {running ? (
                   <>
-                    <span className="pg-spinner" />
+                    <span className="pg-spinner" aria-hidden="true" />
                     Running…
                   </>
                 ) : (
                   <>
-                    <Play size={14} fill="currentColor" />
+                    <Play size={14} fill="currentColor" aria-hidden="true" />
                     {pg.runBtn}
                   </>
                 )}
               </button>
-              <button className="pg-reset-btn" onClick={handleReset} disabled={running}>
-                <RotateCcw size={13} />
+              <button
+                id="pg-reset-btn"
+                className="pg-reset-btn"
+                onClick={handleReset}
+                disabled={running}
+                aria-label={pg.resetBtn}
+              >
+                <RotateCcw size={13} aria-hidden="true" />
                 {pg.resetBtn}
               </button>
             </div>
