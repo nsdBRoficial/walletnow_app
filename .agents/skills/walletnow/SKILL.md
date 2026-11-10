@@ -1,9 +1,9 @@
-<!-- @module .agents\skills\walletnow\SKILL.md | WalletNow Protocol - Documentação e especificações de engenharia -->
-
 ---
 name: walletnow-integration
 description: Guia de desenvolvimento e referência rápida para integrar o WalletNow SDK (onboarding, biométrica/Passkeys, patrocínio e âncoras Stellar).
 ---
+
+<!-- @module .agents/skills/walletnow/SKILL.md | Skill de integração do WalletNow SDK para agentes -->
 
 # WalletNow SDK Integration Skill
 
