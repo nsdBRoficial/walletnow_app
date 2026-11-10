@@ -1,6 +1,7 @@
 /**
- * @module src\security\mnemonicVault.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/security/mnemonicVault.ts
+ * @description Cofre local criptografado (AES-GCM-256 via DeviceVault) para armazenamento,
+ * versionamento (bip39 vs legacy) e limpeza de frases mnemônicas BIP39.
  */
 /**
  * mnemonicVault.ts

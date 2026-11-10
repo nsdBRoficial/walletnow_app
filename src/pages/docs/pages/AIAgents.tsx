@@ -1,8 +1,8 @@
 /**
- * @module src\pages\docs\pages\AIAgents.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/AIAgents.tsx
+ * @description Console interativo de documentação para integração de Agentes de IA e protocolos SEP-10/SEP-24.
  */
-﻿import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Copy, Check, ExternalLink } from 'lucide-react';
 import { Keypair, Transaction } from '@stellar/stellar-sdk';
 

@@ -26,6 +26,7 @@
   "exclude": [
     "node_modules",
     "supabase/functions",
-    "legacy"
+    "legacy",
+    "scratch_*"
   ]
 }

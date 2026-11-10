@@ -1,0 +1,38 @@
+# @module .github/workflows/onchain-nightly.yml
+# @description Execução noturna e manual dos testes reais on-chain na Stellar Testnet (Friendbot + Horizon).
+
+name: Stellar Testnet On-Chain Nightly
+
+on:
+  schedule:
+    # Todos os dias às 06:00 UTC (03:00 BRT)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  onchain-tests:
+    name: On-Chain Settlement & Flow (Testnet)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+      VITE_STELLAR_NETWORK: TESTNET
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps || npm install
+
+      - name: Run On-Chain Tests
+        run: npm run test:onchain

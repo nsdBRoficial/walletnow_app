@@ -1,6 +1,7 @@
 /**
- * @module src\utils\bip39Wallet.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/utils/bip39Wallet.ts
+ * @description Geração, validação e derivação determinística de pares de chaves Stellar (Ed25519)
+ * a partir de mnemônicas BIP39 de 12 palavras utilizando o caminho SEP-0005 (m/44'/148'/0').
  */
 /**
  * bip39Wallet.ts

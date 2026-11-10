@@ -28,3 +28,4 @@ Cada persona vira uma spec em `tests/e2e/personas/`. Os cenários marcados com �
 - **Perfil:** tenta abusar do sistema.
 - **Jornada 🔒:** inputs com XSS/valores negativos/overflow → rejeitados; sessão expirada → redireciona ao login; chamada direta à API com o ID de outro usuário → negada (RLS).
 - **Verificar:** nenhum segredo em `localStorage` em texto claro; nenhum erro técnico vazado na UI.
+

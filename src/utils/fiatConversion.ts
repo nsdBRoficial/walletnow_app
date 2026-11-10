@@ -1,6 +1,6 @@
 /**
- * @module src\utils\fiatConversion.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/utils/fiatConversion.ts
+ * @description Conversão aritmética exata de centavos fiduciários BRL (Pix/Woovi) para unidades decimais de ativos Stellar (SRT/BRW).
  */
 /**
  * Utilidades de conversão de Moeda Fiduciária (BRL Cents) para Blockchain Assets.

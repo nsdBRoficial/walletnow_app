@@ -1,6 +1,6 @@
 /**
- * @module src\services\priceOracleService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/priceOracleService.ts
+ * @description Oráculo de preços XLM/BRL com cache TTL de 20s e cadeia de fallback em 4 camadas (CoinGecko -> Stellar Expert -> Reflector -> Estimativa Estática).
  */
 /**
  * priceOracleService.ts

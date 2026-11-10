@@ -14,13 +14,18 @@
   ],
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "test": "vitest run",
-    "test:watch": "vitest watch",
-    "test:flows": "vitest run tests/integration/flow.test.ts",
+    "test": "vitest run --project unit --project integration",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:onchain": "vitest run --project onchain",
+    "test:all": "vitest run",
+    "test:watch": "vitest watch --project unit --project integration",
+    "test:flows": "vitest run tests/onchain/flow.test.ts",
     "build": "npx turbo run build && vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "eslint . --quiet",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

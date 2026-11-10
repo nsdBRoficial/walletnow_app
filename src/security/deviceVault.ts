@@ -1,6 +1,7 @@
 /**
- * @module src\security\deviceVault.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/security/deviceVault.ts
+ * @description Cofre criptográfico local baseado em WebCrypto (PBKDF2 100k SHA-256 + AES-GCM-256)
+ * para proteção de chaves secretas Stellar em repouso e controle de segredos em memória volátil.
  */
 /**
  * @license

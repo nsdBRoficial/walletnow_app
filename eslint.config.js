@@ -1,13 +1,13 @@
 /**
  * @module eslint.config.js
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @description Configuração flat do ESLint 10 para TypeScript e React Hooks do WalletNow.
  */
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'legacy', 'supabase'] },
+  { ignores: ['dist', 'node_modules', 'legacy', 'supabase', 'scratch_*'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -23,9 +23,10 @@ export default tseslint.config(
       '@typescript-eslint/ban-ts-comment': 'off',
       'prefer-const': 'off',
       'no-useless-assignment': 'off',
+      'no-useless-catch': 'off',
       'preserve-caught-error': 'off',
       'react-hooks/exhaustive-deps': 'off',
-      '@typescript-eslint/no-this-alias': 'off'
+      '@typescript-eslint/no-this-alias': 'off',
     },
   }
 );

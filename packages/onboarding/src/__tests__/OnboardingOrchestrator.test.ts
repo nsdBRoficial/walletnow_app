@@ -16,6 +16,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { Keypair } from '@stellar/stellar-sdk';
 import { OnboardingOrchestrator } from '../OnboardingOrchestrator.js';
 import {
   FakeGasStation,
@@ -54,9 +55,7 @@ class FakeIdentityEngine implements IIdentityEngine {
   use(_adapter: IAuthAdapter): void {}
 
   async create(params: CreateIdentityParams): Promise<IdentityAuthResult> {
-    const id = `fake-identity-${++this._counter}`;
-    const { Keypair } = require('@stellar/stellar-sdk');
-    const publicKey = Keypair.random().publicKey();
+    const id = `fake-identity-${++this._counter}`;    const publicKey = Keypair.random().publicKey();
     const label = 'label' in params ? params.label : undefined;
     const identity: Identity = {
       id,
@@ -73,9 +72,7 @@ class FakeIdentityEngine implements IIdentityEngine {
 
   async authenticate(identityId: string): Promise<IdentityAuthResult> {
     const identity = this._identities.get(identityId);
-    if (!identity) throw new OnboardingError('USER_NOT_FOUND', `Identity ${identityId} not found`);
-    const { Keypair } = require('@stellar/stellar-sdk');
-    const publicKey = Keypair.random().publicKey();
+    if (!identity) throw new OnboardingError('USER_NOT_FOUND', `Identity ${identityId} not found`);    const publicKey = Keypair.random().publicKey();
     this._session = { identityId, publicKey, network: 'testnet', startedAt: Date.now(), expiresAt: null, method: identity.authMethod };
     return { identity, session: this._session, publicKey, authenticatedAt: Date.now() };
   }
@@ -101,9 +98,7 @@ class FakeWalletEngine implements IWalletEngine {
   use(_adapter: import('@walletnow/contracts').IWalletAdapter): void {}
 
   async create(params: import('@walletnow/contracts').CreateWalletParams): Promise<StellarWallet> {
-    const id = `fake-wallet-${++this._counter}`;
-    const { Keypair } = require('@stellar/stellar-sdk');
-    const validPublicKey = Keypair.random().publicKey();
+    const id = `fake-wallet-${++this._counter}`;    const validPublicKey = Keypair.random().publicKey();
 
     const wallet: StellarWallet = {
       id,

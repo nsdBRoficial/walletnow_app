@@ -1,6 +1,6 @@
 /**
- * @module src\utils\stellarValidation.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/utils/stellarValidation.ts
+ * @description Validação algorítmica estrita (StrKey Ed25519 + CRC16) para chaves públicas (G...) e secretas (S...) da rede Stellar.
  */
 import { StrKey } from '@stellar/stellar-sdk';
 
