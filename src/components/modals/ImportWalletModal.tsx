@@ -1,3 +1,7 @@
+/**
+ * @module src\components\modals\ImportWalletModal.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React, { useState } from 'react';
 import { X, KeyRound, ArrowRight, Loader2, FileText, CheckCircle2 } from 'lucide-react';
 import { useWallet } from '../../contexts/WalletContext';

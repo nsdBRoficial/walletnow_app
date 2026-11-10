@@ -1,3 +1,6 @@
+-- @module supabase\migrations\000010_fix_fiat_rls_insert.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- ==============================================================================
 -- MIGRAÇÃO DE SEGURANÇA: 000010_fix_fiat_rls_insert.sql
 -- Auditoria Adversarial Fase 2 (R-09 / RISCO-FT2)

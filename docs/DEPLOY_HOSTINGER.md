@@ -1,3 +1,5 @@
+<!-- @module docs\DEPLOY_HOSTINGER.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Deploy na Hostinger (Subpastas ou Raiz)
 
 Este documento descreve os passos oficiais para realizar o deploy do projeto WalletNow (Frontend React + Vite) em uma infraestrutura da Hostinger (hPanel ou FTP).

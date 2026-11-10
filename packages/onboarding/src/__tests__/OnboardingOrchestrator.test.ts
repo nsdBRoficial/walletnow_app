@@ -1,4 +1,8 @@
 /**
+ * @module packages\onboarding\src\__tests__\OnboardingOrchestrator.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/onboarding — OnboardingOrchestrator.test.ts
  *
  * Testes unitários do domínio de Onboarding.

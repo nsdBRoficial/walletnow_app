@@ -1,3 +1,6 @@
+-- @module supabase\migrations\000011_add_correlation_id.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- ==============================================================================
 -- MIGRAÇÃO DE INTEGRIDADE: 000011_add_correlation_id.sql
 -- Auditoria Adversarial Fase 2 (R-11 / Anti-Replay Idempotência)

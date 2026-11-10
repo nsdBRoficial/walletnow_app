@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\wallet.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Wallet Contracts
  *
  * Contratos canônicos do Wallet Engine e Account Engine.

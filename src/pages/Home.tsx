@@ -1,4 +1,8 @@
 /**
+ * @module src\pages\Home.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * Home — Financial Operating System
  *
  * Visão executiva focada nos objetivos do usuário e evolução de portfólio.

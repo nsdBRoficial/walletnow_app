@@ -1,3 +1,5 @@
+<!-- @module HOSTINGER_DEPLOY.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Guia de Deploy Hostinger — WalletNow em `/walletnow`
 
 **URL Alvo:** https://nsdbr.com/walletnow  

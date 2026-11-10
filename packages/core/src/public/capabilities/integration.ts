@@ -1,3 +1,7 @@
+/**
+ * @module packages\core\src\public\capabilities\integration.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import type { PortfolioSummary, PortfolioPosition } from '../types/portfolio.types.js';
 import type { SwapQuote, SwapQuoteParams } from '../types/swap.types.js';
 import type {

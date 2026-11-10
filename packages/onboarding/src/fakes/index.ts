@@ -1,4 +1,8 @@
 /**
+ * @module packages\onboarding\src\fakes\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/onboarding — Fake Ports (para Testes)
  *
  * Implementações fake dos ports do OnboardingContext.

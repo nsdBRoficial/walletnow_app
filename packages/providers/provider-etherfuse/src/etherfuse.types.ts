@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\provider-etherfuse\src\etherfuse.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/provider-etherfuse — Tipos do Etherfuse V2
  *
  * Fluxo programático validado baseado no demo etherfuse-pix-demo.

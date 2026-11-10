@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\WALLET_ARCHITECTURE_REVIEW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Wallet Architecture Review
 
 **Versão:** 1.0 | **Data:** 2026-05-27

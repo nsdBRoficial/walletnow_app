@@ -1,4 +1,8 @@
 /**
+ * @module src\components\docs\StepFlow.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — StepFlow
  *
  * Componente de fluxo visual em etapas com estados animados.

@@ -1,3 +1,5 @@
+<!-- @module SECURITY.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Política de Segurança do WalletNow
 
 A segurança é o pilar fundamental de qualquer protocolo financeiro.

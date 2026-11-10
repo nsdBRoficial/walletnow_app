@@ -1,4 +1,8 @@
 /**
+ * @module src\components\docs\DocsSidebar.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — DocsSidebar
  *
  * Sidebar de navegação com grupos colapsáveis, rota ativa e suporte mobile.

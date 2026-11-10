@@ -1,4 +1,8 @@
 /**
+ * @module packages\core\src\public\types\portfolio.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * Arquitetura de Portfólio Unificado do WalletNow
  * 
  * Este arquivo define a abstração do portfólio.

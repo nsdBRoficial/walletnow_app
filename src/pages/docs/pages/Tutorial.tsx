@@ -1,3 +1,7 @@
+/**
+ * @module src\pages\docs\pages\Tutorial.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React from 'react';
 import { Fingerprint, ShieldCheck, Zap, Coins } from 'lucide-react';
 import CodeBlock from '../../../components/docs/CodeBlock';

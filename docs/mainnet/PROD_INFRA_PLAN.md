@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\PROD_INFRA_PLAN.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Infrastructure Plan (Vercel + Supabase)
 
 **Versão:** 1.0 | **Data:** 2026-05-27

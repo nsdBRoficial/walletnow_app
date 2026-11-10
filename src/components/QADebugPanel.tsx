@@ -1,3 +1,7 @@
+/**
+ * @module src\components\QADebugPanel.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { useState, useEffect } from 'react';
 import { Terminal, Activity, X } from 'lucide-react';
 

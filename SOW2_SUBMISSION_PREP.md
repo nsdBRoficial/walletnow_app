@@ -1,3 +1,5 @@
+<!-- @module SOW2_SUBMISSION_PREP.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Preparação para Submissão: Instawards SOW2 (WalletNow)
 
 ## 1. Resumo Executivo

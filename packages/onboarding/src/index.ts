@@ -1,4 +1,8 @@
 /**
+ * @module packages\onboarding\src\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/onboarding — Public API Barrel
  *
  * Este é o único ponto de importação do domínio de Onboarding.

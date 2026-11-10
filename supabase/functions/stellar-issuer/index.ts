@@ -1,4 +1,8 @@
 /**
+ * @module supabase\functions\stellar-issuer\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * stellar-issuer — Supabase Edge Function (PRODUÇÃO)
  * =====================================================
  *

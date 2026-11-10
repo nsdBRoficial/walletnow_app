@@ -1,3 +1,7 @@
+/**
+ * @module src\services\transferoService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 
 /**
  * Sprint 9: Integração B2B Transfero Sandbox

@@ -1,4 +1,8 @@
 /**
+ * @module packages\onboarding\src\OnboardingContext.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/onboarding — OnboardingContext
  *
  * Dependências injetadas no OnboardingOrchestrator.

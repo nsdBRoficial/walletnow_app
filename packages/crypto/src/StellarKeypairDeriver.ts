@@ -1,4 +1,8 @@
 /**
+ * @module packages\crypto\src\StellarKeypairDeriver.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @packageDocumentation
  * @module @walletnow/crypto
  *

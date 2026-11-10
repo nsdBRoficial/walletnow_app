@@ -1,4 +1,8 @@
 /**
+ * @module packages\core\src\public\types\yield.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/core — yield.types.ts
  *
  * Tipos centrais para a Yield Capability.

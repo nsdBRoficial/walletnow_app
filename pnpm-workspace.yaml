@@ -1,3 +1,6 @@
+# @module pnpm-workspace.yaml
+# @description WalletNow Protocol - Configuração e automação de fluxos.
+
 packages:
   - "packages/*"
   - "packages/plugins/*"

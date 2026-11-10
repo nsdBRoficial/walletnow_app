@@ -1,3 +1,7 @@
+/**
+ * @module src\components\modals\RevealSeedModal.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Shield, Eye, EyeOff, Copy, CheckCircle, AlertTriangle, X, Lock } from 'lucide-react';
 import { MnemonicVault, type WalletVersion } from '../../security/mnemonicVault';

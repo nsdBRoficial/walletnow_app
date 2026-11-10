@@ -1,4 +1,8 @@
 /**
+ * @module src\components\protocol\CapabilityBadge.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * CapabilityBadge — Badge visual para uma capability de protocolo.
  * Mapeia capability ID → ícone + label + classe CSS de cor.
  */

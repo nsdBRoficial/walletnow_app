@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\events.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — WalletNow OS Event Catalog
  *
  * Catálogo canônico de todos os eventos do WalletNow OS.

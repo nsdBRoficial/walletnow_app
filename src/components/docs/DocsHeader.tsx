@@ -1,4 +1,8 @@
 /**
+ * @module src\components\docs\DocsHeader.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — DocsHeader
  *
  * Header fixo do portal: logo, versão, busca (placeholder), GitHub, toggle de idioma.

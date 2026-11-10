@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\PRIORITY_TASKS.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Priority Tasks & Planejamento de Sprints
 
 **Versão:** 2.0 | **Data:** 2026-09-10 | **Foco Primário:** 🚀 **Stellar Testnet & Hackathon PULSO**  

@@ -1,3 +1,6 @@
+-- @module supabase\migrations\00002_create_auth_trigger.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- supabase/migrations/00002_create_auth_trigger.sql
 
 -- Esta função é chamada toda vez que uma nova linha é inserida na tabela auth.users.

@@ -1,3 +1,7 @@
+/**
+ * @module packages\core\src\public\errors\AuthenticationError.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { WalletNowError } from './WalletNowError.js';
 
 /** Erros de autenticação e sessão */

@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\MULTI_ACCOUNT_RUNTIME_QA_PLAN.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Multi-Account Runtime QA Plan
 **Data:** 28 de Maio de 2026
 **Fase Atual:** Congelamento Arquitetural & Validação Runtime

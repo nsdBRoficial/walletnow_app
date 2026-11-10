@@ -1,3 +1,7 @@
+/**
+ * @module src\components\landing\FlowSection.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { useState, useEffect, useRef } from 'react';
 import { Fingerprint, Wallet, QrCode, CheckCircle2, Coins } from 'lucide-react';
 import type { LandingT } from '../../i18n/landingTranslations';

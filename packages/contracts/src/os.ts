@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\os.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — OS Lifecycle & Registry Contracts
  *
  * Contratos do ciclo de vida do WalletNow OS e do Registry.

@@ -1,4 +1,8 @@
 /**
+ * @module packages\wallet\src\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/wallet — Public API
  */
 

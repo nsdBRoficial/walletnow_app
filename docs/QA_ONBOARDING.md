@@ -1,3 +1,5 @@
+<!-- @module docs\QA_ONBOARDING.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # QA & Validation: Onboarding Flow
 
 Este documento contém o checklist de Qualidade e Garantia (QA) aplicado ao fluxo de Onboarding da WalletNow (Hackathon Edition).

@@ -1,4 +1,8 @@
 /**
+ * @module src\hooks\useManifests.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * useManifests — Hook para descoberta dinâmica de protocolos.
  *
  * Retorna manifestos filtrados por categoria, capability ou network.

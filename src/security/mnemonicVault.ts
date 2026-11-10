@@ -1,4 +1,8 @@
 /**
+ * @module src\security\mnemonicVault.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * mnemonicVault.ts
  *
  * Vault criptografado local para armazenamento seguro da mnemonic BIP39.

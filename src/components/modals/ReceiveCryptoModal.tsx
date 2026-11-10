@@ -1,3 +1,7 @@
+/**
+ * @module src\components\modals\ReceiveCryptoModal.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { X, QrCode, Copy, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';

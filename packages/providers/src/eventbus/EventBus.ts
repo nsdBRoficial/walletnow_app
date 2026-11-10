@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\src\eventbus\EventBus.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/providers — WalletNowEventBus
  *
  * Implementação real do IEventBus<WalletNowOSEvents>.

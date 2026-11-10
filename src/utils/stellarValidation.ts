@@ -1,3 +1,7 @@
+/**
+ * @module src\utils\stellarValidation.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { StrKey } from '@stellar/stellar-sdk';
 
 /**

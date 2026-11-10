@@ -1,4 +1,8 @@
 /**
+ * @module src\contexts\LandingContext.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * LandingContext
  *
  * Gerencia preferências de idioma (EN | PT) e tema (dark | light) da Landing Page.

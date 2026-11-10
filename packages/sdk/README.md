@@ -1,3 +1,5 @@
+<!-- @module packages\sdk\README.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # @walletnow/sdk
 
 O **@walletnow/sdk** é o pacote oficial de integração do **WalletNow** na rede Stellar. Ele fornece mecanismos robustos para onboarding de usuários, verificação biométrica (Passkeys), integração com contratos inteligentes (Soroban) e o painel de desenvolvimento interativo **Testnet Infrastructure Kit**.

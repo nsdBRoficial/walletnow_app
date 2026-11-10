@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\DefindexVaultService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — DefindexVaultService
  *
  * CAMADA 2A: Serviço de listagem e enriquecimento de vaults.

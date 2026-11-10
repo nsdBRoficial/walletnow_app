@@ -1,4 +1,8 @@
 /**
+ * @module src\pages\PortfolioPage.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * PortfolioPage — Visão consolidada de todos os ativos do usuário.
  *
  * Usa IPortfolioCapability para agregar posições de todos os plugins.

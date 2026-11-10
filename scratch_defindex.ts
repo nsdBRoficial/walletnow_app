@@ -1,3 +1,7 @@
+/**
+ * @module scratch_defindex.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { DefindexAPIClient } from './packages/plugins/plugin-defindex/src/DefindexAPIClient';
 import { loadEnv } from 'vite';
 

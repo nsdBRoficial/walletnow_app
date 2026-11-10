@@ -1,3 +1,7 @@
+/**
+ * @module src\lib\supabase.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { createClient } from '@supabase/supabase-js';
 
 // Extração das variáveis de ambiente de forma segura pelo Vite

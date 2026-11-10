@@ -1,3 +1,7 @@
+/**
+ * @module src\components\landing\ProblemSolutionSection.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { X, Check } from 'lucide-react';
 import type { LandingT } from '../../i18n/landingTranslations';
 

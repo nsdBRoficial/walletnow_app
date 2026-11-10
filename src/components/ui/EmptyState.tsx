@@ -1,4 +1,8 @@
 /**
+ * @module src\components\ui\EmptyState.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * EmptyState — Estado vazio elegante.
  * Nunca deixa uma tela parecer quebrada ou vazia.
  */

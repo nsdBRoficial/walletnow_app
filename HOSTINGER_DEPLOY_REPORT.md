@@ -1,3 +1,5 @@
+<!-- @module HOSTINGER_DEPLOY_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # 🚀 RELATÓRIO DE INTEGRIDADE E DEPLOY (HOSTINGER V0.9)
 
 Este documento atesta que o **WalletNow (v0.9)** está plenamente validado para subida no Hostinger. As correções estruturais para evitar a "tela branca" e falhas de rota foram implementadas.

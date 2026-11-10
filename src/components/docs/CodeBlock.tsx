@@ -1,4 +1,8 @@
 /**
+ * @module src\components\docs\CodeBlock.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — CodeBlock
  *
  * Syntax highlight com CSS puro + JetBrains Mono (já carregada).

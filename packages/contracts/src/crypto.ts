@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\crypto.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Crypto Contracts
  *
  * Abstrações canônicas de operações criptográficas.

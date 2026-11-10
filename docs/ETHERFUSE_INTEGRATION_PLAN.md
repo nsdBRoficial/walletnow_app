@@ -1,3 +1,5 @@
+<!-- @module docs\ETHERFUSE_INTEGRATION_PLAN.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Etherfuse Integration Architecture
 
 ## Visão Geral

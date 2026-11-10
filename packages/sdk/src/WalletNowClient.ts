@@ -1,4 +1,8 @@
 /**
+ * @module packages\sdk\src\WalletNowClient.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/sdk — WalletNowClient
  *
  * Facade de alto nível para o WalletNow OS.

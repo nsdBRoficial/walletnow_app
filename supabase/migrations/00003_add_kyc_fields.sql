@@ -1,3 +1,6 @@
+-- @module supabase\migrations\00003_add_kyc_fields.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- Migration: Add KYC and ZK-STARK fields to profiles
 
 ALTER TABLE public.profiles

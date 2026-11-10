@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\wooviProvider.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { BaseDepositProvider, ProviderStatus } from './depositProvider';
 import { WooviService } from '../wooviService';
 import { logger } from '../../utils/logger';

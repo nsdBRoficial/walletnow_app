@@ -1,3 +1,7 @@
+/**
+ * @module src\hooks\useTranslations.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { useState, useEffect } from 'react';
 import { landingTranslations, type LangKey } from '../i18n/landingTranslations';
 

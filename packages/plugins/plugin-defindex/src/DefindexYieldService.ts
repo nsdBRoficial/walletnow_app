@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\DefindexYieldService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — DefindexYieldService
  *
  * CAMADA 2B: Serviço de operações de yield (posições, depósito, saque, estimativas).

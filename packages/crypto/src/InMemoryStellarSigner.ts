@@ -1,3 +1,7 @@
+/**
+ * @module packages\crypto\src\InMemoryStellarSigner.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import type { IStellarSigner } from '@walletnow/contracts';
 import { Keypair, TransactionBuilder } from '@stellar/stellar-sdk';
 

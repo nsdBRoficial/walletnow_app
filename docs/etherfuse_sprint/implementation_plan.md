@@ -1,3 +1,5 @@
+<!-- @module docs\etherfuse_sprint\implementation_plan.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Implementação do Fluxo de KYC Programático (Etherfuse)
 
 Este documento detalha o plano de implementação do fluxo de KYC programático da Etherfuse no WalletNow, substituindo o onboarding manual via URL por uma integração nativa e 100% via API.

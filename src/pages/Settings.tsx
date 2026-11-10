@@ -1,3 +1,7 @@
+/**
+ * @module src\pages\Settings.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { ArrowLeft, Camera, CheckCircle2, Copy, Loader2, ShieldAlert, ShieldCheck, UploadCloud, Mail, MessageCircle, ArrowDownLeft, ArrowUpRight, ArrowRight, RefreshCw, Coins, ExternalLink, Clock, Eye, KeyRound, Wallet, Globe, Check, Plus } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

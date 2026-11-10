@@ -1,3 +1,7 @@
+/**
+ * @module src\services\identityService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 /// <reference types="vite/client" />
 import { sha3_256 } from 'js-sha3';
 import { Keypair, TransactionBuilder, Asset, Operation, Memo, BASE_FEE } from '@stellar/stellar-sdk';

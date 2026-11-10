@@ -1,4 +1,8 @@
 /**
+ * @module src\config\demoMode.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */

@@ -1,3 +1,7 @@
+/**
+ * @module scratch_soroswap.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { SoroswapAPIClient } from './packages/plugins/plugin-soroswap/src/SoroswapAPIClient';
 import { loadEnv } from 'vite';
 

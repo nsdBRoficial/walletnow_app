@@ -1,3 +1,6 @@
+-- @module supabase\migrations\00006_create_wallet_accounts.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- supabase/migrations/00006_create_wallet_accounts.sql
 
 -- Criação da tabela de contas de carteira (Multi-Account Architecture)

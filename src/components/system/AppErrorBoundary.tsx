@@ -1,4 +1,8 @@
 /**
+ * @module src\components\system\AppErrorBoundary.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */

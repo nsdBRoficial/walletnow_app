@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuseProvider.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { BaseDepositProvider, ProviderStatus } from './depositProvider';
 
 /**

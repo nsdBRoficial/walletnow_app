@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\provider-etherfuse\src\EtherfuseTrustlineService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/provider-etherfuse — EtherfuseTrustlineService
  *
  * Serviço REAL de Trustline para o ativo TESOURO da Etherfuse.

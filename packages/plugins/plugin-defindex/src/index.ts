@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — Public API
  *
  * Ponto único de importação do plugin.

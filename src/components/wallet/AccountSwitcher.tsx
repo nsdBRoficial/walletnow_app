@@ -1,3 +1,7 @@
+/**
+ * @module src\components\wallet\AccountSwitcher.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Wallet, Plus, LogIn, Check, ShieldCheck, KeyRound, Globe } from 'lucide-react';
 import { useWallet } from '../../contexts/WalletContext';

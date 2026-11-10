@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\types\defindex.api.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — Types
  *
  * Tipos internos que espelham a API oficial do Defindex (api.defindex.io).

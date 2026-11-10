@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-soroswap\src\constants\tokens.testnet.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-soroswap — Tokens conhecidos na Testnet
  *
  * Lista mínima de tokens para desenvolvimento em testnet.

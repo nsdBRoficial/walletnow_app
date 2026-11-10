@@ -1,3 +1,7 @@
+/**
+ * @module packages\core\src\public\types\rwa.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 export interface RwaAsset {
   id: string;
   name: string;

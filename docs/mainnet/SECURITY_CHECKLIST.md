@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\SECURITY_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Security Checklist (Pré Go-Live Mainnet)
 
 **Versão:** 1.0 | **Data:** 2026-05-27

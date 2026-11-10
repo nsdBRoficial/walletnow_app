@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\provider-etherfuse\src\etherfuse.config.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/provider-etherfuse — Asset Configuration
  *
  * Configuração real do ativo de tesouraria Etherfuse para o Brasil.

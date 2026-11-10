@@ -1,3 +1,5 @@
+<!-- @module docs\ADR_PAYMENT_MOCKING.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Architecture Decision Record (ADR): Payment Mocking Strategy
 
 **Status:** Aceito  

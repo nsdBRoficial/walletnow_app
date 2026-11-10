@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\COMPLIANCE_REQUIREMENTS.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Compliance Requirements
 
 **Versão:** 1.0 | **Data:** 2026-05-27

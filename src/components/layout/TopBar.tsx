@@ -1,4 +1,8 @@
 /**
+ * @module src\components\layout\TopBar.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * TopBar — Header principal da aplicação.
  *
  * Exibe: endereço da wallet, rede, saldo estimado, notificações e avatar.

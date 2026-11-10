@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\provider-etherfuse\src\EtherfusePersistenceService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/provider-etherfuse — EtherfusePersistenceService
  *
  * Persiste dados de onboarding do customer no localStorage do browser.

@@ -1,3 +1,7 @@
+/**
+ * @module src\hooks\useTheme.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { useState, useEffect } from 'react';
 
 const THEME_KEY = '@walletnow:theme';

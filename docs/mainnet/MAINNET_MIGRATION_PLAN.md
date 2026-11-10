@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\MAINNET_MIGRATION_PLAN.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Plano de Migração Testnet → Mainnet
 
 **Versão:** 1.0 | **Data:** 2026-05-27

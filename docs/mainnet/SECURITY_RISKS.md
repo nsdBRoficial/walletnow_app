@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\SECURITY_RISKS.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Security Risks Register & Auditoria de Segurança
 
 **Versão:** 2.0 | **Data:** 2026-09-10 | **Status:** ✅ REVISADO & ATUALIZADO (Pós-Auditoria Adversarial Fase 2)  

@@ -1,3 +1,7 @@
+/**
+ * @module src\i18n\landingTranslations.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 export type LangKey = 'en' | 'pt' | 'es';
 
 export const landingTranslations = {

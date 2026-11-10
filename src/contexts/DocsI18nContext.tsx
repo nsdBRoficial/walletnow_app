@@ -1,4 +1,8 @@
 /**
+ * @module src\contexts\DocsI18nContext.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — i18n Context
  *
  * Lightweight context for EN/PT-BR toggling inside the docs portal.

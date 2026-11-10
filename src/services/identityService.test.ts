@@ -1,3 +1,7 @@
+/**
+ * @module src\services\identityService.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IdentityService } from './identityService';
 import { Keypair, Account, TransactionBuilder } from '@stellar/stellar-sdk';

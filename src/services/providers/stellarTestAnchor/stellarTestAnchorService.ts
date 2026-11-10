@@ -1,4 +1,8 @@
 /**
+ * @module src\services\providers\stellarTestAnchor\stellarTestAnchorService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @packageDocumentation
  * @module Services/Providers/StellarTestAnchor
  *

@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\src\os\WalletNowOS.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/providers — WalletNowOS
  *
  * Entrypoint principal do sistema. Orquestra a inicialização e ciclo de vida

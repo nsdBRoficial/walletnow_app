@@ -1,3 +1,6 @@
+-- @module supabase\migrations\00001_create_profiles.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- supabase/migrations/00001_create_profiles.sql
 
 -- Criação da tabela de perfis (The Access Layer)

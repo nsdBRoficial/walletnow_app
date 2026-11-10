@@ -1,4 +1,8 @@
 /**
+ * @module src\pages\docs\DocsLayout.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — DocsLayout
  *
  * Layout principal: Header fixo + Sidebar + Content area.

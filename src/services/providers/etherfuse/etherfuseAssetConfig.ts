@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuse\etherfuseAssetConfig.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { IEtherfuseAssetConfig } from './etherfuseTypes';
 import { StellarNetwork } from '../../../config/stellarNetwork';
 

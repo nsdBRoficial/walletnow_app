@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-soroswap\src\SoroswapAPIClient.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-soroswap — SoroswapAPIClient
  *
  * CAMADA 1: Comunicação direta com a Soroswap Aggregator REST API.

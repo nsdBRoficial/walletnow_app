@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuseV2\etherfuseActivityService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Horizon } from '@stellar/stellar-sdk';
 import { logger } from '../../../utils/logger';
 import { StellarNetwork } from '../../../config/stellarNetwork';

@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\ISSUER_MIGRATION_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Issuer Migration Audit
 
 **Versão:** 1.0 | **Data:** 2026-05-27 | **Branch:** mainnet-ready-infra

@@ -1,3 +1,5 @@
+<!-- @module docs\ETHERFUSE_REAL_INTEGRATION_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Etherfuse Real Integration Audit — WalletNow
 
 **Data:** 2026-05-18  

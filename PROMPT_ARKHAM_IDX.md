@@ -1,3 +1,5 @@
+<!-- @module PROMPT_ARKHAM_IDX.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # 🤖 Prompt de Handoff para Arkham IDX (Atualizado v0.7)
 
 **Instrução para o Usuário:** Copie todo o texto abaixo (dentro do bloco de código) e cole no chat do Arkham IDX (ou qualquer outro agente de IA) para continuar o desenvolvimento do WalletNow exatamente de onde paramos.

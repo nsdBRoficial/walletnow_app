@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuseV2\etherfusePersistenceService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 export interface EfV2PersistenceData {
   version: number;
   customerId: string;

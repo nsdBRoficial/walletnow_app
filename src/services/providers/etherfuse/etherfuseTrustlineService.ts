@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuse\etherfuseTrustlineService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import {
   Asset,
   Horizon,

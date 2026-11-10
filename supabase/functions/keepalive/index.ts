@@ -1,4 +1,8 @@
 /**
+ * @module supabase\functions\keepalive\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * Edge Function: keepalive
  * ========================
  * Endpoint de health-check que mantém o runtime Deno aquecido

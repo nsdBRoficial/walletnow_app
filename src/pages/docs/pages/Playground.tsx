@@ -1,4 +1,8 @@
 /**
+ * @module src\pages\docs\pages\Playground.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — Live Playground
  *
  * A página mais importante: executa o SDK REAL com Fakes.

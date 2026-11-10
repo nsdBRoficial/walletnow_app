@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\stripeProvider.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { BaseDepositProvider, ProviderStatus } from './depositProvider';
 
 export class StripeProvider extends BaseDepositProvider {

@@ -1,3 +1,5 @@
+<!-- @module docs\caatinga.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Parceria de Testes: Caatinga Soroban Toolchain
 
 O **Caatinga** é o parceiro recomendado pelo **WalletNow** para automatizar o ciclo de desenvolvimento de contratos inteligentes Soroban na Stellar Testnet. Com ele, você reduz drasticamente o trabalho de compilação, deployment e fiação de dependências entre múltiplos contratos.

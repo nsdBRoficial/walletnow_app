@@ -1,3 +1,7 @@
+/**
+ * @module src\services\storageService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { supabase } from '../lib/supabase';
 
 export const StorageService = {

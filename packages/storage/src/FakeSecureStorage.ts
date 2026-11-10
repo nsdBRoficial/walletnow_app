@@ -1,4 +1,8 @@
 /**
+ * @module packages\storage\src\FakeSecureStorage.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/storage — FakeSecureStorage
  *
  * Implementação Fake de ISecureStorage para testes e desenvolvimento.

@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\depositProvider.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 export type ProviderStatus = 'active' | 'coming_soon' | 'maintenance';
 
 export interface IDepositProvider {

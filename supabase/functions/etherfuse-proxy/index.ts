@@ -1,3 +1,7 @@
+/**
+ * @module supabase\functions\etherfuse-proxy\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 
 /**

@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\QA_REGRESSION_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Relatório de Garantia de Qualidade e Regressão (QA)
 **Data:** 28 de Maio de 2026
 **Módulo Avaliado:** Arquitetura Multi-Conta e Isolamento (WalletContext)

@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Public API Barrel
  *
  * Único ponto de importação de TODOS os contratos do WalletNow OS.

@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\onboarding.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Onboarding Contracts
  *
  * Contratos canônicos do domínio Onboarding.

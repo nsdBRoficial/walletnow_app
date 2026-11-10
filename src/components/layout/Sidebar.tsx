@@ -1,4 +1,8 @@
 /**
+ * @module src\components\layout\Sidebar.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * Sidebar — Navegação lateral principal do WalletNow App.
  *
  * Os itens de menu são compostos por:

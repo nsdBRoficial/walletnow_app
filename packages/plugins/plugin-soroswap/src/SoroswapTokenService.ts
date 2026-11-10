@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-soroswap\src\SoroswapTokenService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-soroswap — SoroswapTokenService
  *
  * CAMADA 2 (parcial): Gerenciamento e cache da lista de tokens Soroswap.

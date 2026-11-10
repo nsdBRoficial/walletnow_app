@@ -1,3 +1,5 @@
+<!-- @module docs\etherfuse_sprint\ETHERFUSE_KYC_API_FLOW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Fluxo de KYC Programático Etherfuse (API)
 
 Este documento descreve a arquitetura atual de integração com o Sandbox da Etherfuse utilizando KYC Programático, bypassing o fluxo Web nativo deles.

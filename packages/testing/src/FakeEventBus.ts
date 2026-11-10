@@ -1,4 +1,8 @@
 /**
+ * @module packages\testing\src\FakeEventBus.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/testing — FakeEventBus
  *
  * Implementação Fake de IEventBus<WalletNowOSEvents> para testes.

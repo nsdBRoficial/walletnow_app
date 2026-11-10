@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\KEY_MANAGEMENT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Key Management & Treasury Architecture
 
 **Versão:** 1.0 | **Data:** 2026-05-27

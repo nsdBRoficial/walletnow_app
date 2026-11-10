@@ -1,3 +1,5 @@
+<!-- @module docs\HYBRID_MULTI_ACCOUNT_ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Arquitetura Híbrida Multi-Conta (Web3 Pro Mode) — WalletNow
 
 Este documento serve como especificação técnica oficial e guia de referência rápida para engenheiros que mantêm a camada híbrida de carteiras do **WalletNow**.

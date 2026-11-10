@@ -1,3 +1,7 @@
+/**
+ * @module src\services\oracleService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Operation, TransactionBuilder, Networks, Asset } from "@stellar/stellar-sdk";
 import { supabase } from "../lib/supabase";
 import { WalletFactory } from "./walletFactory";

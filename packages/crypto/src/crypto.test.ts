@@ -1,3 +1,7 @@
+/**
+ * @module packages\crypto\src\crypto.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { describe, it, expect } from 'vitest';
 import { StellarKeypairDeriver } from './StellarKeypairDeriver';
 import { WebCryptoEncryptor } from './WebCryptoEncryptor';

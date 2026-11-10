@@ -1,3 +1,5 @@
+<!-- @module CONTRIBUTING.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Como Contribuir para o WalletNow
 
 Bem-vindo ao protocolo WalletNow! Apreciamos o seu interesse em contribuir.

@@ -1,3 +1,7 @@
+/**
+ * @module tests\unit\IntegrationEngine.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IntegrationEngine } from '../../packages/core/src/public/os/IntegrationEngine';
 import { DiscoveryService } from '../../packages/core/src/public/os/DiscoveryService';

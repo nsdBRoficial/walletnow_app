@@ -1,4 +1,8 @@
 /**
+ * @module src\i18n\docsTranslations.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — Translations
  *
  * EN (default) + PT-BR

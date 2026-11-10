@@ -1,4 +1,8 @@
 /**
+ * @module src\hooks\useHealthStatus.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * useHealthStatus — Hook para monitoramento de saúde de um protocolo.
  *
  * Retorna o health status reativo de um plugin específico.

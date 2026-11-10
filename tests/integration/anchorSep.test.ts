@@ -1,3 +1,7 @@
+/**
+ * @module tests\integration\anchorSep.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { StellarAnchorService } from '../../src/services/stellarAnchorService';
 import { Keypair, TransactionBuilder, Account, Networks, Operation, Asset } from '@stellar/stellar-sdk';

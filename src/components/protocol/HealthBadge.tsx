@@ -1,4 +1,8 @@
 /**
+ * @module src\components\protocol\HealthBadge.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * HealthBadge — Indicador visual de saúde de um protocolo.
  * Usa os dados reativos do HealthMonitor via useHealthStatus.
  */

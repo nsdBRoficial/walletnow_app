@@ -1,4 +1,8 @@
 /**
+ * @module packages\providers\provider-etherfuse\src\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/provider-etherfuse — Public API Barrel
  *
  * Este é o único ponto de importação do pacote.

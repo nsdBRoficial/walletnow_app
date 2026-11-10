@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\TREASURY_ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Treasury Architecture
 
 **Versão:** 1.0 | **Data:** 2026-05-27

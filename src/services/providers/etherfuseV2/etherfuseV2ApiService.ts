@@ -1,4 +1,8 @@
 /**
+ * @module src\services\providers\etherfuseV2\etherfuseV2ApiService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * EtherfuseV2ApiService — Fluxo Programático Validado
  *
  * Implementa o fluxo end-to-end validado no demo `etherfuse-pix-demo`:

@@ -1,3 +1,7 @@
+/**
+ * @module src\components\modals\ExportSecretKeyModal.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Shield, Eye, EyeOff, Copy, CheckCircle, AlertTriangle, X, KeyRound } from 'lucide-react';
 import { DeviceVault } from '../../security/deviceVault';

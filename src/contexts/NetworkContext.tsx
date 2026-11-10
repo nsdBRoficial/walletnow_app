@@ -1,4 +1,8 @@
 /**
+ * @module src\contexts\NetworkContext.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * NetworkContext.tsx
  * ==================
  * Contexto global de alternância de rede Stellar (TESTNET ↔ MAINNET).

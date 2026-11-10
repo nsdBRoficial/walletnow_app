@@ -1,3 +1,7 @@
+/**
+ * @module src\services\providers\etherfuse\etherfuseOnRampService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { ETHERFUSE_PROXY_ENDPOINT } from './etherfuseAssetConfig';
 import { logger } from '../../../utils/logger';
 

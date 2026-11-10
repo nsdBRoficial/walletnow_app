@@ -1,4 +1,8 @@
 /**
+ * @module src\config\environment.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * environment.ts
  *
  * Sistema centralizado de configuração de ambiente da WalletNow.

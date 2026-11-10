@@ -1,3 +1,5 @@
+<!-- @module docs\etherfuse_sprint\walkthrough.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Walkthrough — KYC Programático & Conta Bancária (Etherfuse)
 
 Este documento resume a fase final do Sprint de Infraestrutura Institucional focado na aprovação automática do KYC via **Sandbox da Etherfuse** e a investigação sobre o vínculo de contas bancárias (Proxy Accounts).

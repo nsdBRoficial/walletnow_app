@@ -1,3 +1,7 @@
+/**
+ * @module packages\nft\tsup.config.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { defineConfig } from 'tsup';
 
 export default defineConfig({

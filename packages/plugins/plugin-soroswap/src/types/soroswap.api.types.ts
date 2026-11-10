@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-soroswap\src\types\soroswap.api.types.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-soroswap — Tipos internos da API Soroswap
  *
  * Representam os contratos exatos da Soroswap Aggregator REST API.

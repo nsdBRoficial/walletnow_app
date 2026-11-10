@@ -1,3 +1,7 @@
+/**
+ * @module src\components\modals\WithdrawModal.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { X, ArrowRight, Loader2, CheckCircle2, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';

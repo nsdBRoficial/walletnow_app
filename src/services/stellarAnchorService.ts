@@ -1,3 +1,7 @@
+/**
+ * @module src\services\stellarAnchorService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Keypair, Transaction, Networks } from '@stellar/stellar-sdk';
 import { StellarNetwork } from '../config/stellarNetwork';
 

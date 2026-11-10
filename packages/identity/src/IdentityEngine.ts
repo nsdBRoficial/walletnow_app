@@ -1,4 +1,8 @@
 /**
+ * @module packages\identity\src\IdentityEngine.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @packageDocumentation
  * @module @walletnow/identity
  *

@@ -1,4 +1,8 @@
 /**
+ * @module src\components\dashboard\OpportunityEngine.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * OpportunityEngine
  *
  * Exibe oportunidades de yield, RWA e swap em tempo real.

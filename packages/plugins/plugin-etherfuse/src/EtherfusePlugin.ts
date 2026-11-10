@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-etherfuse\src\EtherfusePlugin.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-etherfuse — EtherfusePlugin
  *
  * CAMADA 3: Registro no Kernel WalletNow.

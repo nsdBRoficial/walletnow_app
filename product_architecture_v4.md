@@ -1,3 +1,5 @@
+<!-- @module product_architecture_v4.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Product Architecture Review v4.0: WalletNow como Infraestrutura da Stellar
 
 O objetivo desta revisão é elevar o WalletNow de um framework de desenvolvimento a uma **plataforma completa de infraestrutura** (a "Vercel da Stellar" ou a "Stripe da Stellar"). A proposta central é que o desenvolvedor não deve gerenciar a complexidade interna de registries, engines ou comunicação direta com nós blockchain. Em vez disso, consome serviços simplificados de alto nível, enquanto a plataforma monetiza através de facilidades de nuvem, sponsorship de taxas (gas), telemetria e APIs de alta confiabilidade.

@@ -1,3 +1,7 @@
+/**
+ * @module scratch_soroswap_quote.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { loadEnv } from 'vite';
 
 async function run() {

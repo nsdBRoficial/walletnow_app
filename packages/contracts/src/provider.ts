@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\provider.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Provider & Protocol Contracts
  *
  * Separação canônica entre Providers (implementações) e Protocols (abstrações).

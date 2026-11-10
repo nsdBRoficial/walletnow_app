@@ -1,3 +1,7 @@
+/**
+ * @module scratch_asset_contract.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Asset } from '@stellar/stellar-sdk';
 import { loadEnv } from 'vite';
 

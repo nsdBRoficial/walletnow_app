@@ -1,3 +1,7 @@
+/**
+ * @module packages\core\src\public\errors\GasError.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { WalletNowError } from './WalletNowError.js';
 
 /** Erros de patrocínio de fee e comunicação com Relayer */

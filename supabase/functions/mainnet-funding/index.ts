@@ -1,4 +1,8 @@
 /**
+ * @module supabase\functions\mainnet-funding\index.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * mainnet-funding — Supabase Edge Function (PRODUÇÃO)
  * =====================================================
  *

@@ -1,4 +1,8 @@
 /**
+ * @module src\lib\docs\playgroundEngine.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — PlaygroundEngine
  *
  * Motor que simula o fluxo REAL do SDK usando os Fakes do @walletnow/onboarding.

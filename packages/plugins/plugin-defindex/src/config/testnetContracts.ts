@@ -1,3 +1,7 @@
+/**
+ * @module packages\plugins\plugin-defindex\src\config\testnetContracts.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 export const TESTNET_VAULT_CONTRACTS = [
   'CBMVK2JK6NTOT2O4HNQAIQFJY232BHKGLIMXDVQVHIIZKDACXDFZDWHN', // usdc_paltalabs_vault
   'CCLV4H7WTLJQ7ATLHBBQV2WW3OINF3FOY5XZ7VPHZO7NH3D2ZS4GFSF6', // xlm_paltalabs_vault

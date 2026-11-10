@@ -1,4 +1,8 @@
 /**
+ * @module src\utils\bip39Wallet.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * bip39Wallet.ts
  *
  * Utilitário de derivação determinística de carteiras Stellar via BIP39/SLIP-0010.

@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\SUPABASE_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Supabase Audit Report
 
 **Versão:** 1.0 | **Data:** 2026-05-27

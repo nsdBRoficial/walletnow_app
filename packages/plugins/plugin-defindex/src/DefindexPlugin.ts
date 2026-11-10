@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\DefindexPlugin.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — DefindexPlugin
  *
  * CAMADA 3: Registro no Kernel WalletNow.

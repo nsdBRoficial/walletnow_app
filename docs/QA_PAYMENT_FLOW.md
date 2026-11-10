@@ -1,3 +1,5 @@
+<!-- @module docs\QA_PAYMENT_FLOW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # QA Payment Flow - Auditoria da Máquina de Estados (Commit 2)
 
 ## 1. Visão Geral

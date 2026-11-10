@@ -1,3 +1,7 @@
+/**
+ * @module packages\nft\tests\NftOrchestrator.test.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { describe, it, expect, vi } from 'vitest';
 import { NftOrchestrator } from '../src/NftOrchestrator.js';
 import { Keypair } from '@stellar/stellar-sdk';

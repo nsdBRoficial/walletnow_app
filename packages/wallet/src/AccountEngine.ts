@@ -1,4 +1,8 @@
 /**
+ * @module packages\wallet\src\AccountEngine.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/wallet — AccountEngine (Stub)
  *
  * Implementação principal do Account Engine.

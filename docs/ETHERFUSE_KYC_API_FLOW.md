@@ -1,3 +1,5 @@
+<!-- @module docs\ETHERFUSE_KYC_API_FLOW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Fluxo de KYC Programático - Etherfuse API
 
 Este documento descreve o fluxo de integração direto via API para o processo de KYC (Know Your Customer) da Etherfuse, sem dependência do ambiente web hospedado. O fluxo detalhado aqui é desenhado para garantir que o cliente seja criado e aprovado, permitindo o avanço das transações financeiras (BRL → TESOURO) na testnet/sandbox.

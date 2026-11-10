@@ -1,3 +1,7 @@
+/**
+ * @module src\utils\decodeHorizonResultXdr.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { xdr } from '@stellar/stellar-sdk';
 
 export interface DecodedXdrResult {

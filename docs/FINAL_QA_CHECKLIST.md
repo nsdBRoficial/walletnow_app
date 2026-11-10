@@ -1,3 +1,5 @@
+<!-- @module docs\FINAL_QA_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow: Final QA Checklist
 
 Este documento consolida os testes e validações de Garantia de Qualidade (QA) aplicados ao projeto WalletNow (Commit 3 - Final Polish) visando garantir o "Readiness Score" máximo para a demonstração pública do Hackathon.

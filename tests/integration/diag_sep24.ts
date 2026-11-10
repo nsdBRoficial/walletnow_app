@@ -1,3 +1,7 @@
+/**
+ * @module tests\integration\diag_sep24.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Keypair, Transaction, Networks } from '@stellar/stellar-sdk';
 
 async function run() {

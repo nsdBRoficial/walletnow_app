@@ -1,3 +1,6 @@
+# @module .github\workflows\supabase-keepalive.yml
+# @description WalletNow Protocol - Configuração e automação de fluxos.
+
 # ============================================================
 # GitHub Actions: Supabase Keepalive
 # ============================================================

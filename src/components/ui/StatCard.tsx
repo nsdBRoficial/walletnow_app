@@ -1,4 +1,8 @@
 /**
+ * @module src\components\ui\StatCard.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * StatCard — Card de estatística financeira premium.
  * Exibe: label, valor, trend, ícone e subtítulo.
  */

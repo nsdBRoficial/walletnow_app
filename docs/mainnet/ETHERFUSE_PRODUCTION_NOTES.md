@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\ETHERFUSE_PRODUCTION_NOTES.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Etherfuse V2: Notas para Produção
 
 **Versão:** 1.0 | **Data:** 2026-05-27

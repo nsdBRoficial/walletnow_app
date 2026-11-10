@@ -1,4 +1,8 @@
 /**
+ * @module src\services\priceOracleService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * priceOracleService.ts
  * =====================
  * Serviço isolado de cotação XLM/BRL para o fluxo On/Off Ramp do WalletNow.

@@ -1,4 +1,8 @@
 /**
+ * @module packages\onboarding\src\OnboardingOrchestrator.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/onboarding — OnboardingOrchestrator
  *
  * Implementação do domínio de Onboarding — caso de uso nº 1 do WalletNow.

@@ -1,4 +1,8 @@
 /**
+ * @module src\components\wallet\NetworkToggle.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * NetworkToggle.tsx
  * =================
  * Badge compacto de alternância TESTNET ↔ MAINNET.

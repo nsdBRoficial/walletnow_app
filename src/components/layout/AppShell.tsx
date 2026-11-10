@@ -1,4 +1,8 @@
 /**
+ * @module src\components\layout\AppShell.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * AppShell — Container principal do app autenticado.
  *
  * Layout: Sidebar fixa + Main Area (TopBar + Content).

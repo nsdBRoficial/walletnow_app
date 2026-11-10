@@ -1,4 +1,8 @@
 /**
+ * @module src\components\docs\APIEndpointCard.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * WalletNow Developer Portal — APIEndpointCard
  *
  * Card de endpoint REST com badge de método HTTP e status.

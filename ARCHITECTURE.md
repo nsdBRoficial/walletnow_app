@@ -1,3 +1,5 @@
+<!-- @module ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # Arquitetura do Protocolo WalletNow (WalletNow OS)
 
 **Data de Atualização:** Setembro de 2026  

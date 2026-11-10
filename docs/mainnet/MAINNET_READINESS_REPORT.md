@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\MAINNET_READINESS_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Relatório de Prontidão Operacional (Foco Testnet) & Roadmap Mainnet
 
 **Versão:** 2.0 | **Data:** 2026-09-10 | **Ambiente Operacional Principal:** 🧪 **Stellar Testnet**  

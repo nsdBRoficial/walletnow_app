@@ -1,3 +1,7 @@
+/**
+ * @module packages\sdk\src\TestnetKit.css
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 .tk-container, .tk-container * { box-sizing: border-box; }
 .tk-container { width: 100%; margin: 0; padding: 0 0 40px 0; }
         .tk-header-area { margin-bottom: 32px; }

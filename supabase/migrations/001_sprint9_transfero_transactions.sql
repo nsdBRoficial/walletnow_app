@@ -1,3 +1,6 @@
+-- @module supabase\migrations\001_sprint9_transfero_transactions.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- ==========================================
 -- SPRINT 9: MOTOR DE PAGAMENTOS (FIAT <-> CRYPTO)
 -- Tabela de Conciliação e Rastros (PIX vs BRZ Mint)

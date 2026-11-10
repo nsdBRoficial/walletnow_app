@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\RLS_VALIDATION_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — RLS Validation Report
 
 **Data:** 2026-05-28 | **Sprint:** mainnet-ready-infra Fase 2  

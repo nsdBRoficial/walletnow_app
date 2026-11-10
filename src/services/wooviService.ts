@@ -1,4 +1,8 @@
 /**
+ * @module src\services\wooviService.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * Woovi Gateway Service (PIX / OpenPix)
  *
  * [PT-BR] Gerencia a integração do On-ramp / Off-ramp com a ponte fiduciária Woovi.

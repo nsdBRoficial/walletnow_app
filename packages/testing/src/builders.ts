@@ -1,4 +1,8 @@
 /**
+ * @module packages\testing\src\builders.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/testing — TestBuilders
  *
  * Funções de construção de objetos de teste (Builder Pattern).

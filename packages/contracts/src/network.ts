@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\network.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Network Contracts
  *
  * Tipos canônicos de rede do WalletNow OS.

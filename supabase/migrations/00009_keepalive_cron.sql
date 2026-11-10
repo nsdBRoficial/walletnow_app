@@ -1,3 +1,6 @@
+-- @module supabase\migrations\00009_keepalive_cron.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- ============================================================
 -- Migration: 00009_keepalive_cron
 -- Propósito: Manter o projeto Supabase sempre ativo usando

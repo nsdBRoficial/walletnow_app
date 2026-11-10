@@ -1,4 +1,8 @@
 /**
+ * @module packages\contracts\src\identity.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/contracts — Identity Contracts
  *
  * Contratos canônicos do Identity Engine.

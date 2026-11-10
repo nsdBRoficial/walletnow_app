@@ -1,3 +1,7 @@
+/**
+ * @module packages\nft\src\NftOrchestrator.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Asset, Operation, TransactionBuilder, Keypair, Networks, Horizon } from '@stellar/stellar-sdk';
 import type { IGasStationPort } from '@walletnow/onboarding';
 

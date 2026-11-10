@@ -1,4 +1,8 @@
 /**
+ * @module src\pages\ActivityPage.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * ActivityPage — Histórico de atividades on-chain.
  */
 

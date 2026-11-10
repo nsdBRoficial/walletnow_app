@@ -1,3 +1,7 @@
+/**
+ * @module src\services\walletFactory.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import { Keypair, TransactionBuilder, Asset, Operation, LiquidityPoolAsset } from '@stellar/stellar-sdk';
 import { supabase } from '../lib/supabase';
 import { isValidPublicKey, isValidSecretKey } from '../utils/stellarValidation';

@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\INCIDENT_RESPONSE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Incident Response Playbook
 
 **Versão:** 1.0 | **Data:** 2026-05-27

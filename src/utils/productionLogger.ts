@@ -1,4 +1,8 @@
 /**
+ * @module src\utils\productionLogger.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * productionLogger.ts
  *
  * Logger seguro para produção da WalletNow.

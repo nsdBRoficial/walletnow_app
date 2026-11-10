@@ -1,3 +1,7 @@
+/**
+ * @module src\components\landing\v2\HeroSection.tsx
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Github, Copy, Check, Zap, Shield, Lock, FlaskConical } from 'lucide-react';
 import { useLanding } from '../../../contexts/LandingContext';

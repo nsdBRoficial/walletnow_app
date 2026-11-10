@@ -1,3 +1,5 @@
+<!-- @module docs\mainnet\HUMAN_QA_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 # WalletNow — Plano de Testes e QA Humano (UAT)
 
 **Versão da Arquitetura:** Híbrida BIP39/Legacy | **Fase:** UAT (User Acceptance Testing)

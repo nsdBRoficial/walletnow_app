@@ -1,3 +1,5 @@
+<!-- @module README.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+
 <div align="center">
   <img src="public/logo-walletnow.svg" alt="WalletNow Logo" width="100" height="100">
   <br/>

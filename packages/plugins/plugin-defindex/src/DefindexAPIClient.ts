@@ -1,4 +1,8 @@
 /**
+ * @module packages\plugins\plugin-defindex\src\DefindexAPIClient.ts
+ * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ */
+/**
  * @walletnow/plugin-defindex — DefindexAPIClient
  *
  * CAMADA 1: Comunicação REST pura com api.defindex.io.

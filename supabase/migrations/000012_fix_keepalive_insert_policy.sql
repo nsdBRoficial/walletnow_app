@@ -1,3 +1,6 @@
+-- @module supabase\migrations\000012_fix_keepalive_insert_policy.sql
+-- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+
 -- ==============================================================================
 -- MIGRAÇÃO DE SEGURANÇA: 000012_fix_keepalive_insert_policy.sql
 -- Auditoria Adversarial Fase 2 (R-14 / MED-05)
