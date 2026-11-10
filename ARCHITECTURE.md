@@ -1,9 +1,9 @@
-<!-- @module ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module ARCHITECTURE.md | Arquitetura em camadas, 17 pacotes do monorepo, SEPs Stellar e infraestrutura de QA do WalletNow OS -->
 
 # Arquitetura do Protocolo WalletNow (WalletNow OS)
 
-**Data de Atualização:** Setembro de 2026  
-**Versão:** `v0.4.5-candidate`  
+**Data de Atualização:** Novembro de 2026  
+**Versão:** `v0.2.0` (Monorepo Root) / `v0.4.5-candidate` (Protocol Spec)  
 **Padrão Arquitetural:** Clean Architecture, Dependency Injection (Inversion of Control), CQRS-Like State Machine e Monorepo Modular.
 
 O **WalletNow** é um sistema operacional financeiro descentralizado (*Financial OS*) concebido sobre a rede Stellar. Ele segue princípios rigorosos de modularidade e separação de preocupações, conforme formalizado no `ADR-000`, eliminando qualquer acoplamento de bibliotecas de terceiros no núcleo do sistema.
@@ -53,21 +53,25 @@ O **WalletNow** é um sistema operacional financeiro descentralizado (*Financial
 
 ## 2. Pacotes do Monorepo (`packages/`)
 
-O protocolo é dividido em 13 pacotes independentes, garantindo manutenibilidade, testabilidade isolada e publicação no NPM sem dependências circulares:
+O protocolo é dividido em **17 pacotes independentes** (gerenciados via Turborepo e NPM Workspaces), garantindo manutenibilidade, testabilidade isolada e publicação no NPM sem dependências circulares:
 
-1. **`@walletnow/core`**: Núcleo agnóstico de blockchain. Controla o ciclo de vida da aplicação (`BOOTING`, `READY`, `ERROR`, `SHUTDOWN`), o barramento de eventos (`EventEmitter`) e o armazenamento de contexto central.
-2. **`@walletnow/contracts`**: Interfaces canônicas, tipos universais, especificações de transações e a hierarquia de erros do sistema (`WalletNowError`).
-3. **`@walletnow/crypto`**: Motor de criptografia cliente-side. Provê derivação de chaves Stellar (`StellarKeypairDeriver`), criptografia autenticada (`WebCryptoEncryptor` via AES-GCM) e compromissos criptográficos SHA3-256.
+1. **`@walletnow/core`**: Núcleo agnóstico de blockchain (`IntegrationEngine`, `DiscoveryService`, `HealthMonitor`, `ProtocolStore` e hierarquia de erros).
+2. **`@walletnow/contracts`**: Interfaces canônicas, tipos universais (`IIdentityEngine`, `IWalletEngine`, `IStorageAdapter`, `IOSEngine`) e especificações de eventos.
+3. **`@walletnow/crypto`**: Motor de criptografia client-side (`StellarKeypairDeriver`, `WebCryptoEncryptor` AES-GCM-256 e `InMemoryStellarSigner`).
 4. **`@walletnow/domain`**: Entidades de negócio ricas (Saldos, Moedas, Transações, Ativos, Cotações e Ordens de Swap).
-5. **`@walletnow/identity`**: Gerenciamento de credenciais e identificação biométrica via WebAuthn/Passkeys, garantindo que o usuário nunca precise memorizar sementes mnemônicas.
-6. **`@walletnow/onboarding`**: Fluxo acelerado de criação de conta não-custodial em background com aprovisionamento automático de trustlines.
-7. **`@walletnow/providers`**: Adaptadores para serviços externos e de rede (Stellar Horizon, RPC de nós, âncoras SEP-01/10/24, oráculos e gateways bancários).
-8. **`@walletnow/plugins`**: Mecanismo de injeção de `Capabilities` sob demanda (ex: assinatura automática, patrocinador de gas, cotas de rendimento).
-9. **`@walletnow/nft`**: Gestão e visualização de ativos digitais colecionáveis na Stellar.
-10. **`@walletnow/storage`**: Adaptadores de persistência local encriptada (`LocalStorageAdapter`, `IndexedDBAdapter` e adaptadores em memória para testes).
-11. **`@walletnow/testing`**: Mocks de primeira classe (`FakeIdentityEngine`, `InMemoryStorageProvider`) para testes de integração rápidos e sem dependência de rede.
-12. **`@walletnow/wallet`**: Camada de gerenciamento de chaves, assunção de transações e criação de envelopes Stellar XDR.
-13. **`@walletnow/sdk`**: Fachada pública unificada (`WalletNowOS`) que compõe todos os motores para consumo simples por qualquer desenvolvedor Web3.
+5. **`@walletnow/identity`**: Gerenciamento de credenciais e autenticação biométrica WebAuthn/Passkeys (`IdentityEngine`, `KeypairAuthAdapter`).
+6. **`@walletnow/onboarding`**: Orquestrador de criação de conta não-custodial em background (`OnboardingOrchestrator`) com provisionamento automático de trustlines e patrocínio Gasless.
+7. **`@walletnow/providers`**: Registro central de provedores (`ProviderRegistry`), barramento de eventos e adaptadores de rede.
+8. **`@walletnow/provider-etherfuse`**: Provedor dedicado para ativos RWA tokenizados (Tesouro Direto `TESOURO` via PIX, API V2, persistência e trustlines).
+9. **`@walletnow/plugin-defindex`**: Plugin de cofres automatizados de rendimento (Yield Vaults) na rede Stellar/Soroban.
+10. **`@walletnow/plugin-etherfuse`**: Plugin de capacidade RWA integrando o provedor Etherfuse ao `IntegrationEngine`.
+11. **`@walletnow/plugin-portfolio`**: Agregador e consolidador de saldos multi-ativos e histórico on-chain.
+12. **`@walletnow/plugin-soroswap`**: Plugin de roteamento de liquidez e swaps AMM no protocolo Soroswap.
+13. **`@walletnow/nft`**: Orquestrador (`NftOrchestrator`) para emissão, transferência e visualização de colecionáveis na Stellar.
+14. **`@walletnow/storage`**: Adaptadores de persistência local encriptada (`LocalStorageAdapter`, `IndexedDBAdapter` e adaptadores em memória).
+15. **`@walletnow/testing`**: Mocks e Fakes determinísticos (`FakeIdentityEngine`, `InMemoryStorageProvider`) para testes sem dependência de rede.
+16. **`@walletnow/wallet`**: Motor de contas e carteiras (`WalletEngine`), construção de transações e envelopes Stellar XDR.
+17. **`@walletnow/sdk`**: Fachada pública unificada (`WalletNowOS` + `TestnetKit`) que compõe todos os motores para consumo simples por qualquer aplicação Web3.
 
 ---
 
@@ -92,6 +96,16 @@ Localizado em `/docs/testnet-kit`, o TestnetKit atua como um laboratório de tes
 
 ## 5. Invariantes de Segurança e Auditoria v2.0
 
-- **Zero-Custody Real**: Nenhuma chave privada é transmitida ou gravada nos servidores. O cofre `DeviceVault` opera exclusivamente na memória local do cliente.
+- **Zero-Custody Real**: Nenhuma chave privada é transmitida ou gravada nos servidores. O cofre `DeviceVault` (PBKDF2 100k SHA-256 + AES-GCM-256) e o `MnemonicVault` (BIP39 / SEP-0005 `m/44'/148'/0'`) operam exclusivamente no cliente.
 - **Proteção LGPD/GDPR**: Dados de identificação do usuário são transformados em digest criptográfico SHA3-256 com salt de alta entropia.
-- **Defesa em Profundidade**: Políticas RLS estritas no banco de dados e sanitização ativa de logs prevenindo vazamento de tokens no console.
+- **Defesa em Profundidade**: Políticas RLS estritas no banco de dados e sanitização ativa de logs (`logger.ts` e `productionLogger.ts`) prevenindo vazamento de tokens, CPFs e chaves secretas no console.
+
+---
+
+## 6. Engenharia de Qualidade (QA) e Automação de Testes
+
+A suíte de testes (`vitest.config.ts`) é estruturada em **3 projetos isolados** com pipelines automatizados no GitHub Actions (`.github/workflows/ci.yml` e `onchain-nightly.yml`):
+- **`unit` (`npm run test:unit`)**: Testes unitários 100% offline para criptografia, cofres locais (`DeviceVault`, `MnemonicVault`, `bip39Wallet`), oráculo de preços com fallback em 4 camadas, provedores, sanitização de logs e motores do monorepo.
+- **`integration` (`npm run test:integration`)**: Fluxos integrados determinísticos (SEP-10/SEP-24, validação de carteiras e máquina de estados de pagamento On/Off-Ramp).
+- **`onchain` (`npm run test:onchain`)**: Liquidação real na Stellar Testnet e ativação via Friendbot, executada no workflow noturno.
+- **Personas e Plano Mestre**: Documentados em [docs/qa/PERSONAS.md](docs/qa/PERSONAS.md) e [docs/qa/TEST_HARDENING_PLAN.md](docs/qa/TEST_HARDENING_PLAN.md).

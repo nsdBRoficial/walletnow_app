@@ -1,6 +1,6 @@
 /**
- * @module src\pages\Landing.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/Landing.tsx
+ * @description Página principal da aplicação (Landing) — orquestração de estado, saldos Stellar e ações do usuário (exporta: Landing).
  */
 /**
  * WalletNow Landing Page v2

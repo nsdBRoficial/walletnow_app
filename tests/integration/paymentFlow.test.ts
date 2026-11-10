@@ -1,6 +1,6 @@
 /**
- * @module tests\integration\paymentFlow.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/integration/paymentFlow.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de paymentFlow.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { WooviService } from '../../src/services/wooviService';

@@ -1,6 +1,6 @@
 /**
- * @module src\services\stellarAnchorService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/stellarAnchorService.ts
+ * @description Serviço de domínio e integração (stellarAnchorService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: StellarAnchorService).
  */
 import { Keypair, Transaction, Networks } from '@stellar/stellar-sdk';
 import { StellarNetwork } from '../config/stellarNetwork';

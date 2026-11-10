@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\MULTI_ACCOUNT_RUNTIME_QA_PLAN.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/MULTI_ACCOUNT_RUNTIME_QA_PLAN.md | Documentação técnica e especificação: Multi-Account Runtime QA Plan. -->
 
 # Multi-Account Runtime QA Plan
 **Data:** 28 de Maio de 2026

@@ -1,6 +1,6 @@
 /**
- * @module packages\providers\provider-etherfuse\src\etherfuse.types.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/providers/provider-etherfuse/src/etherfuse.types.ts
+ * @description Infraestrutura de provedores (@walletnow/providers - etherfuse.types) — registro, barramento de eventos e adaptadores externos (exporta: IEtherfuseAssetConfig, EfV2CreateCustomerRequest, EfV2CustomerResponse, EfV2KycIdentity).
  */
 /**
  * @walletnow/provider-etherfuse — Tipos do Etherfuse V2

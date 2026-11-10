@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\GasError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/GasError.ts
+ * @description Classe de erro tipada (GasError) da hierarquia de exceções do núcleo @walletnow/core (exporta: GasError).
  */
 import { WalletNowError } from './WalletNowError.js';
 

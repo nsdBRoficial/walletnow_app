@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-defindex\src\DefindexVaultService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-defindex/src/DefindexVaultService.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-defindex - DefindexVaultService) integrado ao IntegrationEngine (exporta: DefindexVaultServiceConfig, DefindexVaultService).
  */
 /**
  * @walletnow/plugin-defindex — DefindexVaultService

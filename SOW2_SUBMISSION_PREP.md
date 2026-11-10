@@ -1,4 +1,4 @@
-<!-- @module SOW2_SUBMISSION_PREP.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module SOW2_SUBMISSION_PREP.md | Especificação executiva e plano de 30 dias da submissão Instawards SOW2 (Soroban Gasless + Stellar RPC Relayer) -->
 
 # Preparação para Submissão: Instawards SOW2 (WalletNow)
 

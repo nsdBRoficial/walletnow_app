@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\ETHERFUSE_PRODUCTION_NOTES.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/ETHERFUSE_PRODUCTION_NOTES.md | Documentação técnica e especificação: WalletNow — Etherfuse V2: Notas para Produção. -->
 
 # WalletNow — Etherfuse V2: Notas para Produção
 

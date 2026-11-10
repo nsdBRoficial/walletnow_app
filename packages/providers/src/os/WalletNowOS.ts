@@ -1,6 +1,6 @@
 /**
- * @module packages\providers\src\os\WalletNowOS.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/providers/src/os/WalletNowOS.ts
+ * @description Infraestrutura de provedores (@walletnow/providers - WalletNowOS) — registro, barramento de eventos e adaptadores externos (exporta: WalletNowOS).
  */
 /**
  * @walletnow/providers — WalletNowOS

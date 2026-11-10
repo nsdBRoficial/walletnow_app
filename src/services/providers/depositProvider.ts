@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\depositProvider.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/depositProvider.ts
+ * @description Provedor de depósito/liquidez (depositProvider) conectado ao registro central de rampas do WalletNow (exporta: ProviderStatus, IDepositProvider, BaseDepositProvider).
  */
 export type ProviderStatus = 'active' | 'coming_soon' | 'maintenance';
 

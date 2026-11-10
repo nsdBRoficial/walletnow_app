@@ -69,3 +69,4 @@ describe('bip39Wallet & stellarValidation — Derivação Determinística SEP-00
     expect(words[11]).toEqual({ index: 12, word: 'about' });
   });
 });
+

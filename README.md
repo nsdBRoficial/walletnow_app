@@ -1,4 +1,4 @@
-<!-- @module README.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module README.md | Documentação principal (EN/PT-BR) da arquitetura Full Abstraction, SDK, segurança e QA do WalletNow -->
 
 <div align="center">
   <img src="public/logo-walletnow.svg" alt="WalletNow Logo" width="100" height="100">
@@ -265,8 +265,24 @@ npm install
 cp .env.example .env
 
 # 4. Start the local server in development mode
+npm run lint
+npm test
 npm run dev
 ```
+
+---
+
+## 🧪 Automated QA & Testing Architecture
+
+WalletNow enforces continuous quality through a **3-tier Vitest 4 configuration** (`vitest.config.ts`) and **GitHub Actions CI** (`.github/workflows/ci.yml` & `onchain-nightly.yml`):
+
+| Test Project | Command | Scope & Coverage |
+| :--- | :--- | :--- |
+| **Unit (`unit`)** | `npm run test:unit` | 100% offline tests for `DeviceVault` (PBKDF2 + AES-GCM-256), `MnemonicVault`, `bip39Wallet` (SEP-0005), 4-tier `PriceOracleService`, Deposit Providers, Log Sanitization, and Monorepo Engines. |
+| **Integration (`integration`)** | `npm run test:integration` | Deterministic state-machine and protocol tests for Stellar Anchors (SEP-10/SEP-24), Pix On/Off-Ramp (Woovi), and Wallet Validation. |
+| **On-Chain (`onchain`)** | `npm run test:onchain` | Live Stellar Testnet & Friendbot settlement flows (`tests/onchain/`), executed on the nightly schedule. |
+
+See [docs/qa/TEST_HARDENING_PLAN.md](docs/qa/TEST_HARDENING_PLAN.md) and [docs/qa/PERSONAS.md](docs/qa/PERSONAS.md) for the full QA specification and E2E user personas.
 
 ---
 
@@ -608,8 +624,24 @@ npm install
 cp .env.example .env
 
 # 4. Inicie o servidor local em modo desenvolvimento
+npm run lint
+npm test
 npm run dev
 ```
+
+---
+
+## 🧪 Arquitetura de QA & Testes Automatizados
+
+O WalletNow mantém verificação contínua através de **3 projetos isolados no Vitest 4** (`vitest.config.ts`) e pipelines de **GitHub Actions** (`.github/workflows/ci.yml` e `onchain-nightly.yml`):
+
+| Projeto de Teste | Comando | Escopo e Cobertura |
+| :--- | :--- | :--- |
+| **Unitários (`unit`)** | `npm run test:unit` | Testes 100% offline para `DeviceVault` (PBKDF2 + AES-GCM-256), `MnemonicVault`, `bip39Wallet` (SEP-0005), `PriceOracleService` (fallback em 4 camadas), Provedores de Depósito, Sanitização de Logs e pacotes do monorepo. |
+| **Integração (`integration`)** | `npm run test:integration` | Testes determinísticos de máquinas de estado e protocolos Stellar (SEP-10/SEP-24), Pix On/Off-Ramp (Woovi) e validação de carteiras. |
+| **On-Chain (`onchain`)** | `npm run test:onchain` | Testes reais na Stellar Testnet e Friendbot (`tests/onchain/`), executados no workflow noturno. |
+
+Consulte [docs/qa/TEST_HARDENING_PLAN.md](docs/qa/TEST_HARDENING_PLAN.md) e [docs/qa/PERSONAS.md](docs/qa/PERSONAS.md) para o plano completo e as 5 personas de validação.
 
 ---
 

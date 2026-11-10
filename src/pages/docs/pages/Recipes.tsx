@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\Recipes.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/Recipes.tsx
+ * @description Página de documentação interativa (Recipes) do portal de desenvolvedores WalletNow OS (exporta: Recipes).
  */
 /**
  * WalletNow Developer Portal — Recipes

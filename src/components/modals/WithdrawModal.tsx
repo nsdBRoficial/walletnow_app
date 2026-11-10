@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\WithdrawModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/WithdrawModal.tsx
+ * @description Modal interativo React (WithdrawModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: WithdrawModal).
  */
 import { X, ArrowRight, Loader2, CheckCircle2, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';

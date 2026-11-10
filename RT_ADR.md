@@ -1,4 +1,4 @@
-<!-- @module RT_ADR.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module RT_ADR.md | Documentação técnica e especificação: Relatório Técnico e ADR - WalletNow (Estado Atual da Main). -->
 
 # Relatório Técnico e ADR - WalletNow (Estado Atual da Main)
 

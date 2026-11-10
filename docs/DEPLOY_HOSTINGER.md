@@ -1,4 +1,4 @@
-<!-- @module docs\DEPLOY_HOSTINGER.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/DEPLOY_HOSTINGER.md | Documentação técnica e especificação: Deploy na Hostinger (Subpastas ou Raiz). -->
 
 # Deploy na Hostinger (Subpastas ou Raiz)
 

@@ -1,5 +1,5 @@
--- @module supabase\migrations\00007_create_mainnet_funding_audit.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00007_create_mainnet_funding_audit.sql
+-- @description Migração PostgreSQL/Supabase (00007_create_mainnet_funding_audit) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- Migration: 00007_create_mainnet_funding_audit.sql
 -- Tabela para auditoria rigorosa de funding na MAINNET (trava dupla anti-spam)

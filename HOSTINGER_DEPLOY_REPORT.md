@@ -1,4 +1,4 @@
-<!-- @module HOSTINGER_DEPLOY_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module HOSTINGER_DEPLOY_REPORT.md | Documentação técnica e especificação: 🚀 RELATÓRIO DE INTEGRIDADE E DEPLOY (HOSTINGER V0.9). -->
 
 # 🚀 RELATÓRIO DE INTEGRIDADE E DEPLOY (HOSTINGER V0.9)
 

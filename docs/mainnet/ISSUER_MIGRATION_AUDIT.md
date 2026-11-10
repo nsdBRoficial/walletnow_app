@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\ISSUER_MIGRATION_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/ISSUER_MIGRATION_AUDIT.md | Documentação técnica e especificação: WalletNow — Issuer Migration Audit. -->
 
 # WalletNow — Issuer Migration Audit
 

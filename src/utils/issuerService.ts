@@ -1,6 +1,6 @@
 /**
- * @module src\utils\issuerService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/utils/issuerService.ts
+ * @description Utilitário técnico (issuerService) para validação, formatação, criptografia ou telemetria sanitizada (exporta: IssuerService).
  */
 import { supabase } from '../lib/supabase';
 import { Logger } from './productionLogger';

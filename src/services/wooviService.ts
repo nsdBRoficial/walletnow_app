@@ -1,6 +1,7 @@
 /**
- * @module src\services\wooviService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/wooviService.ts
+ * @description Gateway PIX (Woovi / OpenPix) com máquina de estados determinística em modo Mock
+ * e integração HTTP real para criação de cobranças EMV, consulta de status e saques fiduciários.
  */
 /**
  * Woovi Gateway Service (PIX / OpenPix)
@@ -55,10 +56,13 @@ class WooviSDK {
   private isMockMode: boolean;
 
   constructor() {
-    this.isMockMode = !WOOVI_APP_ID || WOOVI_APP_ID === '';
+    const isTestEnv = Boolean((import.meta as any).env?.VITEST || (typeof process !== 'undefined' && process.env?.VITEST));
+    this.isMockMode = isTestEnv || !WOOVI_APP_ID || WOOVI_APP_ID === '';
     
     if (this.isMockMode) {
-      console.warn('⚠️ [Woovi-Audit] Iniciado em MODO MOCK. Motivo: VITE_WOOVI_APP_ID ausente ou vazio.');
+      if (!isTestEnv) {
+        console.warn('⚠️ [Woovi-Audit] Iniciado em MODO MOCK. Motivo: VITE_WOOVI_APP_ID ausente ou vazio.');
+      }
     } else {
       console.info('✅ [Woovi-Audit] Gateway Woovi inicializado em modo REAL.');
     }

@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\OnChainSendModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/OnChainSendModal.tsx
+ * @description Modal interativo React (OnChainSendModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: OnChainSendModal).
  */
 import { X, Fingerprint, CheckCircle2, Loader2, Send } from 'lucide-react';
 import { useState } from 'react';

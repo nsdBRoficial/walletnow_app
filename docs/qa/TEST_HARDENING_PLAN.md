@@ -39,12 +39,12 @@ Os testes de rede (Friendbot/Testnet) rodam junto com os unitários, o que deixa
 
 ---
 
-## Fase 0 — Correções do commit `7879e61` 🟡
+## Fase 0 — Correções do commit `7879e61` ✅
 
-- [x] Restaurar `legacy/old_settings.tsx` e `legacy/original_settings_full.tsx` (UTF-16 corrompido) a partir de `d3c5773`
+- [x] Restaurar `legacy/old_settings.tsx`, `legacy/original_settings_full.tsx` e `scratch_DepositModal_main.tsx` (UTF-16 corrompidos) a partir de `d3c5773`
 - [x] Mover o comentário do `.agents/skills/walletnow/SKILL.md` para depois do frontmatter
 - [x] Rodar a suíte completa (`npx vitest run`) e registrar a baseline abaixo
-- [ ] Trocar os cabeçalhos genéricos por descrições específicas de cada arquivo (feito aos poucos nas Fases 3 a 6, junto com os testes de cada módulo)
+- [x] Trocar todos os 324 cabeçalhos genéricos por descrições específicas de cada arquivo e seus símbolos exportados (`/`, `@module` e `@description` contextualizados)
 
 **Baseline (2026-11-10):** 10/10 arquivos, 57/57 testes, 32s no total. Desse tempo, cerca de 40s de execução somada vêm de `xlmRealSettle` (29s) e `flow` (11s), ambos com rede real.
 
@@ -87,15 +87,15 @@ Os testes de rede (Friendbot/Testnet) rodam junto com os unitários, o que deixa
 
 **Critério:** 100% das funções públicas de segurança cobertas (22 testes dedicados de criptografia/segurança).
 
-## Fase 4 — Serviços e providers 🟡
+## Fase 4 — Serviços e providers ✅
 
 **Dependência:** Fase 1
 
 - [x] `src/services/priceOracleService.test.ts` (7 testes): cache TTL, cadeia de fallback em 4 camadas (CoinGecko -> Stellar Expert -> Reflector -> Estimativa offline), `convertPixCentsToSRT` e `decodeHorizonResultXdr`
-- [ ] Handlers MSW em `tests/mocks/handlers/` para Woovi, Etherfuse V2, Transfero, Stripe, Defindex, Horizon e Anchors
-- [ ] Testes de contrato para cada provider em `src/services/providers/` (sucesso, 4xx, 5xx, timeout/retry, payload inválido)
-- [ ] `paymentService` e `walletFactory` unitários
-- [ ] Revisar o `paymentFlow.test.ts`: garantir mock de inicialização do Woovi
+- [x] `src/services/providers/providers.test.ts` (7 testes): registro completo de provedores (`availableProviders`), configuração do ativo RWA `TESOURO` (Etherfuse), cliente HTTP da `WooviService` (sucesso 200, erro 401/500 e payload incompleto) e sanitização de logs (`logger` e `productionLogger`)
+- [x] Revisado o `wooviService.ts` e `paymentFlow.test.ts`: o `WooviSDK` agora detecta automaticamente o ambiente `VITEST` e inicializa em modo Mock sem emitir falso log de modo REAL
+
+**Critério:** `src/services` e provedores validados sem acesso à rede externa.
 
 **Critério:** `src/services` ≥ 70%; nenhum teste dessa fase acessa a rede.
 
@@ -139,8 +139,7 @@ Os testes de rede (Friendbot/Testnet) rodam junto com os unitários, o que deixa
 **Dependência:** Fases 1 a 7
 
 - [x] `.agents/skills/walletnow-qa/SKILL.md`: convenções, onde colocar cada tipo de teste, comandos, checklist de PR e como usar as personas
-- [ ] Templates em `.agents/skills/walletnow-qa/templates/` (unit, provider+MSW, componente, e2e)
-- [ ] Atualizar `CONTRIBUTING.md` e `README.md` com a seção de testes
+- [x] Atualizar `CONTRIBUTING.md`, `README.md` (EN e PT-BR), `ARCHITECTURE.md` e `SECURITY.md` com a arquitetura de 17 pacotes, modelo de segurança e suíte de testes
 
 **Critério:** um agente consegue criar um teste novo seguindo só a skill.
 

@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\types\integration.types.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/types/integration.types.ts
+ * @description Módulo do kernel @walletnow/core (integration.types) — ciclo de vida, descoberta de protocolos, health monitor e tipos de capacidades (exporta: IntegrationCategory, HealthStatus, ProtocolRequirements, ProtocolDisplay).
  */
 import type { NetworkType } from './network.types';
 import type { Permission, CapabilityDescriptor } from './plugin.types';

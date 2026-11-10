@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\SignerError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/SignerError.ts
+ * @description Classe de erro tipada (SignerError) da hierarquia de exceções do núcleo @walletnow/core (exporta: SignerError).
  */
 import { WalletNowError } from './WalletNowError.js';
 export class SignerError extends WalletNowError {

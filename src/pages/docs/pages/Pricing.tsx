@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\Pricing.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/Pricing.tsx
+ * @description Página de documentação interativa (Pricing) do portal de desenvolvedores WalletNow OS (exporta: Pricing).
  */
 /**
  * WalletNow Developer Portal — Pricing

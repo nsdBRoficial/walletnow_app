@@ -1,6 +1,6 @@
 /**
  * @module vite.config.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @description Módulo vite.config.ts do ecossistema WalletNow OS.
  */
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';

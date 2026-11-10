@@ -1,6 +1,6 @@
 /**
- * @module packages\testing\src\FakeProviderRegistry.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/testing/src/FakeProviderRegistry.ts
+ * @description Fakes e utilitários de teste (@walletnow/testing - FakeProviderRegistry) para validação determinística em memória (exporta: makeFakeProvider, FakeProviderRegistry).
  */
 /**
  * @walletnow/testing — FakeProviderRegistry

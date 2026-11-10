@@ -1,6 +1,6 @@
 /**
- * @module packages\testing\src\FakeIdentityEngine.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/testing/src/FakeIdentityEngine.ts
+ * @description Fakes e utilitários de teste (@walletnow/testing - FakeIdentityEngine) para validação determinística em memória (exporta: FAKE_PUBLIC_KEY, FAKE_IDENTITY_ID, FakeIdentityEngine).
  */
 /**
  * @packageDocumentation

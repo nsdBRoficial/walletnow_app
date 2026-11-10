@@ -1,6 +1,6 @@
 /**
- * @module src\hooks\useCountUp.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/hooks/useCountUp.ts
+ * @description Hook customizado React (useCountUp) para encapsulamento de lógica reativa e integração com o protocolo (exporta: useCountUp).
  */
 import { useState, useEffect } from 'react';
 

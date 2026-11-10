@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\MULTI_ACCOUNT_ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/MULTI_ACCOUNT_ARCHITECTURE.md | Documentação técnica e especificação: Relatório de Arquitetura Multi-Conta e Isolamento (WalletNow). -->
 
 # Relatório de Arquitetura Multi-Conta e Isolamento (WalletNow)
 **Data:** 28 de Maio de 2026

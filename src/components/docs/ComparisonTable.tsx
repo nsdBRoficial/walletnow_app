@@ -1,6 +1,6 @@
 /**
- * @module src\components\docs\ComparisonTable.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/docs/ComparisonTable.tsx
+ * @description Componente de interface do portal de documentação técnica e TestnetKit (ComparisonTable) (exporta: ComparisonTable).
  */
 /**
  * WalletNow Developer Portal — ComparisonTable

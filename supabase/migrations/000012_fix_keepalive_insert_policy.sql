@@ -1,5 +1,5 @@
--- @module supabase\migrations\000012_fix_keepalive_insert_policy.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/000012_fix_keepalive_insert_policy.sql
+-- @description Migração PostgreSQL/Supabase (000012_fix_keepalive_insert_policy) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- ==============================================================================
 -- MIGRAÇÃO DE SEGURANÇA: 000012_fix_keepalive_insert_policy.sql

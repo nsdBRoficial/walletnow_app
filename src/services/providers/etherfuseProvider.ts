@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\etherfuseProvider.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/etherfuseProvider.ts
+ * @description Adaptador de integração Etherfuse RWA (etherfuseProvider) — KYC programático, trustlines e ordens de Tesouro Direto Tokenizado via PIX (exporta: EtherfuseProvider, etherfuseProvider).
  */
 import { BaseDepositProvider, ProviderStatus } from './depositProvider';
 

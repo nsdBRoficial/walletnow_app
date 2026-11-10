@@ -1,6 +1,6 @@
 /**
- * @module src\services\kycValidatorService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/kycValidatorService.ts
+ * @description Serviço de domínio e integração (kycValidatorService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: KycValidationRequest, KycValidationResult, KycValidationResponse, KycValidatorService).
  */
 import { supabase } from '../lib/supabase';
 import { Logger } from '../utils/productionLogger';

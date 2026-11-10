@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\SECURITY_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/SECURITY_CHECKLIST.md | Documentação técnica e especificação: WalletNow — Security Checklist (Pré Go-Live Mainnet). -->
 
 # WalletNow — Security Checklist (Pré Go-Live Mainnet)
 

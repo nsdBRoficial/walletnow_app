@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\KEY_MANAGEMENT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/KEY_MANAGEMENT.md | Documentação técnica e especificação: WalletNow — Key Management & Treasury Architecture. -->
 
 # WalletNow — Key Management & Treasury Architecture
 

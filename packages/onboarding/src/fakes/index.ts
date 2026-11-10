@@ -1,6 +1,6 @@
 /**
- * @module packages\onboarding\src\fakes\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/onboarding/src/fakes/index.ts
+ * @description Módulo de onboarding invisível (@walletnow/onboarding - index) — orquestração de identidade, carteira, patrocínio Gasless e sessão (exporta: FakeGasStation, FakeTestnetFaucet, FakeSessionPort, FakeAnalyticsPort).
  */
 /**
  * @walletnow/onboarding — Fake Ports (para Testes)

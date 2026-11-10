@@ -95,3 +95,4 @@ describe('DeviceVault — Criptografia Local AES-GCM-256 & PBKDF2', () => {
     expect(DeviceVault.getVolatileSecret()).toBeNull();
   });
 });
+

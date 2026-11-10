@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\TestnetKit.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/TestnetKit.tsx
+ * @description Página de documentação interativa (TestnetKit) do portal de desenvolvedores WalletNow OS (exporta: TestnetKit).
  */
 /**
  * @packageDocumentation

@@ -1,6 +1,6 @@
 /**
- * @module src\contexts\WalletContext.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/contexts/WalletContext.tsx
+ * @description Contexto React (WalletContext) para gerenciamento de estado reativo e provisão de serviços na árvore de componentes (exporta: WalletAccount, WalletProvider, useWallet).
  */
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';

@@ -1,6 +1,6 @@
 /**
- * @module supabase\functions\kyc-validator\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module supabase/functions/kyc-validator/index.ts
+ * @description Supabase Edge Function (Deno Runtime) 'kyc-validator' — processamento serverless autenticado e integração segura.
  */
 /**
  * kyc-validator — Supabase Edge Function

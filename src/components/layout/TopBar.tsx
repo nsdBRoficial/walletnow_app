@@ -1,6 +1,6 @@
 /**
- * @module src\components\layout\TopBar.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/layout/TopBar.tsx
+ * @description Componente visual React (TopBar) da interface de carteira autocustodial WalletNow (exporta: TopBar).
  */
 /**
  * TopBar — Header principal da aplicação.

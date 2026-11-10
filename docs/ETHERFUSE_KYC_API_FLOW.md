@@ -1,4 +1,4 @@
-<!-- @module docs\ETHERFUSE_KYC_API_FLOW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/ETHERFUSE_KYC_API_FLOW.md | Documentação técnica e especificação: Fluxo de KYC Programático - Etherfuse API. -->
 
 # Fluxo de KYC Programático - Etherfuse API
 

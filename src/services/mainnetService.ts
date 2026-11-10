@@ -1,6 +1,6 @@
 /**
- * @module src\services\mainnetService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/mainnetService.ts
+ * @description Serviço de domínio e integração (mainnetService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: MainnetService).
  */
 import { supabase } from '../lib/supabase';
 import { Logger } from '../utils/productionLogger';

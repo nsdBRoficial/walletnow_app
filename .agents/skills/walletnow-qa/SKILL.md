@@ -49,3 +49,4 @@ Consulte [docs/qa/PERSONAS.md](../../../docs/qa/PERSONAS.md) ao desenhar fluxos 
 3. **Carla (Recorrente):** Login → Saque Pix → Histórico → Logout seguro.
 4. **Diego (Recuperação):** Troca de dispositivo → Seed BIP39 SEP-0005 (`m/44'/148'/0'`) → Mesma chave pública `G...`.
 5. **Eva (Adversária):** Adulteração de ciphertext AES-GCM, chaves inválidas, valores negativos e isolamento entre usuários.
+

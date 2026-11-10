@@ -1,6 +1,6 @@
 /**
- * @module packages\storage\src\InMemoryStorage.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/storage/src/InMemoryStorage.ts
+ * @description Adaptador de armazenamento seguro (@walletnow/storage - InMemoryStorage) com isolamento por namespace (exporta: InMemoryStorage).
  */
 /**
  * @walletnow/storage — InMemoryStorage

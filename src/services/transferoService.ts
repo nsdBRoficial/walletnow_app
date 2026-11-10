@@ -1,6 +1,6 @@
 /**
- * @module src\services\transferoService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/transferoService.ts
+ * @description Serviço de domínio e integração (transferoService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: TransferoService).
  */
 
 /**

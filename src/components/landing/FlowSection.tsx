@@ -1,6 +1,6 @@
 /**
- * @module src\components\landing\FlowSection.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/landing/FlowSection.tsx
+ * @description Seção visual da Landing Page (FlowSection) com suporte a internacionalização (PT/EN/ES) e tema adaptativo (exporta: FlowSection).
  */
 import { useState, useEffect, useRef } from 'react';
 import { Fingerprint, Wallet, QrCode, CheckCircle2, Coins } from 'lucide-react';

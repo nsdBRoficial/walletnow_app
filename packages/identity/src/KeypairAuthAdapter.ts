@@ -1,6 +1,6 @@
 /**
- * @module packages\identity\src\KeypairAuthAdapter.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/identity/src/KeypairAuthAdapter.ts
+ * @description Motor de identidade e autenticação (@walletnow/identity - KeypairAuthAdapter) com suporte a sessões e adaptadores de chave (exporta: KeypairAuthAdapter).
  */
 import type { 
   IAuthAdapter, 

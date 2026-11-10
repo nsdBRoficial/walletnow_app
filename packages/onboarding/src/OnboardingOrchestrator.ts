@@ -1,6 +1,6 @@
 /**
- * @module packages\onboarding\src\OnboardingOrchestrator.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/onboarding/src/OnboardingOrchestrator.ts
+ * @description Módulo de onboarding invisível (@walletnow/onboarding - OnboardingOrchestrator) — orquestração de identidade, carteira, patrocínio Gasless e sessão (exporta: OnboardingOrchestrator).
  */
 /**
  * @walletnow/onboarding — OnboardingOrchestrator

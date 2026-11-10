@@ -1,6 +1,6 @@
 /**
  * @module check_balances.js
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @description Módulo check_balances.js do ecossistema WalletNow OS.
  */
 import { createClient } from '@supabase/supabase-js';
 import fetch from 'node-fetch';

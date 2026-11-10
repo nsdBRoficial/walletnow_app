@@ -103,3 +103,4 @@ describe('fiatConversion & decodeHorizonResultXdr — Utilitários Financeiros',
     expect((bad as { error: string }).error).toContain('Falha ao decodificar result_xdr');
   });
 });
+

@@ -1,6 +1,6 @@
 /**
- * @module src\i18n\docsTranslations.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/i18n/docsTranslations.ts
+ * @description Dicionário de traduções multi-idioma (PT-BR, EN, ES) do módulo docsTranslations (exporta: DocsLang, docsTranslations, DocsTranslations).
  */
 /**
  * WalletNow Developer Portal — Translations

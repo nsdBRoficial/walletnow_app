@@ -1,5 +1,5 @@
--- @module supabase\migrations\000011_add_correlation_id.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/000011_add_correlation_id.sql
+-- @description Migração PostgreSQL/Supabase (000011_add_correlation_id) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- ==============================================================================
 -- MIGRAÇÃO DE INTEGRIDADE: 000011_add_correlation_id.sql

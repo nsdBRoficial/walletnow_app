@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\wallet.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/wallet.ts
+ * @description Contratos canônicos, interfaces e tipos universais (wallet) do pacote @walletnow/contracts (exporta: WalletId, AccountId, WalletCustodyType, StellarWallet).
  */
 /**
  * @walletnow/contracts — Wallet Contracts

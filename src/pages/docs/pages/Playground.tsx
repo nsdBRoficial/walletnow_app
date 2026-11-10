@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\Playground.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/Playground.tsx
+ * @description Página de documentação interativa (Playground) do portal de desenvolvedores WalletNow OS (exporta: Playground).
  */
 /**
  * WalletNow Developer Portal — Live Playground

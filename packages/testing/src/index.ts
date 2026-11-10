@@ -1,6 +1,6 @@
 /**
- * @module packages\testing\src\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/testing/src/index.ts
+ * @description Fakes e utilitários de teste (@walletnow/testing - index) para validação determinística em memória.
  */
 /**
  * @walletnow/testing — Public API Barrel

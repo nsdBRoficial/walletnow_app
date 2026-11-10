@@ -1,4 +1,4 @@
-<!-- @module docs\caatinga.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/caatinga.md | Documentação técnica e especificação: Parceria de Testes: Caatinga Soroban Toolchain. -->
 
 # Parceria de Testes: Caatinga Soroban Toolchain
 

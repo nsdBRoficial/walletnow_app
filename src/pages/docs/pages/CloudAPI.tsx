@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\CloudAPI.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/CloudAPI.tsx
+ * @description Página de documentação interativa (CloudAPI) do portal de desenvolvedores WalletNow OS (exporta: CloudAPI).
  */
 /**
  * WalletNow Developer Portal — Cloud API

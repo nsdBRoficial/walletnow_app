@@ -1,6 +1,6 @@
 /**
- * @module src\components\layout\RootLayout.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/layout/RootLayout.tsx
+ * @description Componente visual React (RootLayout) da interface de carteira autocustodial WalletNow (exporta: RootLayout).
  */
 import { Outlet } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-<!-- @module docs\DEPOSIT_PROVIDER_ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/DEPOSIT_PROVIDER_ARCHITECTURE.md | Documentação técnica e especificação: Deposit Provider Architecture. -->
 
 # Deposit Provider Architecture
 

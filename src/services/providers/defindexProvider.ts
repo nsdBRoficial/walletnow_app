@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\defindexProvider.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/defindexProvider.ts
+ * @description Provedor de depósito/liquidez (defindexProvider) conectado ao registro central de rampas do WalletNow (exporta: defindexProvider).
  */
 
 import { IDepositProvider } from './depositProvider';

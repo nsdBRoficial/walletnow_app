@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-soroswap\src\constants\tokens.testnet.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-soroswap/src/constants/tokens.testnet.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-soroswap - tokens.testnet) integrado ao IntegrationEngine (exporta: XLM_TESTNET, TESTNET_TOKENS, TESTNET_TOKEN_MAP).
  */
 /**
  * @walletnow/plugin-soroswap — Tokens conhecidos na Testnet

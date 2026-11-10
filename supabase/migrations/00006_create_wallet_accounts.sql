@@ -1,5 +1,5 @@
--- @module supabase\migrations\00006_create_wallet_accounts.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00006_create_wallet_accounts.sql
+-- @description Migração PostgreSQL/Supabase (00006_create_wallet_accounts) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- supabase/migrations/00006_create_wallet_accounts.sql
 

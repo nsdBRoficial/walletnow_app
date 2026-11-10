@@ -1,4 +1,4 @@
-<!-- @module docs\ETHERFUSE_REAL_INTEGRATION_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/ETHERFUSE_REAL_INTEGRATION_AUDIT.md | Documentação técnica e especificação: Etherfuse Real Integration Audit — WalletNow. -->
 
 # Etherfuse Real Integration Audit — WalletNow
 

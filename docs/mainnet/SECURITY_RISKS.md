@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\SECURITY_RISKS.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/SECURITY_RISKS.md | Documentação técnica e especificação: WalletNow — Security Risks Register & Auditoria de Segurança. -->
 
 # WalletNow — Security Risks Register & Auditoria de Segurança
 

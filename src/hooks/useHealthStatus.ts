@@ -1,6 +1,6 @@
 /**
- * @module src\hooks\useHealthStatus.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/hooks/useHealthStatus.ts
+ * @description Hook customizado React (useHealthStatus) para encapsulamento de lógica reativa e integração com o protocolo (exporta: UseHealthStatusResult, useHealthStatus).
  */
 /**
  * useHealthStatus — Hook para monitoramento de saúde de um protocolo.

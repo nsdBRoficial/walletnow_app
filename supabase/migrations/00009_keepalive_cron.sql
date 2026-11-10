@@ -1,5 +1,5 @@
--- @module supabase\migrations\00009_keepalive_cron.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00009_keepalive_cron.sql
+-- @description Migração PostgreSQL/Supabase (00009_keepalive_cron) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- ============================================================
 -- Migration: 00009_keepalive_cron

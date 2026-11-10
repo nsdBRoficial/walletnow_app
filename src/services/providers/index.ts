@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/index.ts
+ * @description Registro centralizado dos provedores de depósito (Woovi, Stellar TestAnchor, Etherfuse V2, Defindex, Stripe e Etherfuse V1).
  */
 export * from './depositProvider';
 export * from './wooviProvider';

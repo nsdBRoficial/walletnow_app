@@ -1,4 +1,4 @@
-<!-- @module docs\FINAL_QA_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/FINAL_QA_CHECKLIST.md | Documentação técnica e especificação: WalletNow: Final QA Checklist. -->
 
 # WalletNow: Final QA Checklist
 

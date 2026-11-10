@@ -1,6 +1,6 @@
 /**
- * @module supabase\functions\mainnet-funding\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module supabase/functions/mainnet-funding/index.ts
+ * @description Supabase Edge Function (Deno Runtime) 'mainnet-funding' — processamento serverless autenticado e integração segura.
  */
 /**
  * mainnet-funding — Supabase Edge Function (PRODUÇÃO)

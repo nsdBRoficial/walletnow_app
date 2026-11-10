@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\DepositModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/DepositModal.tsx
+ * @description Modal interativo React (DepositModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: DepositModal).
  */
 import { X, Copy, QrCode, CheckCircle2, Loader2, Zap, ExternalLink, CreditCard, Globe, ChevronRight, ShieldCheck, AlertCircle, TrendingUp, Wallet, RefreshCw } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';

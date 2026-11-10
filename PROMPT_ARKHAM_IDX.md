@@ -1,4 +1,4 @@
-<!-- @module PROMPT_ARKHAM_IDX.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module PROMPT_ARKHAM_IDX.md | Documentação técnica e especificação: 🤖 Prompt de Handoff para Arkham IDX (Atualizado v0.7). -->
 
 # 🤖 Prompt de Handoff para Arkham IDX (Atualizado v0.7)
 

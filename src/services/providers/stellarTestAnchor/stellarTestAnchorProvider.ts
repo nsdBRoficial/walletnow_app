@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\stellarTestAnchor\stellarTestAnchorProvider.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/stellarTestAnchor/stellarTestAnchorProvider.ts
+ * @description Provedor Stellar Test Anchor (stellarTestAnchorProvider) — autenticação SEP-10, rampas interativas SEP-24 e liquidação XLM/SRT (exporta: StellarNativeXlmProvider, stellarTestAnchorProvider).
  */
 /**
  * @packageDocumentation

@@ -1,6 +1,6 @@
 /**
- * @module src\components\landing\v2\PublicGoodsSection.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/landing/v2/PublicGoodsSection.tsx
+ * @description Seção visual da Landing Page (PublicGoodsSection) com suporte a internacionalização (PT/EN/ES) e tema adaptativo (exporta: PublicGoodsSection).
  */
 import React from 'react';
 import { Github } from 'lucide-react';

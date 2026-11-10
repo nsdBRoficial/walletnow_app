@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-portfolio\src\PortfolioPlugin.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-portfolio/src/PortfolioPlugin.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-portfolio - PortfolioPlugin) integrado ao IntegrationEngine (exporta: PortfolioPlugin).
  */
 import type { 
   IPlugin, 

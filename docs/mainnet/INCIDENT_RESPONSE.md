@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\INCIDENT_RESPONSE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/INCIDENT_RESPONSE.md | Documentação técnica e especificação: WalletNow — Incident Response Playbook. -->
 
 # WalletNow — Incident Response Playbook
 

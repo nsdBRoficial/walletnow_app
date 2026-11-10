@@ -1,6 +1,6 @@
 /**
- * @module packages\storage\src\LocalStorageAdapter.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/storage/src/LocalStorageAdapter.ts
+ * @description Adaptador de armazenamento seguro (@walletnow/storage - LocalStorageAdapter) com isolamento por namespace (exporta: LocalStorageAdapter).
  */
 /**
  * @packageDocumentation

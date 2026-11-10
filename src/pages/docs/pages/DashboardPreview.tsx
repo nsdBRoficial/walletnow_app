@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\DashboardPreview.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/DashboardPreview.tsx
+ * @description Página de documentação interativa (DashboardPreview) do portal de desenvolvedores WalletNow OS (exporta: DashboardPreview).
  */
 /**
  * WalletNow Developer Portal — Dashboard Preview (mockado)

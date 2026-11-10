@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\os\ProtocolStore.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/os/ProtocolStore.ts
+ * @description Módulo do kernel @walletnow/core (ProtocolStore) — ciclo de vida, descoberta de protocolos, health monitor e tipos de capacidades (exporta: InstallationState, StoreEntry, ProtocolStore).
  */
 import type { ProtocolManifest } from '../types/integration.types';
 

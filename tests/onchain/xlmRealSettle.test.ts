@@ -1,6 +1,6 @@
 /**
- * @module tests\integration\xlmRealSettle.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/onchain/xlmRealSettle.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de xlmRealSettle.
  */
 import { describe, it } from 'vitest';
 import { StellarTestAnchorService } from '../../src/services/providers/stellarTestAnchor/stellarTestAnchorService';

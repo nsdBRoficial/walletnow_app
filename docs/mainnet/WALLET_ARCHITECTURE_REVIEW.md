@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\WALLET_ARCHITECTURE_REVIEW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/WALLET_ARCHITECTURE_REVIEW.md | Documentação técnica e especificação: WalletNow — Wallet Architecture Review. -->
 
 # WalletNow — Wallet Architecture Review
 

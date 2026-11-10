@@ -1,6 +1,6 @@
 /**
- * @module src\components\dashboard\PortfolioHero.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/dashboard/PortfolioHero.tsx
+ * @description Componente visual React (PortfolioHero) da interface de carteira autocustodial WalletNow (exporta: PortfolioHero).
  */
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';

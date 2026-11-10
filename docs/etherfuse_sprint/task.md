@@ -1,4 +1,4 @@
-<!-- @module docs\etherfuse_sprint\task.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/etherfuse_sprint/task.md | Documentação técnica e especificação: task. -->
 
 - [x] Fase 1 — Auditoria e Documentação
   - [x] Criar `docs/ETHERFUSE_KYC_API_FLOW.md` detalhando o fluxo programático, endpoints e payload.

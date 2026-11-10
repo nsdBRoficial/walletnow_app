@@ -1,6 +1,6 @@
 /**
  * @module webhook_server.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @description Módulo webhook_server.ts do ecossistema WalletNow OS.
  */
 import express from 'express';
 import cors from 'cors';

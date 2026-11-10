@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\RLS_VALIDATION_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/RLS_VALIDATION_REPORT.md | Documentação técnica e especificação: WalletNow — RLS Validation Report. -->
 
 # WalletNow — RLS Validation Report
 

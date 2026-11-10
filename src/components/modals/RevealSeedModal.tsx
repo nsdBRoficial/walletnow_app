@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\RevealSeedModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/RevealSeedModal.tsx
+ * @description Modal interativo React (RevealSeedModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: RevealSeedModal).
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Shield, Eye, EyeOff, Copy, CheckCircle, AlertTriangle, X, Lock } from 'lucide-react';

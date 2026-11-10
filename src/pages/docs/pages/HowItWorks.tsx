@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\HowItWorks.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/HowItWorks.tsx
+ * @description Página de documentação interativa (HowItWorks) do portal de desenvolvedores WalletNow OS (exporta: HowItWorks).
  */
 /**
  * WalletNow Developer Portal — How It Works

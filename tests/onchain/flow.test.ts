@@ -1,6 +1,6 @@
 /**
- * @module tests\integration\flow.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/onchain/flow.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de flow.
  */
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { WalletFactory } from '../../src/services/walletFactory';

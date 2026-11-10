@@ -1,6 +1,6 @@
 /**
- * @module packages\providers\provider-etherfuse\src\EtherfuseV2ApiService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/providers/provider-etherfuse/src/EtherfuseV2ApiService.ts
+ * @description Infraestrutura de provedores (@walletnow/providers - EtherfuseV2ApiService) — registro, barramento de eventos e adaptadores externos (exporta: EfV2HttpError, EtherfuseApiServiceConfig, createEtherfuseV2ApiService, EtherfuseV2ApiService).
  */
 /**
  * @walletnow/provider-etherfuse — EtherfuseV2ApiService

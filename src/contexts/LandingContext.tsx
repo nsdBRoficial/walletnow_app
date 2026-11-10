@@ -1,6 +1,6 @@
 /**
- * @module src\contexts\LandingContext.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/contexts/LandingContext.tsx
+ * @description Contexto React (LandingContext) para gerenciamento de estado reativo e provisão de serviços na árvore de componentes (exporta: Lang, Theme, LandingProvider, useLanding).
  */
 /**
  * LandingContext

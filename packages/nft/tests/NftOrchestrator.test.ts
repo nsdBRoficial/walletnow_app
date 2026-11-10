@@ -1,6 +1,6 @@
 /**
- * @module packages\nft\tests\NftOrchestrator.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/nft/tests/NftOrchestrator.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de NftOrchestrator.
  */
 import { describe, it, expect, vi } from 'vitest';
 import { NftOrchestrator } from '../src/NftOrchestrator.js';

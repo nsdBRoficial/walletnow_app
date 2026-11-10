@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\ValidationError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/ValidationError.ts
+ * @description Classe de erro tipada (ValidationError) da hierarquia de exceções do núcleo @walletnow/core (exporta: ValidationError).
  */
 import { WalletNowError } from './WalletNowError.js';
 export class ValidationError extends WalletNowError {

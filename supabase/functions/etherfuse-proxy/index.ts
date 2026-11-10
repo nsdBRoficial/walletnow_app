@@ -1,6 +1,6 @@
 /**
- * @module supabase\functions\etherfuse-proxy\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module supabase/functions/etherfuse-proxy/index.ts
+ * @description Supabase Edge Function (Deno Runtime) 'etherfuse-proxy' — processamento serverless autenticado e integração segura.
  */
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 

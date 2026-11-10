@@ -1,6 +1,6 @@
 /**
- * @module src\components\layout\AppShell.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/layout/AppShell.tsx
+ * @description Componente visual React (AppShell) da interface de carteira autocustodial WalletNow (exporta: AppShell).
  */
 /**
  * AppShell — Container principal do app autenticado.

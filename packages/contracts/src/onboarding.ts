@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\onboarding.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/onboarding.ts
+ * @description Contratos canônicos, interfaces e tipos universais (onboarding) do pacote @walletnow/contracts (exporta: CreateUserParams, RestoreUserParams, SetupTrustlinesParams, UserOnboardingResult).
  */
 /**
  * @walletnow/contracts — Onboarding Contracts

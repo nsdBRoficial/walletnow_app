@@ -1,4 +1,4 @@
-<!-- @module docs\ETHERFUSE_V2_VALIDATED_FLOW.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/ETHERFUSE_V2_VALIDATED_FLOW.md | Documentação técnica e especificação: Etherfuse V2 — Fluxo Programático Validado: Diferenças e Implementação. -->
 
 # Etherfuse V2 — Fluxo Programático Validado: Diferenças e Implementação
 

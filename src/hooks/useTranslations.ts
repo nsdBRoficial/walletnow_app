@@ -1,6 +1,6 @@
 /**
- * @module src\hooks\useTranslations.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/hooks/useTranslations.ts
+ * @description Hook customizado React (useTranslations) para encapsulamento de lógica reativa e integração com o protocolo (exporta: useTranslations).
  */
 import { useState, useEffect } from 'react';
 import { landingTranslations, type LangKey } from '../i18n/landingTranslations';

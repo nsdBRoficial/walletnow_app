@@ -1,6 +1,6 @@
 /**
- * @module src\components\dashboard\OpportunityEngine.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/dashboard/OpportunityEngine.tsx
+ * @description Componente visual React (OpportunityEngine) da interface de carteira autocustodial WalletNow (exporta: OpportunityEngine).
  */
 /**
  * OpportunityEngine

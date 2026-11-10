@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\HUMAN_QA_CHECKLIST.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/HUMAN_QA_CHECKLIST.md | Documentação técnica e especificação: WalletNow — Plano de Testes e QA Humano (UAT). -->
 
 # WalletNow — Plano de Testes e QA Humano (UAT)
 

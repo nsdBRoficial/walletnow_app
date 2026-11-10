@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\PRIORITY_TASKS.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/PRIORITY_TASKS.md | Documentação técnica e especificação: WalletNow — Priority Tasks & Planejamento de Sprints. -->
 
 # WalletNow — Priority Tasks & Planejamento de Sprints
 

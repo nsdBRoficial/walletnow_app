@@ -1,6 +1,6 @@
 /**
- * @module src\components\system\AppErrorBoundary.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/system/AppErrorBoundary.tsx
+ * @description Componente visual React (AppErrorBoundary) da interface de carteira autocustodial WalletNow (exporta: AppErrorBoundary).
  */
 /**
  * @license

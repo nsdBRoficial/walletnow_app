@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\errors.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/errors.ts
+ * @description Contratos canônicos, interfaces e tipos universais (errors) do pacote @walletnow/contracts (exporta: WalletNowError, NotImplementedError, IdentityErrorCode, IdentityError).
  */
 /**
  * @packageDocumentation

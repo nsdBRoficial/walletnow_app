@@ -19,3 +19,4 @@ Em **Settings → Branches → Add branch protection rule** para `main`:
 1. Marcar **Require a pull request before merging**.
 2. Marcar **Require status checks to pass before merging**.
 3. Selecionar o check **`Lint, Test & Build`** (do workflow `WalletNow CI`).
+

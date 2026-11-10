@@ -1,6 +1,6 @@
 /**
- * @module src\contexts\DocsI18nContext.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/contexts/DocsI18nContext.tsx
+ * @description Contexto React (DocsI18nContext) para gerenciamento de estado reativo e provisão de serviços na árvore de componentes (exporta: DocsI18nProvider, useDocsI18n).
  */
 /**
  * WalletNow Developer Portal — i18n Context

@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\etherfuseV2\etherfusePersistenceService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/etherfuseV2/etherfusePersistenceService.ts
+ * @description Adaptador de integração Etherfuse RWA (etherfusePersistenceService) — KYC programático, trustlines e ordens de Tesouro Direto Tokenizado via PIX (exporta: EfV2PersistenceData, EtherfusePersistenceService).
  */
 export interface EfV2PersistenceData {
   version: number;

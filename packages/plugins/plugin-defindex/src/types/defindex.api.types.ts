@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-defindex\src\types\defindex.api.types.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-defindex/src/types/defindex.api.types.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-defindex - defindex.api.types) integrado ao IntegrationEngine (exporta: DefindexNetwork, DefindexHealthResponse, DefindexStrategyRaw, DefindexVaultAssetRaw).
  */
 /**
  * @walletnow/plugin-defindex — Types

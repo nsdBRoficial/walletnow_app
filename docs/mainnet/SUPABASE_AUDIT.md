@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\SUPABASE_AUDIT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/SUPABASE_AUDIT.md | Documentação técnica e especificação: WalletNow — Supabase Audit Report. -->
 
 # WalletNow — Supabase Audit Report
 

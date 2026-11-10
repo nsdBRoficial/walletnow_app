@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\storage.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/storage.ts
+ * @description Contratos canônicos, interfaces e tipos universais (storage) do pacote @walletnow/contracts (exporta: IStorage, ISecureStorage, StorageItemMetadata, IMemoryStorage).
  */
 /**
  * @walletnow/contracts — Storage Contracts

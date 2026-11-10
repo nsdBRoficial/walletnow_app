@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\RoadmapPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/RoadmapPage.tsx
+ * @description Página de documentação interativa (RoadmapPage) do portal de desenvolvedores WalletNow OS (exporta: RoadmapPage).
  */
 /**
  * WalletNow Developer Portal — Roadmap Page

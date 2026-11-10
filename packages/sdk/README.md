@@ -1,4 +1,4 @@
-<!-- @module packages\sdk\README.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module packages/sdk/README.md | Documentação técnica e especificação: @walletnow/sdk. -->
 
 # @walletnow/sdk
 

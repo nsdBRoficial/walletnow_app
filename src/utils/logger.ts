@@ -1,6 +1,6 @@
 /**
- * @module src\utils\logger.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/utils/logger.ts
+ * @description Utilitário de logging categorizado com redação automática ([REDACTED]) de segredos, chaves privadas e tokens.
  */
 /**
  * @license

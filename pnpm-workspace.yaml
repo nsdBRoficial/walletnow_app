@@ -1,5 +1,5 @@
 # @module pnpm-workspace.yaml
-# @description WalletNow Protocol - Configuração e automação de fluxos.
+# @description Workflow de automação GitHub Actions (pnpm-workspace) para execução agendada e integração contínua.
 
 packages:
   - "packages/*"

@@ -1,4 +1,4 @@
-<!-- @module docs\etherfuse_sprint\SPRINT_SUMMARY.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/etherfuse_sprint/SPRINT_SUMMARY.md | Documentação técnica e especificação: Resumo do Sprint: Investigação do Sandbox da Etherfuse. -->
 
 # Resumo do Sprint: Investigação do Sandbox da Etherfuse
 

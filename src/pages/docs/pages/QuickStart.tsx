@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\QuickStart.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/QuickStart.tsx
+ * @description Página de documentação interativa (QuickStart) do portal de desenvolvedores WalletNow OS (exporta: QuickStart).
  */
 /**
  * WalletNow Developer Portal — Quick Start

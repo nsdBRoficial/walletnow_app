@@ -1,5 +1,5 @@
--- @module supabase\migrations\001_sprint9_transfero_transactions.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/001_sprint9_transfero_transactions.sql
+-- @description Migração PostgreSQL/Supabase (001_sprint9_transfero_transactions) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- ==========================================
 -- SPRINT 9: MOTOR DE PAGAMENTOS (FIAT <-> CRYPTO)

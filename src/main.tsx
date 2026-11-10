@@ -1,6 +1,6 @@
 /**
- * @module src\main.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/main.tsx
+ * @description Módulo src/main.tsx do ecossistema WalletNow OS.
  */
 /**
  * @packageDocumentation

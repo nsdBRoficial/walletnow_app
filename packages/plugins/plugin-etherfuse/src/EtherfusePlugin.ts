@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-etherfuse\src\EtherfusePlugin.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-etherfuse/src/EtherfusePlugin.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-etherfuse - EtherfusePlugin) integrado ao IntegrationEngine (exporta: EtherfusePluginConfig, ETHERFUSE_MANIFEST, EtherfusePlugin).
  */
 /**
  * @walletnow/plugin-etherfuse — EtherfusePlugin

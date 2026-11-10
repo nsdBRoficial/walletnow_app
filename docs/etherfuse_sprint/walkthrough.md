@@ -1,4 +1,4 @@
-<!-- @module docs\etherfuse_sprint\walkthrough.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/etherfuse_sprint/walkthrough.md | Documentação técnica e especificação: Walkthrough — KYC Programático & Conta Bancária (Etherfuse). -->
 
 # Walkthrough — KYC Programático & Conta Bancária (Etherfuse)
 

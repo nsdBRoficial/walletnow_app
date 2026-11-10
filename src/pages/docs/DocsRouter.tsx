@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\DocsRouter.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/DocsRouter.tsx
+ * @description Página principal da aplicação (DocsRouter) — orquestração de estado, saldos Stellar e ações do usuário (exporta: DocsRouter).
  */
 /**
  * WalletNow Developer Portal — DocsRouter

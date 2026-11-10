@@ -1,6 +1,6 @@
 /**
- * @module src\config\stellarNetwork.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/config/stellarNetwork.ts
+ * @description Configuração de ambiente e parâmetros de rede Stellar/Demo (stellarNetwork) (exporta: StellarNetworkConfig, StellarAssetConfig, StellarNetwork).
  */
 /**
  * @packageDocumentation

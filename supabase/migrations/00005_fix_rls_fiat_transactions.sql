@@ -1,5 +1,5 @@
--- @module supabase\migrations\00005_fix_rls_fiat_transactions.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00005_fix_rls_fiat_transactions.sql
+-- @description Migração PostgreSQL/Supabase (00005_fix_rls_fiat_transactions) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- =============================================
 -- MIGRAÇÃO DE SEGURANÇA: Correção de RLS Permissiva

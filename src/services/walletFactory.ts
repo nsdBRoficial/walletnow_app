@@ -1,6 +1,6 @@
 /**
- * @module src\services\walletFactory.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/walletFactory.ts
+ * @description Serviço de domínio e integração (walletFactory) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: WalletFactory).
  */
 import { Keypair, TransactionBuilder, Asset, Operation, LiquidityPoolAsset } from '@stellar/stellar-sdk';
 import { supabase } from '../lib/supabase';

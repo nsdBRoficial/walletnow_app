@@ -1,6 +1,6 @@
 /**
- * @module src\components\ProtectedRoute.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/ProtectedRoute.tsx
+ * @description Componente visual React (ProtectedRoute) da interface de carteira autocustodial WalletNow (exporta: ProtectedRoute).
  */
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';

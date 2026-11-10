@@ -1,6 +1,6 @@
 /**
- * @module src\i18n\landingTranslations.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/i18n/landingTranslations.ts
+ * @description Dicionário de traduções multi-idioma (PT-BR, EN, ES) do módulo landingTranslations (exporta: LangKey, landingTranslations, LandingT).
  */
 export type LangKey = 'en' | 'pt' | 'es';
 

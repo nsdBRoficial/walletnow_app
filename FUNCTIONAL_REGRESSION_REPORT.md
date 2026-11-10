@@ -1,4 +1,4 @@
-<!-- @module FUNCTIONAL_REGRESSION_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module FUNCTIONAL_REGRESSION_REPORT.md | Documentação técnica e especificação: FUNCTIONAL REGRESSION REPORT — WalletNow RC2. -->
 
 # FUNCTIONAL REGRESSION REPORT — WalletNow RC2
 > Gerado em: 2026-06-23 | Sprint: Functional Recovery

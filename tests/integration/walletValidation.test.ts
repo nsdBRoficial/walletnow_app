@@ -1,6 +1,6 @@
 /**
- * @module tests\integration\walletValidation.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/integration/walletValidation.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de walletValidation.
  */
 import { describe, it, expect } from 'vitest';
 import { Keypair } from '@stellar/stellar-sdk';

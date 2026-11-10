@@ -1,6 +1,6 @@
 /**
- * @module src\components\landing\v2\WhyWeExistSection.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/landing/v2/WhyWeExistSection.tsx
+ * @description Seção visual da Landing Page (WhyWeExistSection) com suporte a internacionalização (PT/EN/ES) e tema adaptativo (exporta: WhyWeExistSection).
  */
 import React from 'react';
 import { useLanding } from '../../../contexts/LandingContext';

@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\PluginError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/PluginError.ts
+ * @description Classe de erro tipada (PluginError) da hierarquia de exceções do núcleo @walletnow/core (exporta: PluginError).
  */
 import { WalletNowError } from './WalletNowError.js';
 export class PluginError extends WalletNowError {

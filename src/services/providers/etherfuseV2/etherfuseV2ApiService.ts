@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\etherfuseV2\etherfuseV2ApiService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/etherfuseV2/etherfuseV2ApiService.ts
+ * @description Adaptador de integração Etherfuse RWA (etherfuseV2ApiService) — KYC programático, trustlines e ordens de Tesouro Direto Tokenizado via PIX (exporta: EfV2HttpError, EtherfuseV2ApiService).
  */
 /**
  * EtherfuseV2ApiService — Fluxo Programático Validado

@@ -81,3 +81,4 @@ describe('MnemonicVault — Armazenamento Criptografado de Seed BIP39', () => {
     expect(await MnemonicVault.loadMnemonic(userId)).toBeNull();
   });
 });
+

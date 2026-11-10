@@ -1,4 +1,4 @@
-<!-- @module HOSTINGER_DEPLOY.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module HOSTINGER_DEPLOY.md | Documentação técnica e especificação: Guia de Deploy Hostinger — WalletNow em /walletnow. -->
 
 # Guia de Deploy Hostinger — WalletNow em `/walletnow`
 

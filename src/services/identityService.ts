@@ -1,6 +1,6 @@
 /**
- * @module src\services\identityService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/identityService.ts
+ * @description Serviço de domínio e integração (identityService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: IdentityService).
  */
 /// <reference types="vite/client" />
 import { sha3_256 } from 'js-sha3';

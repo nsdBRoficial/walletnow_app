@@ -1,6 +1,6 @@
 /**
- * @module src\components\ui\StatCard.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/ui/StatCard.tsx
+ * @description Componente visual React (StatCard) da interface de carteira autocustodial WalletNow (exporta: StatCard).
  */
 /**
  * StatCard — Card de estatística financeira premium.

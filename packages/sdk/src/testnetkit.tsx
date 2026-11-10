@@ -1,6 +1,6 @@
 /**
- * @module packages\sdk\src\testnetkit.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/sdk/src/testnetkit.tsx
+ * @description SDK unificado (@walletnow/sdk - testnetkit) — fachada pública WalletNowOS, TestnetKit e simuladores interativos (exporta: TestnetKit).
  */
 import './TestnetKit.css';
 // @ts-nocheck

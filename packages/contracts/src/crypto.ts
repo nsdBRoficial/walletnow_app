@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\crypto.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/crypto.ts
+ * @description Contratos canônicos, interfaces e tipos universais (crypto) do pacote @walletnow/contracts (exporta: IKeypairDeriver, DeriveInput, DerivedKeypair, IStellarSigner).
  */
 /**
  * @walletnow/contracts — Crypto Contracts

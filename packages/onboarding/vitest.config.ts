@@ -1,6 +1,6 @@
 /**
- * @module packages\onboarding\vitest.config.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/onboarding/vitest.config.ts
+ * @description Módulo de onboarding invisível (@walletnow/onboarding - vitest.config) — orquestração de identidade, carteira, patrocínio Gasless e sessão.
  */
 /**
  * @walletnow/onboarding — Vitest Configuration

@@ -1,6 +1,6 @@
 /**
- * @module src\services\paymentService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/paymentService.ts
+ * @description Serviço de domínio e integração (paymentService) para operações Stellar, conciliação fiduciária e persistência Supabase (exporta: PaymentService).
  */
 /**
  * @packageDocumentation

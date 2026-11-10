@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\SDKReference.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/SDKReference.tsx
+ * @description Página de documentação interativa (SDKReference) do portal de desenvolvedores WalletNow OS (exporta: SDKReference).
  */
 /**
  * WalletNow Developer Portal — SDK Reference

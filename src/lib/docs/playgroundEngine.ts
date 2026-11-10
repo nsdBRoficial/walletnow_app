@@ -1,6 +1,6 @@
 /**
- * @module src\lib\docs\playgroundEngine.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/lib/docs/playgroundEngine.ts
+ * @description Módulo src/lib/docs/playgroundEngine.ts do ecossistema WalletNow OS (exporta: UserOnboardingResult, PlaygroundStepId, PlaygroundStepStatus, PlaygroundStep).
  */
 /**
  * WalletNow Developer Portal — PlaygroundEngine

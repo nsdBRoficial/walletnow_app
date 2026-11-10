@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\RecoveryError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/RecoveryError.ts
+ * @description Classe de erro tipada (RecoveryError) da hierarquia de exceções do núcleo @walletnow/core (exporta: RecoveryError).
  */
 import { WalletNowError } from './WalletNowError.js';
 export class RecoveryError extends WalletNowError {

@@ -1,6 +1,6 @@
 /**
- * @module src\pages\PortfolioPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/PortfolioPage.tsx
+ * @description Página principal da aplicação (PortfolioPage) — orquestração de estado, saldos Stellar e ações do usuário (exporta: PortfolioPage).
  */
 /**
  * PortfolioPage — Visão consolidada de todos os ativos do usuário.

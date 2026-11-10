@@ -1,6 +1,6 @@
 /**
- * @module src\components\system\EnvironmentBanner.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/system/EnvironmentBanner.tsx
+ * @description Componente visual React (EnvironmentBanner) da interface de carteira autocustodial WalletNow (exporta: EnvironmentBanner).
  */
 import React from 'react';
 import { AppConfig } from '../../config/environment';

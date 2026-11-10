@@ -1,6 +1,6 @@
 /**
- * @module src\services\identityService.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/identityService.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de identityService.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IdentityService } from './identityService';

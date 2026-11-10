@@ -1,4 +1,4 @@
-<!-- @module docs\etherfuse_sprint\bug_report_etherfuse.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/etherfuse_sprint/bug_report_etherfuse.md | Documentação técnica e especificação: Bug Report: Etherfuse Sandbox On-Ramp Integration. -->
 
 # Bug Report: Etherfuse Sandbox On-Ramp Integration
 

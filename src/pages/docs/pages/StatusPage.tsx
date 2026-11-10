@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\StatusPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/StatusPage.tsx
+ * @description Página de documentação interativa (StatusPage) do portal de desenvolvedores WalletNow OS (exporta: StatusPage).
  */
 /**
  * WalletNow Developer Portal — Status Page

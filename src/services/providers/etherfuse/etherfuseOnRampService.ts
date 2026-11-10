@@ -1,6 +1,6 @@
 /**
- * @module src\services\providers\etherfuse\etherfuseOnRampService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/services/providers/etherfuse/etherfuseOnRampService.ts
+ * @description Adaptador de integração Etherfuse RWA (etherfuseOnRampService) — KYC programático, trustlines e ordens de Tesouro Direto Tokenizado via PIX (exporta: EtherfuseCustomerResult, EtherfuseQuoteResult, EtherfuseOrderResult, EtherfuseBankAccount).
  */
 import { ETHERFUSE_PROXY_ENDPOINT } from './etherfuseAssetConfig';
 import { logger } from '../../../utils/logger';

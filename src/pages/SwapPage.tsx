@@ -1,6 +1,6 @@
 /**
- * @module src\pages\SwapPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/SwapPage.tsx
+ * @description Página principal da aplicação (SwapPage) — orquestração de estado, saldos Stellar e ações do usuário (exporta: SwapPage).
  */
 /**
  * @packageDocumentation

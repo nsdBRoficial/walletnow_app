@@ -1,6 +1,6 @@
 /**
- * @module packages\crypto\tsup.config.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/crypto/tsup.config.ts
+ * @description Configuração de bundling tsup (ESM, CJS e declarações .d.ts) do pacote @walletnow/crypto.
  */
 import { defineConfig } from 'tsup';
 

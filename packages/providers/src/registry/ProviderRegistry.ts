@@ -1,6 +1,6 @@
 /**
- * @module packages\providers\src\registry\ProviderRegistry.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/providers/src/registry/ProviderRegistry.ts
+ * @description Infraestrutura de provedores (@walletnow/providers - ProviderRegistry) — registro, barramento de eventos e adaptadores externos (exporta: ProviderRegistry).
  */
 /**
  * @walletnow/providers — ProviderRegistry

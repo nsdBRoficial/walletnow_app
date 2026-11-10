@@ -1,6 +1,6 @@
 /**
- * @module packages\crypto\src\StellarKeypairDeriver.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/crypto/src/StellarKeypairDeriver.ts
+ * @description Primitiva criptográfica (@walletnow/crypto - StellarKeypairDeriver) para derivação Ed25519, assinatura em memória e cifragem WebCrypto AES-GCM (exporta: StellarKeypairDeriver).
  */
 /**
  * @packageDocumentation

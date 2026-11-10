@@ -1,4 +1,4 @@
-<!-- @module docs\QA_ONBOARDING.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/QA_ONBOARDING.md | Documentação técnica e especificação: QA & Validation: Onboarding Flow. -->
 
 # QA & Validation: Onboarding Flow
 

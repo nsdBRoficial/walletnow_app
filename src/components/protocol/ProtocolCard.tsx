@@ -1,6 +1,6 @@
 /**
- * @module src\components\protocol\ProtocolCard.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/protocol/ProtocolCard.tsx
+ * @description Componente visual React (ProtocolCard) da interface de carteira autocustodial WalletNow (exporta: ProtocolCard).
  */
 /**
  * ProtocolCard — Card genérico de protocolo.

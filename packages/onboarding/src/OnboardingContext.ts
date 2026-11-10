@@ -1,6 +1,6 @@
 /**
- * @module packages\onboarding\src\OnboardingContext.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/onboarding/src/OnboardingContext.ts
+ * @description Módulo de onboarding invisível (@walletnow/onboarding - OnboardingContext) — orquestração de identidade, carteira, patrocínio Gasless e sessão (exporta: IGasStationPort, ITestnetFaucetPort, ISessionPort, IAnalyticsPort).
  */
 /**
  * @walletnow/onboarding — OnboardingContext

@@ -1,6 +1,6 @@
 /**
- * @module src\pages\Home.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/Home.tsx
+ * @description Página principal da aplicação (Home) — orquestração de estado, saldos Stellar e ações do usuário (exporta: Home).
  */
 /**
  * Home — Financial Operating System

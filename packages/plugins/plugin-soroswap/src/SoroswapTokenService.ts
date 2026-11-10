@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-soroswap\src\SoroswapTokenService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-soroswap/src/SoroswapTokenService.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-soroswap - SoroswapTokenService) integrado ao IntegrationEngine (exporta: SoroswapTokenService).
  */
 /**
  * @walletnow/plugin-soroswap — SoroswapTokenService

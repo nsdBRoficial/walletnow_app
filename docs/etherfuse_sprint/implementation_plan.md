@@ -1,4 +1,4 @@
-<!-- @module docs\etherfuse_sprint\implementation_plan.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/etherfuse_sprint/implementation_plan.md | Documentação técnica e especificação: Implementação do Fluxo de KYC Programático (Etherfuse). -->
 
 # Implementação do Fluxo de KYC Programático (Etherfuse)
 

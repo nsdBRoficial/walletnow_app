@@ -1,6 +1,6 @@
 /**
- * @module packages\plugins\plugin-defindex\src\config\testnetContracts.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/plugins/plugin-defindex/src/config/testnetContracts.ts
+ * @description Plugin de capacidade DeFi/RWA (@walletnow/plugin-defindex - testnetContracts) integrado ao IntegrationEngine (exporta: TESTNET_VAULT_CONTRACTS).
  */
 export const TESTNET_VAULT_CONTRACTS = [
   'CBMVK2JK6NTOT2O4HNQAIQFJY232BHKGLIMXDVQVHIIZKDACXDFZDWHN', // usdc_paltalabs_vault

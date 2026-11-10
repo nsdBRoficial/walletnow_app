@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\Tutorial.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/Tutorial.tsx
+ * @description Página de documentação interativa (Tutorial) do portal de desenvolvedores WalletNow OS (exporta: Tutorial, Header).
  */
 import React from 'react';
 import { Fingerprint, ShieldCheck, Zap, Coins } from 'lucide-react';

@@ -1,6 +1,6 @@
 /**
- * @module tests\unit\IntegrationEngine.test.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/unit/IntegrationEngine.test.ts
+ * @description Suíte de testes automatizados Vitest para validação de IntegrationEngine.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IntegrationEngine } from '../../packages/core/src/public/os/IntegrationEngine';

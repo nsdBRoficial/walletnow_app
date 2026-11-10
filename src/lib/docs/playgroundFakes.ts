@@ -1,6 +1,6 @@
 /**
- * @module src\lib\docs\playgroundFakes.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/lib/docs/playgroundFakes.ts
+ * @description Módulo src/lib/docs/playgroundFakes.ts do ecossistema WalletNow OS (exporta: server, BRW_KEYPAIR, USDW_KEYPAIR, BRW_ISSUER).
  */
 import type {
   IIdentityEngine,

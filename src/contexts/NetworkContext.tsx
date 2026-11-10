@@ -1,6 +1,6 @@
 /**
- * @module src\contexts\NetworkContext.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/contexts/NetworkContext.tsx
+ * @description Contexto React (NetworkContext) para gerenciamento de estado reativo e provisão de serviços na árvore de componentes (exporta: NetworkType, NetworkContextType, getCurrentNetwork, isCurrentNetworkMainnet).
  */
 /**
  * NetworkContext.tsx

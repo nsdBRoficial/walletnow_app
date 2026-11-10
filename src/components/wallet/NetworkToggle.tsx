@@ -1,6 +1,6 @@
 /**
- * @module src\components\wallet\NetworkToggle.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/wallet/NetworkToggle.tsx
+ * @description Componente visual React (NetworkToggle) da interface de carteira autocustodial WalletNow (exporta: NetworkToggle).
  */
 /**
  * NetworkToggle.tsx

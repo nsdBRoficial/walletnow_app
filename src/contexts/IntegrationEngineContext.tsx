@@ -1,6 +1,6 @@
 /**
- * @module src\contexts\IntegrationEngineContext.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/contexts/IntegrationEngineContext.tsx
+ * @description Contexto React (IntegrationEngineContext) para gerenciamento de estado reativo e provisão de serviços na árvore de componentes (exporta: HealthMap, CapabilityProvider, IntegrationEngineContextValue, IntegrationEngineProvider).
  */
 /**
  * IntegrationEngineContext

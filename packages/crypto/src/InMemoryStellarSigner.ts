@@ -1,6 +1,6 @@
 /**
- * @module packages\crypto\src\InMemoryStellarSigner.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/crypto/src/InMemoryStellarSigner.ts
+ * @description Primitiva criptográfica (@walletnow/crypto - InMemoryStellarSigner) para derivação Ed25519, assinatura em memória e cifragem WebCrypto AES-GCM (exporta: InMemoryStellarSigner).
  */
 import type { IStellarSigner } from '@walletnow/contracts';
 import { Keypair, TransactionBuilder } from '@stellar/stellar-sdk';

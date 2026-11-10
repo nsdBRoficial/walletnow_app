@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\os\HealthMonitor.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/os/HealthMonitor.ts
+ * @description Módulo do kernel @walletnow/core (HealthMonitor) — ciclo de vida, descoberta de protocolos, health monitor e tipos de capacidades (exporta: HealthCheckResult, HealthMonitor).
  */
 import type { ProtocolManifest } from '../types/integration.types';
 import { HealthStatus } from '../types/integration.types';

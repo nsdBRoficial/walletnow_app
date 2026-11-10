@@ -1,4 +1,4 @@
-<!-- @module product_architecture_v4.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module product_architecture_v4.md | Documentação técnica e especificação: Product Architecture Review v4.0: WalletNow como Infraestrutura da Stellar. -->
 
 # Product Architecture Review v4.0: WalletNow como Infraestrutura da Stellar
 

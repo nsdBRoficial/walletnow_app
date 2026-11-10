@@ -1,6 +1,6 @@
 /**
- * @module src\hooks\useManifests.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/hooks/useManifests.ts
+ * @description Hook customizado React (useManifests) para encapsulamento de lógica reativa e integração com o protocolo (exporta: UseManifestsOptions, UseManifestsResult, useManifests).
  */
 /**
  * useManifests — Hook para descoberta dinâmica de protocolos.

@@ -1,6 +1,6 @@
 /**
- * @module packages\identity\src\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/identity/src/index.ts
+ * @description Motor de identidade e autenticação (@walletnow/identity - index) com suporte a sessões e adaptadores de chave.
  */
 /**
  * @walletnow/identity — Public API

@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\provider.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/provider.ts
+ * @description Contratos canônicos, interfaces e tipos universais (provider) do pacote @walletnow/contracts (exporta: ProviderCapability, WalletNowProviderManifest, ProviderHealthStatus, ProviderHealthResult).
  */
 /**
  * @walletnow/contracts — Provider & Protocol Contracts

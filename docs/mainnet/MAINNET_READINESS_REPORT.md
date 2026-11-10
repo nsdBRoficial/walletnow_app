@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\MAINNET_READINESS_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/MAINNET_READINESS_REPORT.md | Documentação técnica e especificação: WalletNow — Relatório de Prontidão Operacional (Foco Testnet) & Roadmap Mainnet. -->
 
 # WalletNow — Relatório de Prontidão Operacional (Foco Testnet) & Roadmap Mainnet
 

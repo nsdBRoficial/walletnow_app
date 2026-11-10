@@ -1,6 +1,6 @@
 /**
- * @module packages\wallet\src\WalletEngine.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/wallet/src/WalletEngine.ts
+ * @description Motor de carteiras e contas Stellar (@walletnow/wallet - WalletEngine) — gestão de trustlines, saldos e submissão XDR (exporta: WalletEngine).
  */
 /**
  * @walletnow/wallet — WalletEngine (Stub)

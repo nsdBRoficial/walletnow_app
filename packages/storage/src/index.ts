@@ -1,6 +1,6 @@
 /**
- * @module packages\storage\src\index.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/storage/src/index.ts
+ * @description Adaptador de armazenamento seguro (@walletnow/storage - index) com isolamento por namespace.
  */
 /**
  * @walletnow/storage — Public API Barrel

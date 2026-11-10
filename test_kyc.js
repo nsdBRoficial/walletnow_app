@@ -1,6 +1,6 @@
 /**
  * @module test_kyc.js
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @description Módulo test_kyc.js do ecossistema WalletNow OS.
  */
 
 

@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\Examples.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/Examples.tsx
+ * @description Página de documentação interativa (Examples) do portal de desenvolvedores WalletNow OS (exporta: Examples).
  */
 /**
  * WalletNow Developer Portal — Examples

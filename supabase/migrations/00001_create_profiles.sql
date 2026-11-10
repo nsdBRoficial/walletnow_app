@@ -1,5 +1,5 @@
--- @module supabase\migrations\00001_create_profiles.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00001_create_profiles.sql
+-- @description Migração PostgreSQL/Supabase (00001_create_profiles) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- supabase/migrations/00001_create_profiles.sql
 

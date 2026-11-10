@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\capabilities\integration.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/capabilities/integration.ts
+ * @description Módulo do kernel @walletnow/core (integration) — ciclo de vida, descoberta de protocolos, health monitor e tipos de capacidades (exporta: ISwapCapability, YieldTransactionResult, IYieldCapability, IRWACapability).
  */
 import type { PortfolioSummary, PortfolioPosition } from '../types/portfolio.types.js';
 import type { SwapQuote, SwapQuoteParams } from '../types/swap.types.js';

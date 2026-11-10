@@ -1,4 +1,4 @@
-<!-- @module docs\ADR_ONBOARDING_STABILITY.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/ADR_ONBOARDING_STABILITY.md | Documentação técnica e especificação: ADR: Onboarding Stability & Fail-Safe Keys. -->
 
 # ADR: Onboarding Stability & Fail-Safe Keys
 

@@ -1,6 +1,6 @@
 /**
- * @module src\components\landing\v2\AbstractionFeaturesSection.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/landing/v2/AbstractionFeaturesSection.tsx
+ * @description Seção visual da Landing Page (AbstractionFeaturesSection) com suporte a internacionalização (PT/EN/ES) e tema adaptativo (exporta: AbstractionFeaturesSection).
  */
 import React from 'react';
 import { useLanding } from '../../../contexts/LandingContext';

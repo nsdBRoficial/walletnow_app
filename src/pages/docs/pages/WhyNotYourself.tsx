@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\WhyNotYourself.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/WhyNotYourself.tsx
+ * @description Página de documentação interativa (WhyNotYourself) do portal de desenvolvedores WalletNow OS (exporta: WhyNotYourself).
  */
 /**
  * WalletNow Developer Portal — WhyNotYourself

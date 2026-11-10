@@ -1,6 +1,6 @@
 /**
- * @module packages\providers\provider-etherfuse\src\EtherfuseActivityService.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/providers/provider-etherfuse/src/EtherfuseActivityService.ts
+ * @description Infraestrutura de provedores (@walletnow/providers - EtherfuseActivityService) — registro, barramento de eventos e adaptadores externos (exporta: EtherfuseActivityService).
  */
 /**
  * @walletnow/provider-etherfuse — EtherfuseActivityService

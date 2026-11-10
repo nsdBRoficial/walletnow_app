@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\events.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/events.ts
+ * @description Contratos canônicos, interfaces e tipos universais (events) do pacote @walletnow/contracts (exporta: WalletNowOSEvents, OSEventName).
  */
 /**
  * @walletnow/contracts — WalletNow OS Event Catalog

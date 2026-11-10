@@ -1,6 +1,6 @@
 /**
- * @module packages\core\src\public\errors\TransactionError.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/core/src/public/errors/TransactionError.ts
+ * @description Classe de erro tipada (TransactionError) da hierarquia de exceções do núcleo @walletnow/core (exporta: TransactionError).
  */
 import { WalletNowError } from './WalletNowError.js';
 

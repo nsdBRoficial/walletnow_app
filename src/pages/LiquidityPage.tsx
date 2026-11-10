@@ -1,6 +1,6 @@
 /**
- * @module src\pages\LiquidityPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/LiquidityPage.tsx
+ * @description Página principal da aplicação (LiquidityPage) — orquestração de estado, saldos Stellar e ações do usuário (exporta: LiquidityPage).
  */
 import React, { useState, useEffect } from 'react';
 import { Droplets, Settings, Zap, ArrowDown, ArrowUp, Info, CheckCircle2 } from 'lucide-react';

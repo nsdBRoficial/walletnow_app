@@ -1,6 +1,6 @@
 /**
- * @module tests\integration\diag_sep6.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module tests/onchain/diag_sep6.ts
+ * @description Suíte de testes automatizados Vitest para validação de diag_sep6.
  */
 import { Keypair, Transaction, Networks } from '@stellar/stellar-sdk';
 

@@ -1,6 +1,6 @@
 /**
- * @module src\components\landing\v2\BottomCTASection.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/landing/v2/BottomCTASection.tsx
+ * @description Seção visual da Landing Page (BottomCTASection) com suporte a internacionalização (PT/EN/ES) e tema adaptativo (exporta: BottomCTASection).
  */
 import React from 'react';
 import { ArrowRight, Github } from 'lucide-react';

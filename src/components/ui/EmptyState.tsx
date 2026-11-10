@@ -1,6 +1,6 @@
 /**
- * @module src\components\ui\EmptyState.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/ui/EmptyState.tsx
+ * @description Componente visual React (EmptyState) da interface de carteira autocustodial WalletNow (exporta: EmptyState, SkeletonCard, ErrorState, LoadingState).
  */
 /**
  * EmptyState — Estado vazio elegante.

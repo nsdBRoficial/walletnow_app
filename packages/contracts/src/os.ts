@@ -1,6 +1,6 @@
 /**
- * @module packages\contracts\src\os.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module packages/contracts/src/os.ts
+ * @description Contratos canônicos, interfaces e tipos universais (os) do pacote @walletnow/contracts (exporta: WalletNowOSConfig, OSState, IWalletNowOS, IEventBus).
  */
 /**
  * @walletnow/contracts — OS Lifecycle & Registry Contracts

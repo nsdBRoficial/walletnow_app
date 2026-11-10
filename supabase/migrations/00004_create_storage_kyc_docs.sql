@@ -1,5 +1,5 @@
--- @module supabase\migrations\00004_create_storage_kyc_docs.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00004_create_storage_kyc_docs.sql
+-- @description Migração PostgreSQL/Supabase (00004_create_storage_kyc_docs) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- Supabase Migration: Criação do Bucket de Storage para Documentos de KYC
 -- Cria o bucket 'kyc_docs' e aplica políticas rigorosas de Row Level Security (RLS)

@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\SwapModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/SwapModal.tsx
+ * @description Modal interativo React (SwapModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: SwapModal).
  */
 import { X, ArrowDownUp, Info, CheckCircle2, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';

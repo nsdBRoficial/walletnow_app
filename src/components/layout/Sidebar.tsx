@@ -1,6 +1,6 @@
 /**
- * @module src\components\layout\Sidebar.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/layout/Sidebar.tsx
+ * @description Componente visual React (Sidebar) da interface de carteira autocustodial WalletNow (exporta: Sidebar).
  */
 /**
  * Sidebar — Navegação lateral principal do WalletNow App.

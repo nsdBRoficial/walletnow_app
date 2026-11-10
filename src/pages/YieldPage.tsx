@@ -1,6 +1,6 @@
 /**
- * @module src\pages\YieldPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/YieldPage.tsx
+ * @description Página principal da aplicação (YieldPage) — orquestração de estado, saldos Stellar e ações do usuário (exporta: YieldPage).
  */
 /**
  * @packageDocumentation

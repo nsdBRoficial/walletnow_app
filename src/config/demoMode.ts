@@ -1,6 +1,6 @@
 /**
- * @module src\config\demoMode.ts
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/config/demoMode.ts
+ * @description Configuração de ambiente e parâmetros de rede Stellar/Demo (demoMode) (exporta: DemoConfig).
  */
 /**
  * @license

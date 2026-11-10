@@ -1,6 +1,6 @@
 /**
- * @module src\pages\RWAPage.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/RWAPage.tsx
+ * @description Página principal da aplicação (RWAPage) — orquestração de estado, saldos Stellar e ações do usuário (exporta: RWAPage).
  */
 /**
  * @packageDocumentation

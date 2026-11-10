@@ -1,5 +1,5 @@
--- @module supabase\migrations\00002_create_auth_trigger.sql
--- @description WalletNow Protocol - Esquema e funções de persistência Supabase/PostgreSQL.
+-- @module supabase/migrations/00002_create_auth_trigger.sql
+-- @description Migração PostgreSQL/Supabase (00002_create_auth_trigger) — definição de tabelas, índices e políticas de Row Level Security (RLS).
 
 -- supabase/migrations/00002_create_auth_trigger.sql
 

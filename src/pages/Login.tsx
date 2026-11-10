@@ -1,6 +1,6 @@
 /**
- * @module src\pages\Login.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/Login.tsx
+ * @description Página principal da aplicação (Login) — orquestração de estado, saldos Stellar e ações do usuário (exporta: Login).
  */
 import { Fingerprint, Mail, Loader2, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';

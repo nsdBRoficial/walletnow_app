@@ -1,6 +1,6 @@
 /**
- * @module src\components\modals\ExportSecretKeyModal.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/components/modals/ExportSecretKeyModal.tsx
+ * @description Modal interativo React (ExportSecretKeyModal) para jornada financeira do usuário com estados de validação, confirmação e feedback on-chain (exporta: ExportSecretKeyModal).
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Shield, Eye, EyeOff, Copy, CheckCircle, AlertTriangle, X, KeyRound } from 'lucide-react';

@@ -1,6 +1,6 @@
 /**
- * @module src\pages\docs\pages\DocsHero.tsx
- * @description WalletNow Protocol - Arquitetura de carteira inteligente e pagamentos Stellar.
+ * @module src/pages/docs/pages/DocsHero.tsx
+ * @description Página de documentação interativa (DocsHero) do portal de desenvolvedores WalletNow OS (exporta: DocsHero).
  */
 /**
  * WalletNow Developer Portal — Hero Page

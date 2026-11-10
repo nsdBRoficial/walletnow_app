@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\QA_REGRESSION_REPORT.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/QA_REGRESSION_REPORT.md | Documentação técnica e especificação: Relatório de Garantia de Qualidade e Regressão (QA). -->
 
 # Relatório de Garantia de Qualidade e Regressão (QA)
 **Data:** 28 de Maio de 2026

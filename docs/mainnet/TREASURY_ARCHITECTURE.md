@@ -1,4 +1,4 @@
-<!-- @module docs\mainnet\TREASURY_ARCHITECTURE.md | WalletNow Protocol - Documentação e especificações de engenharia -->
+<!-- @module docs/mainnet/TREASURY_ARCHITECTURE.md | Documentação técnica e especificação: WalletNow — Treasury Architecture. -->
 
 # WalletNow — Treasury Architecture
 
